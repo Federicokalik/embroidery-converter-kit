@@ -2,7 +2,7 @@
   "name": "desktop",
   "license": "SEE LICENSE IN LICENSE",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Ricuci — embroidery file converter (desktop)",
   "author": "Federico Kalik",
   "main": "main.js",

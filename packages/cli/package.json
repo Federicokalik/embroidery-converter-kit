@@ -1,6 +1,6 @@
 {
   "name": "ricuci",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Universal embroidery file converter (VIP, ZHS, PES, DST, JEF, VP3, HUS, EXP and more) — 100% local. Run with: npx ricuci in.vip out.zhs",
   "license": "SEE LICENSE IN LICENSE",
   "author": "Federico Kalik",
