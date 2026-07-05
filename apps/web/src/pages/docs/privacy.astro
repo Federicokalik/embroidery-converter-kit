@@ -1,0 +1,61 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — Privacy">
+  <h1>Privacy — tutto nel tuo browser</h1>
+  <p class="docs-lede">
+    Restitch non ha backend. Non ha server. Non ha analytics. I file che
+    trascini nello strumento non lasciano mai il tuo computer. Tutto
+    accade dentro la scheda del browser che hai aperto. Quando chiudi la
+    pagina, i file non sono più da nessuna parte.
+  </p>
+
+  <h2>Cosa fa</h2>
+  <ul>
+    <li>Legge il file <em>localmente</em> con <code>FileReader</code>/<code>file.arrayBuffer()</code>.</li>
+    <li>Parserizza i byte in memoria con il core TS.</li>
+    <li>Produce i byte di output in memoria.</li>
+    <li>Offre un download diretto (<code>Blob</code> + <code>objectURL</code>): i byte scritti sono i tuoi.</li>
+  </ul>
+
+  <h2>Cosa NON fa</h2>
+  <ul>
+    <li>Non manda il file a un server.</li>
+    <li>Non invia telemetria, analytics, crash report, error stacks.</li>
+    <li>Non salva i tuoi file in <code>localStorage</code>/<code>IndexedDB</code>: solo la lingua scelta.</li>
+    <li>Non carica script di terze parti a runtime: il web app è statico, telecomandato via <code>script type="module"</code> ES2022. Niente CDN runtime.</li>
+    <li>Non chiama API esterne. Niente fetch, niente WebSocket.</li>
+  </ul>
+
+  <h2>Come verificarlo tu</h2>
+  <ol>
+    <li>Apri DevTools → Network.</li>
+    <li>Trascina un file di ricamo.</li>
+    <li>Converti.</li>
+    <li>Vedi: zero richieste verso l'esterno dopo il primo caricamento della pagina.</li>
+  </ol>
+
+  <h2>Perché è possibile</h2>
+  <p>
+    Tutta la logica — readers, writers, <code>EmbCompress</code>, IR — vive
+    in <code>packages/core</code> in TypeScript <em>strict</em> con zero
+    dipendenze DOM o Node. Il bundle peso ~qualche decina di kilobyte
+   ingombra in memoria e gira in pochi millisecondi anche per disegni di
+    migliaia di punti. Non c'è alcun motivo di mandare i file da nessuna
+    parte: il browser basta.
+  </p>
+
+  <h2>Sponsorship</h2>
+  <p>
+    Non ci sono P.Iva né pubblicità diretta nello strumento. C'è un piccolo
+    badge <em>"Sostenuto da Calicchia.Design"</em> nel footer che punta al
+    sito del manutentore (Federico). Niente tracking, niente cookie di
+    terze parti. Clicchi, vedi il sito, decidi tu.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href="/docs/testing">← Test</a>
+    <a href="/convert">Converti ora →</a>
+  </p>
+</DocLayout>

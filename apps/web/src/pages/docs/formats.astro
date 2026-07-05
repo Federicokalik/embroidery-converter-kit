@@ -1,0 +1,141 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — Formati">
+  <h1>Tutti i formati</h1>
+  <p class="docs-lede">
+    Restitch legge 13 formati e ne scrive 10. La tabella dice cosa sa fare
+    di ciascuno; le righe sono linkate alle pagine di dettaglio per i
+    formati principali.
+  </p>
+
+  <h2>Lettura e scrittura</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Formato</th>
+        <th>Marca</th>
+        <th>Legge</th>
+        <th>Scrive</th>
+        <th>Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="/docs/formats/vip">VIP</a></td>
+        <td>Husqvarna / PFAFF</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>HUS body compresso con EmbCompress, no XOR.</td>
+      </tr>
+      <tr>
+        <td><a href="/docs/formats/zhs">ZHS</a></td>
+        <td>Husqvarna (newer)</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Writer reverse-engineered. Il primo writer open al mondo.</td>
+      </tr>
+      <tr>
+        <td>HUS</td>
+        <td>Husqvarna (old)</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>EmbCompress, senza wrapper VIP.</td>
+      </tr>
+      <tr>
+        <td>XXX</td>
+        <td>Melco / Barudan</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Verificato byte-per-byte contro pyembroidery.</td>
+      </tr>
+      <tr>
+        <td><a href="/docs/formats/pes">PES / PEC</a></td>
+        <td>Brother</td>
+        <td>✓</td>
+        <td>✓ (PES+PEC)</td>
+        <td>Colori avvicinati alle matassine Brother.</td>
+      </tr>
+      <tr>
+        <td><a href="/docs/formats/dst">DST</a></td>
+        <td>Tajima</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Header + 3 byte per punto + tail. Indolore.</td>
+      </tr>
+      <tr>
+        <td><a href="/docs/formats/jef">JEF</a></td>
+        <td>Janome</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Colori avvicinati alle matassine Janome.</td>
+      </tr>
+      <tr>
+        <td><a href="/docs/formats/vp3">VP3</a></td>
+        <td>PFAFF / Husqvarna</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Thread metadata, multicolore strutturato.</td>
+      </tr>
+      <tr>
+        <td><a href="/docs/formats/exp">EXP</a></td>
+        <td>Melco</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>2 byte firma per punto. No colori, no telaio.</td>
+      </tr>
+      <tr>
+        <td>SEW</td>
+        <td>Janome (old, SewPro)</td>
+        <td>✓</td>
+        <td>—</td>
+        <td>Sola lettura. Vecchio formato DA.</td>
+      </tr>
+      <tr>
+        <td>SHV</td>
+        <td>Husqvarna (old)</td>
+        <td>✓</td>
+        <td>—</td>
+        <td>Sola lettura. Variante pre-VIP.</td>
+      </tr>
+      <tr>
+        <td>PCS</td>
+        <td>Pfaff (old)</td>
+        <td>✓</td>
+        <td>—</td>
+        <td>Sola lettura. Formato PCD-style.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="warnings">Avvertenze strutturate</h2>
+  <p>
+    Quando uno scrittore incontra un comando che il formato di destinazione
+    non sa esprimere, adotta una strategia di fallback e inserisce una
+    <em>warning</em> strutturata nella risposta di conversione. Lo UI
+   presenta le warning nella lista dei risultati. Le warning conosciute:
+  </p>
+  <ul>
+    <li><code>FILLER_THREAD</code> — il file di partenza non ha colori; quelli mancanti sono segnati in nero.</li>
+    <li><code>DELTA_63_SHIFTED</code> — un punto era troppo lungo; accorciato di 0,1 mm.</li>
+    <li><code>COLOR_QUANTIZED</code> — il formato conosce solo le proprie matassine; i colori sono stati avvicinati.</li>
+    <li><code>HOOP_FIT_EXCEEDED</code> — il ricamo è più grande del telaio scelto.</li>
+    <li><code>HOOP_UNSUPPORTED</code> — il formato non conosce il telaio richiesto; tenuto quello di serie.</li>
+    <li><code>TRIM_DROPPED</code> — il formato non sa tagliare il filo; i <code>TRIM</code> sono stati rimossi.</li>
+  </ul>
+
+  <h2>Porting futuro</h2>
+  <p>
+    Formati che potrebbero entrare: SEW/SHV/PCS writing (vecchi margini),
+    CND (Melco CNDCondor), 10o (Bernina), EMD (Elna), PHB / GNC. C'è già il
+    reader per SEW/SHV/PCS; il writer è lavoro aperto. Aggiungere un formato
+    = aggiungere un file in <code>readers/</code> o <code>writers/</code>
+    più una riga nel <code>registry.ts</code>. Tutto qui.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href="/docs/architecture">← Architettura</a>
+    <a href="/docs/formats/vip">VIP →</a>
+  </p>
+</DocLayout>

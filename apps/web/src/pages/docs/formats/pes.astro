@@ -1,0 +1,44 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — PES / PEC">
+  <h1>PES / PEC — Brother</h1>
+  <p class="docs-lede">
+    PES è il formato Brother moderno. PEC è il blocco colori + thumb che
+    vivono dentro un PES (ma possono stare anche separati). I file hanno
+    magic bytes riconoscibili; la lettura sniffa dal contenuto.
+  </p>
+
+  <h2>Caratteristiche</h2>
+  <ul>
+    <li><strong>Codifica punti</strong>: delta signed in unità da 0,1 mm con scaling nel header.</li>
+    <li><strong>Colori</strong>: sequence di indici in una tabella, <em>matassine Brother</em>; lo scrittore avvicina i colori del tuo file al thread chart Brother più vicino (<code>warn.COLOR_QUANTIZED</code>).</li>
+    <li><strong>Trims</strong>: supportati come comando byte nel flusso comandi.</li>
+    <li><strong>Telaio</strong>: header contiene dimensioni telaio note.</li>
+  </ul>
+
+  <h2>Lettura</h2>
+  <p>
+    <code>packages/core/src/readers/pes.ts</code> e <code>pec.ts</code>
+    riconoscono il formato via magic bytes
+    (<code>isPec()</code>, <code>isPes()</code> in
+    <code>registry.ts:detectFormat</code>). Header PES impersona peppers di
+    versioni multiple; il reader gestisce PES v1–v10+ con un path robusto.
+  </p>
+
+  <h2>Scrittura</h2>
+  <p>
+    <code>src/writers/pes.ts</code> + <code>pec.ts</code> producono un PES
+    autoportante con il suo PEC embdded. Colori: avvicinati al chart Brother.
+    Nota standard mostrata nello UI:
+  </p>
+  <blockquote>
+    PES: i colori vengono avvicinati alle matassine Brother.
+  </blockquote>
+
+  <p class="docs-prevnext">
+    <a href="/docs/formats/zhs">← ZHS</a>
+    <a href="/docs/formats/dst">DST →</a>
+  </p>
+</DocLayout>

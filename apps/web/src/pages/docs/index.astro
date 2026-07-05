@@ -1,0 +1,57 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+const title = 'Restitch — Docs';
+---
+
+<DocLayout title={title}>
+  <h1>Restitch, dentro e fuori.</h1>
+  <p class="docs-lede">
+    Restitch converte i file di ricamo (VIP, ZHS, PES, DST, JEF, VP3, EXP e altri)
+    direttamente nel tuo browser. Nessun server, nessun caricamento: i file non
+    lasciano mai il tuo computer. Queste pagine spiegano come funziona, dentro
+    e fuori.
+  </p>
+
+  <h2>Da dove partire</h2>
+  <ul>
+    <li><a href="/docs/how-it-works">Come funziona</a> — il flusso di una conversione, dalla prima all'ultima istruzione.</li>
+    <li><a href="/docs/architecture">Architettura</a> — come è organizzato il monorepo (core + web + cli) e perché.</li>
+    <li><a href="/docs/formats">Tutti i formati</a> — quali formati legge e scrive, e cosa sa o non sa di ciascuno.</li>
+    <li><a href="/docs/privacy">Privacy</a> — perché tutto può accendere nel browser senza nemmeno un server.</li>
+  </ul>
+
+  <h2>Per chi è scritto</h2>
+  <p>
+    Per chi usa una macchina da ricamo domestica o semi-industriale e vuole
+    spostare un design da un formato all'altro senza installare niente. E per
+    chi, curioso, vuole capire cosa succede dietro le quinte. I nomi dei
+    formati sono nomi di marche concrete (Husqvarna, Brother, Janome, Tajima,
+    Barudan, PFAFF…) ma Restitch è neutrale: legge quello che gli dài e
+    produce quello che gli chiedi.
+  </p>
+
+  <h2>Cosa c'è qui intorno</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Pagina</th>
+        <th>Cosa trovi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>/docs/how-it-works</code></td><td>Da file上传 a download: lettura, IR, scrittura.</td></tr>
+      <tr><td><code>/docs/architecture</code></td><td>Monorepo, IR, ordine di porting, testing.</td></tr>
+      <tr><td><code>/docs/formats</code></td><td>Tabella di ciò che viene letto e scritto.</td></tr>
+      <tr><td><code>/docs/formats/[fmt]</code></td><td>Una pagina per ogni formato supportato.</td></tr>
+      <tr><td><code>/docs/ir</code></td><td>L'Intermediate Representation, il cuore del converter.</td></tr>
+      <tr><td><code>/docs/embcompress</code></td><td>Il compressore di Husqvarna (VIP, HUS).</td></tr>
+      <tr><td><code>/docs/testing</code></td><td>Fixture, round-trip byte-byte, pyembroidery come oracolo.</td></tr>
+      <tr><td><code>/docs/privacy</code></td><td>Perché niente lascia il tuo computer.</td></tr>
+    </tbody>
+  </table>
+
+  <p class="docs-prevnext">
+    <span></span>
+    <a href="/docs/how-it-works">Come funziona →</a>
+  </p>
+</DocLayout>

@@ -1,0 +1,35 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — JEF">
+  <h1>JEF — Janome</h1>
+  <p class="docs-lede">
+    Formato Janome / Elna / Kenmore. Header binario con offset table ai
+    blocchi di coordinate; colori via thread chart Janome.
+  </p>
+
+  <h2>Cosa sa</h2>
+  <ul>
+    <li><strong>Trims</strong>: supportati come comando nel flusso.</li>
+    <li><strong>Colori</strong>: scritti come thread; lo scrittore avvicina al chart Janome (<code>warn.COLOR_QUANTIZED</code>).</li>
+    <li><strong>Telaio</strong>: il JEF conosce alcuni telai standard (codice telaio nel header).</li>
+    <li><strong>Coordinate</strong>: delta signed 0,1 mm, longitudinale/multipli.</li>
+  </ul>
+
+  <h2>Note nello UI</h2>
+  <blockquote>
+    JEF: i colori vengono avvicinati alle matassine Janome.
+  </blockquote>
+
+  <h2>Recognizing</h2>
+  <p>
+    Nessun magic byte affidabile; <code>registry.ts</code> risolve JEF per
+    estensione.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href="/docs/formats/dst">← DST</a>
+    <a href="/docs/formats/vp3">VP3 →</a>
+  </p>
+</DocLayout>

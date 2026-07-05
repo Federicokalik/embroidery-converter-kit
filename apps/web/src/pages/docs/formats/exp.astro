@@ -1,0 +1,38 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — EXP">
+  <h1>EXP — Melco</h1>
+  <p class="docs-lede">
+    EXP è il formato Melco "standard minimale": un flusso di 2 byte firmati
+    per punto (dx, dy), con <code>0x80</code> come marker di comando
+    speciale. Niente colori, niente telaio, niente magic byte.
+  </p>
+
+  <h2>Cosa sa e cosa NON sa</h2>
+  <ul>
+    <li><strong>Colori</strong>: <em>assenti</em>. Li scegli tu in macchina.</li>
+    <li><strong>Telaio</strong>: <em>assente</em>. Idem.</li>
+    <li><strong>Trims</strong>: no comando diretto; il writer droppa i TRIM con <code>TRIM_DROPPED</code> warning.</li>
+    <li><strong>Color change</strong>: marker speciale.</li>
+  </ul>
+
+  <h2>Note nello UI</h2>
+  <blockquote>
+    EXP non salva i colori: sulla macchina li scegli tu.
+  </blockquote>
+
+  <h2>Detection</h2>
+  <p>
+    Nessun magic byte <em>affidabile</em> (EXP non ha proprio un magic)
+    quindi <code>registry.ts</code> risolve via estensione. La lettura
+    è permissive: se non è leggibile, gli altri formati ottengono un
+    fallback via estensione.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href="/docs/formats/vp3">← VP3</a>
+    <a href="/docs/ir">Intermediate Representation →</a>
+  </p>
+</DocLayout>

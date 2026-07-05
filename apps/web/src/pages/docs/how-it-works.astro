@@ -1,0 +1,94 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — Come funziona">
+  <h1>Come funziona una conversione</h1>
+  <p class="docs-lede">
+    Una conversione è tre passaggi: <strong>lettura</strong> del file di
+    partenza, <strong>traduzione</strong> in un Intermediate Representation
+    neutro, <strong>scrittura</strong> nel formato di destinazione.
+    Tutto nel browser, tutto sincrono.
+  </p>
+
+  <h2>1. Lettura (reader)</h2>
+  <p>
+    Ogni formato ha un suo <em>reader</em> — una funzione
+    <code>read(bytes: Uint8Array): Pattern</code> in <code>packages/core</code>.
+    Il reader decodifica i byte del file, tratta le peculiarità del formato
+    (compressione, XOR, byte order, offset table) e restituisce un
+    <a href="/docs/ir">Pattern</a> con punti assoluti in 0.1 mm, fili con
+    RGB e catalogo, comandi (<code>STITCH</code>, <code>JUMP</code>,
+    <code>TRIM</code>, <code>COLOR_CHANGE</code>, <code>STOP</code>,
+    <code>END</code>).
+  </p>
+  <p>
+    Alcuni lettori sono semplici (DST è testo con coordinate; EXP è un flusso
+    di byte firmati). Altri hanno un'impalcatura più complessa: VIP è un HUS
+    compresso con EmbCompress e wraps in un header Husqvarna; PES ha un
+    CCS-style header con colori Bedeutet-Pec; VP3 ha tabelle di thread con
+    metadata del produttore.
+  </p>
+
+  <h2>2. Intermediate Representation</h2>
+  <p>
+    Il <em>Pattern</em> è il cuore del converter: ogni scrittore lo consuma,
+    ogni lettore lo produce. È neutro, quindi due formati qualsiasi si
+    parlano senza sapere l'uno dell'altro. Vedi la pagina
+    <a href="/docs/ir">IR</a> per i dettagli del tipo.
+  </p>
+
+  <h3>Comandi</h3>
+  <ul>
+    <li><code>STITCH</code> — punto normale; l'ago scende e cuce.</li>
+    <li><code>JUMP</code> — sposto l'ago senza cucire (per salti tra zone di ricamo).</li>
+    <li><code>TRIM</code> — taglia il filo. Non tutti i formati lo sanno.</li>
+    <li><code>COLOR_CHANGE</code> — cambio colore della macchina.</li>
+    <li><code>STOP</code> — pausa: l'operatore cambia filo o sistema la stoffa.</li>
+    <li><code>END</code> — fine del disegno; l'ultimo comando che il writer deve sempre scrivere.</li>
+  </ul>
+
+  <h2>3. Scrittura (writer)</h2>
+  <p>
+    Ogni formato ha uno scrittore <code>write(pattern: Pattern,
+    settings): Uint8Array</code>. Lo scrittore prende le coordinate assolute,
+    le converte nel delta encoding del formato (1/10 mm in ZHS, 0,1 mm con
+    scaling in DST, ecc.), e innesca i comandi speciali con i byte presi dal
+    proprio dialetto.
+  </p>
+  <p>
+    Se il formato di destinazione non sa esprimere un comando del Pattern
+    (per esempio ZHS non sa scrivere i <code>STOP</code> come pause arbitrarie,
+    un vecchio formato non ha concetto di <code>TRIM</code>), lo scrittore
+    applica la strategia di fallback documentata per quel formato e inserisce
+    una <a href="/docs/formats#warnings">warning</a> strutturata nella
+    risposta. Lo UI mostra le warning nella lista risultati.
+  </p>
+
+  <h2>4. La funzione <code>convert()</code></h2>
+  <pre><code>{String.raw`import { convert } from '@embroidery/core';
+
+// it: bytes di partenza, fromFmt, toFmt → bytes di destinazione
+const out = await convert({
+  bytes: vipBytes,
+  from: 'vip',
+  to:  'zhs',
+  settings: { hoop: 'auto', trims: 'drop' },
+});
+// out.bytes    : Uint8Array
+// out.warnings : Warning[]  (è vuoto quando tutto è andato liscio)
+// out.note?    : string     (caveat per il formato di destinazione)`}</code></pre>
+
+  <h2>Cosa NON fa</h2>
+  <ul>
+    <li>Non ricama. Non genera punti da un SVG o da un disegno vettoriale — legge un file di ricamo e ne scrive un altro.</li>
+    <li>Non tocca i colori del tuo file. Se un formato conosce solo le proprie matassine, li avvicina ai più vicini e segnala la <code>warn.COLOR_QUANTIZED</code>.</li>
+    <li>Non ritocca la geometria: sposta o centra nel telaio solo se tu glielo chiedi.</li>
+    <li>Non manda niente in rete. Vedi <a href="/docs/privacy">Privacy</a>.</li>
+  </ul>
+
+  <p class="docs-prevnext">
+    <a href="/docs">← Panoramica</a>
+    <a href="/docs/architecture">Architettura →</a>
+  </p>
+</DocLayout>

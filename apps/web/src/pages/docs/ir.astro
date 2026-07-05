@@ -1,0 +1,112 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — Intermediate Representation">
+  <h1>Intermediate Representation (IR)</h1>
+  <p class="docs-lede">
+    Il <code>Pattern</code> è il tipo neutro che ogni reader produce e ogni
+    writer consuma. Coordinate <strong>assolute</strong> in 0,1 mm,
+    orientamento standard (y cresce verso l'alto; VIP memorizza y negato,
+    i readers normalizzano). Vaporizzata ogni eccentricità del formato
+    sorgente.
+  </p>
+
+  <h2>Tipo (TS)</h2>
+  <pre><code>{String.raw`type Command =
+  | 'STITCH' | 'JUMP' | 'TRIM'
+  | 'COLOR_CHANGE' | 'STOP' | 'END';
+
+interface Stitch {
+  x: number;        // assoluto, 0.1 mm
+  y: number;        // assoluto, 0.1 mm
+  command: Command;
+}
+
+interface Thread {
+  rgb: number;             // 24-bit 0xRRGGBB
+  description?: string;
+  catalog?: string;
+  chart?: string;          // es. "Brother", "Janome"
+}
+
+interface Extents {
+  minX: number; minY: number; maxX: number; maxY: number;
+}
+
+interface Hoop {
+  width: number;            // 0.1 mm
+  height: number;
+  name?: string;            // es. "130x180" o un PES hoop-name
+}
+
+interface Pattern {
+  stitches: Stitch[];
+  threads: Thread[];
+  extents: Extents;
+  hoop?: Hoop;              // presente solo se il formato lo porta
+}`}</code></pre>
+
+  <h2>Comandi</h2>
+  <table>
+    <thead><tr><th>Comando</th><th>Significato macchina</th></tr></thead>
+    <tbody>
+      <tr><td><code>STITCH</code></td><td>L'ago scende e cuce un punto.</td></tr>
+      <tr><td><code>JUMP</code></td><td>Sposta senza cucire (per salti tra zone).</td></tr>
+      <tr><td><code>TRIM</code></td><td>Taglia il filo.</td></tr>
+      <tr><td><code>COLOR_CHANGE</code></td><td>Ferma per cambio colore della macchina.</td></tr>
+      <tr><td><code>STOP</code></td><td>Ferma per intervento operatore.</td></tr>
+      <tr><td><code>END</code></td><td>Fine del disegno.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Ogni reader <strong>deve</strong> emettere un <code>END</code> come
+    ultimo record; ogni writer <strong>deve</strong> terminare il file con
+    il proprio END e (per i formati che lo prevedono) col checksum finale.
+  </p>
+
+  <h2>Estents e Hoop</h2>
+  <p>
+    <code>extents</code> è calcolato da <code>computeExtents(stitches)</code>
+    ignorando gli END. <code>hoop</code> è presente solo se il formato
+    sorgente lo memorizza (PES, JEF, PCS lo portano; VIP/ZHS solo extents).
+    Il writer decide cosa fare del hoop quando il formato di destinazione
+    non lo supporta: solitamente <code>warn.HOOP_UNSUPPORTED</code>.
+  </p>
+
+  <h2>Warnings strutturate</h2>
+  <p>
+    Lo scrittore segnala deviazioni inevitabili con un <code>ConversionWarning</code>:
+  </p>
+  <pre><code>{String.raw`interface ConversionWarning {
+  code:
+    | 'DELTA_63_SHIFTED' | 'METADATA_0X83_ZEROED'
+    | 'FILLER_THREAD' | 'COLOR_QUANTIZED'
+    | 'HOOP_FIT_EXCEEDED' | 'HOOP_UNSUPPORTED'
+    | 'TRIM_DROPPED';
+  message: string;          // human-readable, EN, dell'engine
+}`}</code></pre>
+  <p>
+    Il web app rimappa ogni <code>code</code> alla sua chiave i18n
+    (<code>warn.DELTA_63_SHIFTED</code>, ecc.) e lo mostra nella lista
+    risultati. Lo store IT/EN/FR/DE/ES/PT vive in
+    <code>apps/web/src/i18n/strings.ts</code>.
+  </p>
+
+  <h2>UnsupportedDesignError</h2>
+  <p>
+    Se un disegno contiene qualcosa che il formato di destinazione
+    <em>proprio non può esprimere</em> (non con un workaround) il writer
+    solleva <code>UnsupportedDesignError</code> con un
+    <code>reason: UnsupportedReason</code>. Lo UI mappa ogni reason alla sua
+    chiave i18n (<code>err.EMPTY</code>, <code>err.MULTI_COLOR</code>,
+    <code>err.TRIM</code>, <code>err.JUMP</code>, <code>err.STOP</code>,
+    <code>err.DELTA_RANGE</code>, <code>err.TOO_MANY_RECORDS</code>,
+    <code>err.TOO_LARGE</code>).
+  </p>
+
+  <p class="docs-prevnext">
+    <a href="/docs/formats/exp">← EXP</a>
+    <a href="/docs/embcompress">EmbCompress →</a>
+  </p>
+</DocLayout>

@@ -1,0 +1,33 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — VP3">
+  <h1>VP3 — PFAFF / Husqvarna Viking</h1>
+  <p class="docs-lede">
+    VP3 è il formato "nuovo" PFAFF/Husqvarna. Supporta multicolore
+    strutturato, thread metadata (chart, descrizione, catalogo), più telai.
+    È un HUS body compresso con EmbCompress, wrapper in un albero di
+    sezioni formato.
+  </p>
+
+  <h2>Cosa sa</h2>
+  <ul>
+    <li><strong>Trims</strong>: supportati.</li>
+    <li><strong>Colori</strong>: thread objects con metadati estesi (manufacturer-style).</li>
+    <li><strong>Telaio</strong>: memorizzato nel formato.</li>
+    <li><strong>Compressione</strong>: EmbCompress (<a href="/docs/embcompress">vedi</a>).</li>
+  </ul>
+
+  <h2>Strumento di riferimento</h2>
+  <p>
+    Cross-verificato col reader di pyembroidery (MIT). Lo scrittore è
+    <strong>software-verified</strong>; accettazione su macchina reale è
+    pendente come per HUS / VIP.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href="/docs/formats/jef">← JEF</a>
+    <a href="/docs/formats/exp">EXP →</a>
+  </p>
+</DocLayout>

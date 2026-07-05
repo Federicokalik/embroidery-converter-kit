@@ -1,0 +1,115 @@
+---
+// Shared layout for every /docs/* page. Left sidebar with a hand-written
+// index, main column with <slot />, <Footer /> at the bottom. The docs
+// entry lives under /docs so the "Docs" link in the main nav points here.
+import '../styles/base.css';
+import '../styles/footer.css';
+import '../styles/docs.css';
+import DocsNav from '../components/DocsNav.astro';
+import Footer from '../components/Footer.astro';
+
+interface NavItem {
+  href: string;
+  label: string;
+}
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+}
+
+const groups: NavGroup[] = [
+  {
+    title: 'Start',
+    items: [
+      { href: '/docs', label: 'Panoramica' },
+      { href: '/docs/how-it-works', label: 'Come funziona' },
+      { href: '/docs/architecture', label: 'Architettura' },
+    ],
+  },
+  {
+    title: 'Formats',
+    items: [
+      { href: '/docs/formats', label: 'Tutti i formati' },
+      { href: '/docs/formats/vip', label: 'VIP' },
+      { href: '/docs/formats/zhs', label: 'ZHS' },
+      { href: '/docs/formats/pes', label: 'PES / PEC' },
+      { href: '/docs/formats/dst', label: 'DST' },
+      { href: '/docs/formats/jef', label: 'JEF' },
+      { href: '/docs/formats/vp3', label: 'VP3' },
+      { href: '/docs/formats/exp', label: 'EXP' },
+    ],
+  },
+  {
+    title: 'Internals',
+    items: [
+      { href: '/docs/ir', label: 'Intermediate Representation' },
+      { href: '/docs/embcompress', label: 'EmbCompress' },
+      { href: '/docs/testing', label: 'Test & fixture' },
+      { href: '/docs/privacy', label: 'Privacy' },
+    ],
+  },
+];
+
+// Mark the active item via aria-current when the current path equals the
+// item href (or starts with it, for index pages).
+const here = Astro.url.pathname;
+const isActive = (href: string): boolean => {
+  if (href === '/docs') return here === '/docs/';
+  return href !== '/docs' && (here === href + '/' || here === href);
+};
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{Astro.props.title ?? 'Restitch — Docs'}</title>
+    <meta
+      name="description"
+      content={Astro.props.description ?? 'Come funziona Restitch, dentro e fuori.'}
+    />
+    <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff2e88' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M3 17 Q7 13 12 15 T21 11'/%3E%3Cpath d='M17 4 l3 3 M20 4 l-3 3'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body data-i18n-title="meta.title" data-i18n-description="meta.description">
+    <DocsNav />
+
+    <main class="docs-shell">
+      <aside class="docs-sidebar" aria-label="Indice">
+        {groups.map((group) => (
+          <nav>
+            <h2>{group.title}</h2>
+            <ul>
+              {group.items.map((item) => (
+                <li>
+                  <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
+      </aside>
+
+      <article class="docs-body">
+        <slot />
+      </article>
+    </main>
+
+    <Footer />
+
+    <script>
+      import { applyI18n } from '../i18n/i18n';
+      import { initLangSwitch } from '../i18n/lang-switch';
+      applyI18n();
+      initLangSwitch();
+    </script>
+  </body>
+</html>

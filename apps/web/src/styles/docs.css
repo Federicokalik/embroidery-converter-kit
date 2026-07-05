@@ -1,0 +1,272 @@
+/* Docs layout — Pico classless as base (typography, code blocks, tables),
+   then overridden so the docs match the Restitch paper/pink identity:
+   paper background, ink text, pink accents, custom sidebar grid. */
+
+/* Pull in Pico classless + the pink accent preset (no .container classes
+   needed: the docs use semantic <article>/<aside>/<nav>). */
+@import '@picocss/pico/css/pico.classless.pink.min.css';
+
+:root {
+  /* Override Pico's CSS vars to align with base.css palette. */
+  --pico-background-color: var(--paper);
+  --pico-color: var(--ink);
+  --pico-muted-color: var(--ink-soft);
+  --pico-primary: var(--pink);
+  --pico-primary-focus: var(--pink-deep);
+  --pico-primary-background: var(--pink);
+  --pico-primary-inverse: var(--ink);
+  --pico-border-color: var(--line);
+  --pico-secondary: var(--ink-soft);
+  --pico-secondary-background: var(--paper-2);
+  --pico-font-family: var(--font-sans);
+  --pico-font-family-monospace: var(--font-mono);
+  --pico-font-size: 100%;
+  --pico-border-radius: var(--radius-surface);
+  --pico-spacing: 1rem;
+}
+
+/* Pico applies a body background gradient by default; reset to plain paper. */
+body {
+  background: var(--paper) !important;
+  background-image: none !important;
+  color: var(--ink);
+}
+
+/* Heading voice: clash display for h1/h2, sans for the rest. */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+h2 {
+  font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+  margin-top: 2.5rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.4rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin-top: 1.8rem;
+}
+
+/* Inline code: pink dot, mono. */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--paper-2);
+  border-radius: 6px;
+  padding: 0.1em 0.35em;
+  color: var(--pink-deep);
+}
+
+/* Code blocks keep Pico's nice defaults; just tighten the radius. */
+pre {
+  border-radius: var(--radius-surface);
+  font-size: 0.85rem;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+/* Links: ink with pink underline-on-hover. */
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--pink-deep);
+}
+
+/* Tables: tighter, paper-2 stripes. */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+th {
+  background: var(--paper-2);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Blockquote: pink left bar. */
+blockquote {
+  border-left: 3px solid var(--pink);
+  margin-inline: 0;
+  padding-inline: 1rem;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* ---------- Docs grid ---------- */
+
+.docs-shell {
+  display: grid;
+  grid-template-columns: minmax(220px, 18rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  max-width: min(1400px, 92vw);
+  margin-inline: auto;
+  padding-block: clamp(2rem, 5vh, 3.5rem);
+  padding-top: calc(var(--nav-h) + 2rem);
+  min-height: 100dvh;
+}
+
+.docs-sidebar {
+  position: sticky;
+  top: calc(var(--nav-h) + 2rem);
+  align-self: start;
+  padding-right: 1rem;
+  border-right: 1px solid var(--line);
+}
+
+.docs-sidebar h2 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 0;
+  margin: 1.4rem 0 0.6rem;
+  padding: 0;
+}
+
+.docs-sidebar h2:first-child {
+  margin-top: 0;
+}
+
+.docs-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem;
+  display: grid;
+  gap: 0.18rem;
+}
+
+.docs-sidebar a {
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 0.95rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border-left: 2px solid transparent;
+}
+
+.docs-sidebar a:hover {
+  background: var(--paper-2);
+  color: var(--ink);
+  border-left-color: var(--pink);
+}
+
+.docs-sidebar a[aria-current='page'] {
+  background: color-mix(in srgb, var(--pink) 12%, var(--paper));
+  border-left-color: var(--pink);
+  font-weight: 600;
+}
+
+.docs-body {
+  min-width: 0;
+}
+
+.docs-lede {
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin-bottom: 2rem;
+}
+
+.docs-prevnext {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.docs-prevnext a {
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+/* Format legend pills */
+.fmt-row {
+  display: grid;
+  grid-template-columns: minmax(4rem, 6rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.fmt-row:last-child {
+  border-bottom: 0;
+}
+
+.fmt-tag {
+  display: inline-block;
+  font: 600 0.78rem var(--font-mono);
+  letter-spacing: 0.05em;
+  text-align: center;
+  padding: 0.2rem 0.5rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper-2);
+}
+
+.fmt-row[data-rw='ro'] .fmt-tag {
+  color: var(--ink-soft);
+  border-color: var(--line);
+}
+
+.fmt-row[data-rw='wo'] .fmt-tag {
+  color: var(--pink-deep);
+  border-color: var(--pink);
+}
+
+.fmt-row[data-rw='rw'] .fmt-tag {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+@media (max-width: 1023px) {
+  .docs-shell {
+    grid-template-columns: 1fr;
+  }
+  .docs-sidebar {
+    position: static;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding-right: 0;
+    padding-bottom: 1rem;
+  }
+}

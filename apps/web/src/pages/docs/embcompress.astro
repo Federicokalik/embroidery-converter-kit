@@ -1,0 +1,61 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — EmbCompress">
+  <h1>EmbCompress — compressione Husqvarna (Greg-Hus)</h1>
+  <p class="docs-lede">
+    La compressione usata da HUS, VIP e VP3. ClassicaSchemelet "Greg's HUS
+    compression": due livelli — Huffman statici + RLE — implementati in
+    <code>packages/core/src/embcompress.ts</code>, port fedele di
+    <code>pyembroidery/EmbCompress.py</code> (licenza MIT).
+  </p>
+
+  <h2>API</h2>
+  <pre><code>// Decompressione (per leggere VIP/HUS/VP3)
+expand(data: Uint8Array, count: number): Uint8Array
+
+// Compressione (per scrivere HUS/VIP/VP3)
+compress(data: Uint8Array): Uint8Array</code></pre>
+  <p>
+    <code>expand()</code> prende un blocco compresso e il numero di record
+    attesi, restituisce i byte decompressi. <code>compress()</code> produce
+    un blocco stored (tabella Huffman letterale degenerata): chiave per non
+    rischiare edge case su dim. variabili.
+  </p>
+
+  <h2>Struttura del blocco</h2>
+  <ul>
+    <li><strong>Header</strong>: number of elements (4 byte, letto come MSB-first dai decoder).</li>
+    <li><strong>Huffman table</strong>: bitlengths per ogni simbolo.</li>
+    <li><strong>RLE layer</strong>: controlla ripetizioni di byte.</li>
+    <li><strong>Payload</strong>: sequenze codificate.</li>
+  </ul>
+
+  <h2>Bug noto in pyembroidery</h2>
+  <blockquote>
+    <code>pyembroidery.EmbCompress.compress</code> scrive il count del
+    blocco little-endian, mentre ogni decoder lo legge MSB-first. Funziona
+    per puro lucky size. Il nostro writer lo scrive in <em>decoder order</em>
+    — verificato contro <code>expand</code> di pyembroidery per <em>tutte</em>
+    le size, non solo quelle fortunate.
+  </blockquote>
+
+  <h2>Test</h2>
+  <p>
+    <code>packages/core/test/embcompress.test.ts</code> copre:
+  </p>
+  <ul>
+    <li>Round-trip <code>compress → expand</code> su fixture reali HUS/VIP/VP3.</li>
+    <li>Confronto byte-per-byte con output di pyembroidery per gli stessi input.</li>
+    <li>Edge case: 1 record, 65535 record (gate), byte nulli, delta di ctrl.</li>
+  </ul>
+  <p>
+    Vedi anche <a href="/docs/testing">Test &amp; fixture</a>.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href="/docs/ir">← IR</a>
+    <a href="/docs/testing">Test →</a>
+  </p>
+</DocLayout>

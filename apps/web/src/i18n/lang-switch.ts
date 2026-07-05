@@ -1,22 +1,35 @@
 /**
- * IT/EN switch buttons in the nav. Shared by both pages; the landing
- * passes an onChange hook (ScrollTrigger refresh), /convert passes none —
- * this module must never import gsap.
+ * Language selector shared by every page. Renders as a <select> dropdown
+ * so the 6 supported locales fit; the landing passes an onChange hook
+ * (ScrollTrigger refresh), /convert passes none — this module must never
+ * import gsap.
  */
-import { currentLang, onLangChange, setLang } from './i18n';
+import { currentLang, onLangChange, setLang, LANGS } from './i18n';
 import type { Lang } from './i18n';
 
 export function initLangSwitch(onChange?: () => void): void {
-  const buttons = document.querySelectorAll<HTMLButtonElement>('.lang-switch button');
-  const sync = (lang: Lang): void => {
-    for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset['lang'] === lang));
-  };
-  sync(currentLang());
-  for (const b of buttons) {
-    b.addEventListener('click', () => setLang(b.dataset['lang'] as Lang));
+  if (typeof document === 'undefined') return;
+  const sel = document.querySelector<HTMLSelectElement>('#lang-select');
+  if (sel === null) return;
+
+  // Populate once (a static <select> with no options is also fine: the
+  // markup may already list the <option>s, in which case we skip filling).
+  if (sel.options.length === 0) {
+    for (const l of LANGS) {
+      const opt = document.createElement('option');
+      opt.value = l.code;
+      opt.textContent = `${l.flag} ${l.label}`;
+      sel.appendChild(opt);
+    }
   }
+  sel.value = currentLang();
+
+  sel.addEventListener('change', () => {
+    setLang(sel.value as Lang);
+  });
+
   onLangChange((lang) => {
-    sync(lang);
+    if (sel.value !== lang) sel.value = lang;
     onChange?.();
   });
 }

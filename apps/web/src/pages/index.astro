@@ -5,6 +5,7 @@ import '../styles/base.css';
 import '../styles/scenes.css';
 import '../styles/converter.css';
 import '../styles/preloader.css';
+import '../styles/footer.css';
 import ConverterSection from '../components/ConverterSection.astro';
 // Preloaded through the Vite pipeline so the URLs stay in sync with the
 // hashed assets the CSS @font-face rules resolve to (base-aware on Pages).
@@ -17,6 +18,8 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const convertHref = `${base}convert/`;
+const docsHref = `${base}docs/`;
+import Footer from '../components/Footer.astro';
 ---
 
 <!doctype html>
@@ -50,10 +53,20 @@ const convertHref = `${base}convert/`;
         </svg>
       </a>
       <div class="nav-right">
-        <div class="lang-switch" role="group" data-i18n-aria="nav.langLabel">
-          <button type="button" data-lang="it">IT</button>
-          <button type="button" data-lang="en">EN</button>
-        </div>
+<a class="nav-docs" href={docsHref} data-i18n="nav.docs">Docs</a>
+        <select
+          id="lang-select"
+          class="lang-select"
+          aria-label="Language"
+          data-i18n-aria="nav.langLabel"
+        >
+          <option value="it">IT Italiano</option>
+          <option value="en">EN English</option>
+          <option value="fr">FR Français</option>
+          <option value="de">DE Deutsch</option>
+          <option value="es">ES Español</option>
+          <option value="pt">PT Português</option>
+        </select>
         <a class="btn btn-primary nav-cta" href={convertHref} data-i18n="nav.cta">Converti ora</a>
       </div>
     </nav>
@@ -154,6 +167,33 @@ const convertHref = `${base}convert/`;
           <p class="footer-tagline" data-i18n="footer.tagline">
             Ricuci i tuoi ricami in un altro formato.
           </p>
+
+          <nav class="footer-links" aria-label="Footer">
+            <a href="/docs" data-i18n="footer.docsLink">Come funziona Restitch</a>
+            <a href="/docs/formats" data-i18n="footer.formatsLink">Formati supportati</a>
+            <a href="/docs/privacy" data-i18n="footer.privacyLink">Privacy</a>
+          </nav>
+
+          <a
+            class="footer-sponsor"
+            href="https://calicchia.design"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="footer-sponsor-label mono" data-i18n="footer.sponsorBy">Sostenuto da</span>
+            <span class="footer-sponsor-badge">
+              <span class="footer-sponsor-text">Calicchia.Design</span>
+              <svg
+                class="footer-sponsor-arrow"
+                viewBox="0 0 12 12"
+                aria-hidden="true"
+                fill="none"
+              >
+                <path d="M3 9 L9 3 M9 3 H4 M9 3 V8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+          </a>
+
           <p class="footer-credit mono" data-i18n="footer.credit">Design e codice: Federico</p>
           <!-- The page-long pink thread ends here, in a small knot. -->
           <svg class="footer-knot" viewBox="0 0 44 32" aria-hidden="true">
@@ -161,6 +201,8 @@ const convertHref = `${base}convert/`;
           </svg>
         </div>
       </footer>
+      <!-- Kept a single inline copy for the landing (pink thread ends here).
+           /convert and the docs pages reuse <Footer /> instead. -->
     </main>
 
     <!-- Stitch-out overlay: the machine sews the user's real design. -->

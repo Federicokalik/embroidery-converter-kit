@@ -1,0 +1,165 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Restitch — Formato ZHS">
+  <h1>ZHS — Husqvarna Viking (newer) / Zeng Hsing</h1>
+  <p class="docs-lede">
+    Reverse-engineered <strong>completamente</strong> da output reali di
+    Artist Toolkit. Il mapping single-color è <strong>verificato</strong>:
+    generare <code>028-B.vip</code> con questa spec produce un file
+    <em>byte-identical</em> a <code>fixtures/028-B.zhs</em> tranne una
+    singola word di metadata a <code>0x83</code>.
+  </p>
+  <blockquote>
+    <strong>Non esiste alcuno ZHS writer open-source al mondo.</strong>
+    pyembroidery / Ink-Stitch / libembroidery sanno <em>leggere</em> ZHS ma
+    non <em>scriverlo</em>. Questa spec è il cuore del progetto — guardala
+    con test di round-trip.
+  </blockquote>
+
+  <h2>Header fisso (offset 0x00–0x85, single-color)</h2>
+  <p>Tutti gli interi multi-byte sono little-endian salvo nota.</p>
+  <table>
+    <thead><tr><th>Offset</th><th>Tipo</th><th>Significato</th></tr></thead>
+    <tbody>
+      <tr><td>0x00</td><td>7 byte</td><td>magic ASCII <code>"HSING12"</code></td></tr>
+      <tr><td>0x07</td><td>uint32</td><td>element count = <code>nData + 1</code></td></tr>
+      <tr><td>0x0B</td><td>uint32</td><td>stitch count <code>nStitches</code> (record 0x02)</td></tr>
+      <tr><td>0x0F</td><td>uint32</td><td><strong>stitchStartOffset</strong> (155 / 0x9B)</td></tr>
+      <tr><td>0x13</td><td>uint32</td><td><strong>headerStartOffset</strong> (134 / 0x86)</td></tr>
+      <tr><td>0x17</td><td>uint32</td><td>150 (0x96) — costante</td></tr>
+      <tr><td>0x1C</td><td>int16</td><td>posX (max X)</td></tr>
+      <tr><td>0x1E</td><td>int16</td><td>negX (min X)</td></tr>
+      <tr><td>0x22</td><td>int16</td><td>posY (max Y)</td></tr>
+      <tr><td>0x24</td><td>int16</td><td>negY (min Y)</td></tr>
+      <tr><td>0x68</td><td>uint32</td><td>stitch count (di nuovo)</td></tr>
+      <tr><td>0x6C/0x6E</td><td>int16×2</td><td>firstX / firstY (delta del primo record)</td></tr>
+      <tr><td>0x74</td><td>uint32</td><td>140 (0x8C) — costante</td></tr>
+      <tr><td>0x7B/0x7D</td><td>int16×2</td><td>lastX / lastY (posizione finale assoluta)</td></tr>
+      <tr><td>0x7F</td><td>uint16</td><td>totalRecords − 2</td></tr>
+      <tr><td>0x83</td><td>uint16</td><td><strong>UNKNOWN editor metadata</strong> (es: 486 vs 2) — vedi nota</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Nota su 0x83</h3>
+  <p>
+    Tra i due campioni di riferimento questo campo vale <code>486</code>
+    (001s-A) e <code>2</code> (028-B). Non correla con <em>nessuna</em>
+    metrica del disegno (numero di punti, extent, somma byte, path, file size
+    — tutte testate). Il reader ZHS <strong>non lo legge mai</strong>.
+    Conclusione: è un valore interno dell'editor Artist Toolkit; lo si può
+    mettere a <code>0</code>. La cucitura fisica in macchina resta il test
+    di accettazione finale.
+  </p>
+
+  <h2>Palette block (offset 0x86, single-color)</h2>
+  <pre><code>uint8   colorCount
+colorCount × 3 byte   RGB, 24-bit BIG-ENDIAN
+uint16  stringLength (LE)
+bytes   thread-metadata string (UTF-8), length = stringLength
+... padding zero fino a stitchStartOffset (0x9B)</code></pre>
+  <p>
+    La stringa è separata da <code>&amp;$</code>/<code>&amp;#</code> (chart,
+    description, catalog). Per le lettere monogramma il blocco è costante:
+  </p>
+  <pre><code>01  34 8D 1A  08 00  "&$&#&#&%"</code></pre>
+  <p>1 colore, RGB <code>#348D1A</code>, stringa di 8 byte <code>&amp;$&amp;#&amp;#&amp;%</code>, poi zero fino a 0x9B.</p>
+
+  <h2>Stitch stream (offset 0x9B)</h2>
+  <p>Lista piatta di <strong>record da 3 byte</strong>: <code>[ctrl, b1, b2]</code>.</p>
+
+  <h3>Control byte</h3>
+  <table>
+    <thead><tr><th>ctrl</th><th>meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x01</code></td><td>MOVE / jump-in</td></tr>
+      <tr><td><code>0x02</code></td><td>STITCH</td></tr>
+      <tr><td><code>0x04</code></td><td>COLOR CHANGE</td></tr>
+      <tr><td><code>0x10</code></td><td>CHECKSUM (vedi sotto)</td></tr>
+      <tr><td><code>0x80</code></td><td>END</td></tr>
+      <tr><td><code>0x41</code></td><td>visto dal reader come "unmapped" — significato ignoto</td></tr>
+      <tr><td><code>0x88?</code></td><td>TRIM — <strong>ignoto</strong>, nessun sample. GAP aperto.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Packing delle coordinate (b1, b2)</h3>
+  <p>
+    <code>dx</code> e <code>dy</code> sono delta signed8 con i bit
+    <strong>interleaved</strong> tra b1 e b2:
+  </p>
+  <pre><code>x.bit0 <- b1.bit0   x.bit1 <- b2.bit1   x.bit2 <- b1.bit2   x.bit3 <- b2.bit3
+x.bit4 <- b1.bit4   x.bit5 <- b2.bit5   x.bit6 <- b1.bit6   x.bit7 <- b2.bit7
+y.bit0 <- b2.bit0   y.bit1 <- b1.bit1   y.bit2 <- b2.bit2   y.bit3 <- b1.bit3
+y.bit4 <- b2.bit4   y.bit5 <- b1.bit5   y.bit6 <- b2.bit6   y.bit7 <- b1.bit7</code></pre>
+  <p>
+    Dopo extraction, i valori sono signed8 con un <strong>range-extension
+    tweak</strong> su <em>decode</em>: <code>if v&gt;=63: v+=1</code> e
+    <code>if v&lt;=-63: v-=1</code>. Su <em>encode</em> si inverte:
+    <code>if v&gt;=64: store v-1</code> e <code>if v&lt;=-64: store v+1</code>.
+  </p>
+  <blockquote>
+    <strong>±63 hole</strong>: un delta di esattamente +63 o −63 non è
+    rappresentabile (63 memorizzato decodifica come 64). Range decodificabile
+    −129..128 meno ±63. Nessun fixture contiene tali delta (max |delta| = 32).
+    Il writer TS calcola i delta contro la posizione <em>decoded</em>, così
+    un ±63 non rappresentabile sfuma a uno scarto di 0,1 mm su quel singolo
+    punto (con warning strutturata) invece di shiftare tutto il disegno.
+  </blockquote>
+  <p>
+    <strong>Segno Y:</strong> il reader emette <code>stitch(x, -y)</code>, o
+    quindi lo <em>stored</em> y coincide con il VIP y. Convertendo VIP→ZHS
+    si copiano i delta VIP direttamente — nessun flip di segno necessario.
+  </p>
+
+  <h3>Record di checksum</h3>
+  <p>
+    Dopo <strong>ogni 84 record dati</strong>, inserire un record di checksum:
+  </p>
+  <pre><code>[0x10, sum & 0xFF, (sum >> 8) & 0xFF]   // somma 16-bit LE di tutti i byte
+                                          // (ctrl+b1+b2) del blocco di 84 record</code></pre>
+
+  <h3>Fine file</h3>
+  <p>
+    Dopo l'ultimo record dati: emettere END <code>[0x80, 0, 0]</code>,
+    <strong>poi</strong> un record di checksum finale sul blocco che contiene
+    l'END.
+  </p>
+
+  <h2>VIP → ZHS record mapping (single-color, verificato)</h2>
+  <ol>
+    <li>Primo record VIP → ZHS <strong>MOVE</strong> <code>[0x01]</code> con lo stesso (dx,dy).</li>
+    <li>Subito dopo, una <strong>tie-in duplicate stitch</strong> <code>[0x02] (0,0)</code>.</li>
+    <li>Ogni stitch VIP successivo → ZHS <strong>STITCH</strong> <code>[0x02]</code> con (dx,dy).</li>
+    <li>Drop del record END VIP; emettere ZHS END + checksum finale.</li>
+  </ol>
+  <p>
+    Vedi <code>reference/zhs_vip_reference.py</code> per l'implementazione
+    eseguibile e testata.
+  </p>
+
+  <h2>Layout multicolore (campioni di fabbrica)</h2>
+  <p>
+    Decodificato da un campione reale di fabbrica a 6 colori / 10 blocchi /
+    9302 punti con gemello <code>.pes</code>. L'header “single-color” di §1
+    è in realtà il caso speciale a 1 blocco di una <strong>tabella per-blocco
+    di righe da 20 byte</strong>. Vedi <code>docs/ZHS_FORMAT.md §5</code> per
+    i dettagli per-blocco (offsets +2/+9/+10/+14/+16/+18, terminator row,
+    palette block con un'entry <code>"&amp;$chart&amp;#desc&amp;#cat&amp;%</code>"
+    per blocco — non per colore unico), il record COLOR_CHANGE (0x04) il cui
+    payload è <em>palette index del blocco successivo</em> (dy=0), e le
+    aperture dei blocchi (MOVE run + tie-in stitch).
+  </p>
+
+  <h3>Tuttora ignoto</h3>
+  <ul>
+    <li><strong>TRIM</strong> — nessun campione contiene trim. <code>0x88</code> resta una guess; il writer <em>droppa i TRIM</em> con <code>TRIM_DROPPED</code> warning (stile JEF); i fili volanti si spuntano a mano.</li>
+    <li>Counter monotonico per-blocco +2, terminator +17 (il vecchio <code>0x83</code>), byte di fabbrica 0x20/0x26 — editor metadata, scritti come 0/costanti.</li>
+    <li><code>0x41</code> — ancora non mappato (assente da tutti i sample).</li>
+  </ul>
+
+  <p class="docs-prevnext">
+    <a href="/docs/formats/vip">← VIP</a>
+    <a href="/docs/formats/pes">PES / PEC →</a>
+  </p>
+</DocLayout>
