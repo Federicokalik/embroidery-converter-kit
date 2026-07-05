@@ -1,0 +1,102 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
+---
+
+<DocLayout title="Ricuci — CLI (command line)" lang="en">
+  <h1>Command line (CLI)</h1>
+  <p class="docs-lede">
+    The same conversions as the web app, from a terminal — for scripts,
+    automation and batch jobs. Zero install with <code>npx</code>, or a
+    standalone binary that needs no Node.
+  </p>
+
+  <h2>Quick start</h2>
+  <pre><code>npx ricuci input.vip output.zhs</code></pre>
+  <p>
+    <code>npx</code> downloads and runs the package in one shot — there is no
+    install step. It needs <strong>Node ≥18</strong>. The package is
+    <a href="https://www.npmjs.com/package/ricuci" target="_blank" rel="noopener">ricuci</a>
+    on npm, with no runtime dependencies (the core is bundled in).
+  </p>
+
+  <h2>Getting it</h2>
+  <ul>
+    <li>
+      <strong>With npx (recommended)</strong> — nothing to install:
+      <code>npx ricuci …</code>
+    </li>
+    <li>
+      <strong>Global install</strong> — if you use it often:
+      <code>npm install -g ricuci</code>, then <code>ricuci …</code>. The
+      package also installs an <code>embconv</code> alias, so scripts written
+      against it keep working.
+    </li>
+    <li>
+      <strong>Standalone binary</strong> — no Node: download
+      <code>embconv-windows-x64.exe</code> / <code>-macos-arm64</code> /
+      <code>-macos-x64</code> / <code>-linux-x64</code> from the
+      <a href="https://github.com/Federicokalik/embroidery-converter-kit/releases/latest" target="_blank" rel="noopener">releases</a>.
+    </li>
+  </ul>
+
+  <h2>Commands</h2>
+
+  <h3>Single conversion</h3>
+  <pre><code>ricuci input.pes output.jef</code></pre>
+  <p>
+    The format is inferred from the file extensions. Any readable format
+    converts to any writable one (see
+    <a href={withBase('en/docs/formats')}>Formats</a>).
+  </p>
+
+  <h3>Inspect a file</h3>
+  <pre><code>ricuci info design.vip --brand janome</code></pre>
+  <p>
+    Prints the format, stitch count, colors, size in mm, the declared hoop
+    and the smallest hoop that fits the design (per brand).
+  </p>
+
+  <h3>Batch conversion</h3>
+  <pre><code>ricuci --batch folder/ --to zhs --out results/</code></pre>
+  <p>
+    Converts every readable file in a folder to the <code>--to</code> format,
+    writing into <code>--out</code> (or the same folder if omitted).
+  </p>
+
+  <h2>Options</h2>
+  <ul>
+    <li>
+      <code>--hoop &lt;WxH&gt;</code> — target hoop in mm (e.g.
+      <code>--hoop 130x180</code>) for formats that declare one
+      (<code>pes</code>, <code>jef</code>, <code>zhs</code>).
+    </li>
+    <li>
+      <code>--center</code> — center the design on the origin before writing.
+    </li>
+    <li>
+      <code>--pause-trims</code> — <code>zhs</code>: stop the machine at each
+      mid-color trim (to cut the thread there) instead of dropping trims
+      silently.
+    </li>
+    <li>
+      <code>--brand &lt;brand&gt;</code> — in <code>info</code>, check the fit
+      against that brand's hoops.
+    </li>
+  </ul>
+
+  <h2>Examples</h2>
+  <pre><code>{String.raw`# convert a folder of PES to ZHS
+ricuci --batch ./designs --to zhs --out ./zhs
+
+# convert declaring a hoop and centering
+ricuci logo.pes logo.jef --hoop 130x180 --center
+
+# how many stitches and colors does this file have?
+ricuci info eagle.dst`}</code></pre>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/architecture')}>← Architecture</a>
+    <a href={withBase('en/docs/formats')}>Formats →</a>
+  </p>
+</DocLayout>

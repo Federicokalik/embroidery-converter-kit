@@ -1,0 +1,104 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import { withBase } from '../../core/base';
+---
+
+<DocLayout title="Ricuci — CLI (riga di comando)">
+  <h1>Riga di comando (CLI)</h1>
+  <p class="docs-lede">
+    Le stesse conversioni della web app, da terminale — per script,
+    automazioni e conversioni in blocco. Zero installazione con
+    <code>npx</code>, oppure un binario standalone che non richiede Node.
+  </p>
+
+  <h2>Avvio rapido</h2>
+  <pre><code>npx ricuci ingresso.vip uscita.zhs</code></pre>
+  <p>
+    <code>npx</code> scarica ed esegue il pacchetto in un colpo solo: non c'è
+    un passo di installazione. Serve <strong>Node ≥18</strong>. Il pacchetto è
+    <a href="https://www.npmjs.com/package/ricuci" target="_blank" rel="noopener">ricuci</a>
+    su npm, senza dipendenze runtime (il core è già dentro il bundle).
+  </p>
+
+  <h2>Come averla</h2>
+  <ul>
+    <li>
+      <strong>Con npx (consigliato)</strong> — niente da installare:
+      <code>npx ricuci …</code>
+    </li>
+    <li>
+      <strong>Installazione globale</strong> — se la usi spesso:
+      <code>npm install -g ricuci</code>, poi <code>ricuci …</code>. Il
+      pacchetto installa anche l'alias <code>embconv</code>, così i vecchi
+      script continuano a funzionare.
+    </li>
+    <li>
+      <strong>Binario standalone</strong> — senza Node: scarica
+      <code>embconv-windows-x64.exe</code> / <code>-macos-arm64</code> /
+      <code>-macos-x64</code> / <code>-linux-x64</code> dalle
+      <a href="https://github.com/Federicokalik/embroidery-converter-kit/releases/latest" target="_blank" rel="noopener">release</a>.
+    </li>
+  </ul>
+
+  <h2>Comandi</h2>
+
+  <h3>Conversione singola</h3>
+  <pre><code>ricuci ingresso.pes uscita.jef</code></pre>
+  <p>
+    Il formato è dedotto dall'estensione dei file. Qualunque formato
+    leggibile si converte in qualunque formato scrivibile (vedi
+    <a href={withBase('docs/formats')}>Formati</a>).
+  </p>
+
+  <h3>Informazioni su un file</h3>
+  <pre><code>ricuci info disegno.vip --brand janome</code></pre>
+  <p>
+    Stampa formato, numero di punti, colori, misure in mm, telaio dichiarato
+    e il telaio più piccolo che contiene il disegno (per marca).
+  </p>
+
+  <h3>Conversione in blocco</h3>
+  <pre><code>ricuci --batch cartella/ --to zhs --out risultati/</code></pre>
+  <p>
+    Converte tutti i file leggibili di una cartella nel formato
+    <code>--to</code>, scrivendo in <code>--out</code> (o nella stessa
+    cartella se omesso).
+  </p>
+
+  <h2>Opzioni</h2>
+  <ul>
+    <li>
+      <code>--hoop &lt;LxA&gt;</code> — telaio di destinazione in mm (es.
+      <code>--hoop 130x180</code>) per i formati che lo dichiarano
+      (<code>pes</code>, <code>jef</code>, <code>zhs</code>).
+    </li>
+    <li>
+      <code>--center</code> — centra il disegno sull'origine prima di
+      scrivere.
+    </li>
+    <li>
+      <code>--pause-trims</code> — <code>zhs</code>: ferma la macchina a ogni
+      taglio di metà colore (per spuntare il filo lì) invece di scartare i
+      tagli in silenzio.
+    </li>
+    <li>
+      <code>--brand &lt;marca&gt;</code> — in <code>info</code>, valuta il fit
+      contro i telai di quella marca.
+    </li>
+  </ul>
+
+  <h2>Esempi</h2>
+  <pre><code>{String.raw`# converti una cartella di PES in ZHS
+ricuci --batch ./ricami --to zhs --out ./zhs
+
+# converti dichiarando il telaio e centrando
+ricuci logo.pes logo.jef --hoop 130x180 --center
+
+# quanti punti e colori ha questo file?
+ricuci info aquila.dst`}</code></pre>
+
+  <p class="docs-prevnext">
+    <a href={withBase('docs/architecture')}>← Architettura</a>
+    <a href={withBase('docs/formats')}>Formati →</a>
+  </p>
+</DocLayout>
