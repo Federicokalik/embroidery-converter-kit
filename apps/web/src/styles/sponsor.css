@@ -1,91 +1,120 @@
-/* Floating sponsor badge (Calicchia Design), bottom-right on every page.
-   A holographic-foil wordmark on a dark card — the ink surface makes the
-   iridescence pop like a holo sticker. Revealed and driven by sponsor.ts. */
+/* Floating sponsor tab (Calicchia Design), bottom-right on every page.
+   Collapsed to a small iridescent-tilde mark; expands to the full
+   holographic wordmark + CTA on hover or during the one-time tease
+   (sponsor.ts). */
 
 .sponsor {
   position: fixed;
-  right: clamp(0.9rem, 2vw, 1.5rem);
-  bottom: clamp(0.9rem, 2vw, 1.5rem);
+  right: clamp(0.9rem, 2vw, 1.4rem);
+  bottom: clamp(0.9rem, 2vw, 1.4rem);
   z-index: 65; /* above content + grain, below the stitch-out overlay (80) */
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
-  --sheen-x: 50%;
 }
 
-/* Slide-in once sponsor.ts clears [hidden] and adds .is-in. */
-.sponsor.is-in .sponsor-card {
-  animation: sponsor-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+.sponsor-tab {
+  display: block;
+  text-decoration: none;
 }
 
-@keyframes sponsor-in {
-  from {
-    opacity: 0;
-    transform: translateY(14px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
+/* ---------- Collapsed mark ---------- */
 
-.sponsor-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: clamp(150px, 42vw, 184px);
-  padding: 0.85rem 1rem 0.9rem;
-  border-radius: 16px;
+.sponsor-mark {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-left: auto; /* hug the right edge */
+  border-radius: 15px;
   background: var(--ink);
   border: 1px solid rgb(244 244 242 / 0.1);
-  box-shadow:
-    0 10px 30px -12px rgb(20 20 20 / 0.45),
-    0 2px 8px -4px rgb(20 20 20 / 0.3);
-  text-decoration: none;
-  overflow: hidden;
-  transform: perspective(600px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  box-shadow: 0 8px 22px -10px rgb(20 20 20 / 0.45);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
 
-.sponsor-card:hover {
-  box-shadow:
-    0 16px 40px -12px rgb(20 20 20 / 0.55),
-    0 3px 10px -4px rgb(20 20 20 / 0.35);
+.sponsor-mark svg {
+  width: 30px;
+  height: auto;
+  overflow: visible;
 }
 
-.sponsor-kicker {
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgb(244 244 242 / 0.55);
+.sponsor:hover .sponsor-mark {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px -10px rgb(20 20 20 / 0.55);
+}
+
+/* One-time attention nudge on the mark. */
+.sponsor.is-teasing .sponsor-mark {
+  animation: sponsor-nudge 1.1s ease-in-out;
+}
+
+@keyframes sponsor-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px) rotate(-3deg);
+  }
+  60% {
+    transform: translateY(-1px) rotate(2deg);
+  }
+}
+
+/* ---------- Expanding panel ---------- */
+
+.sponsor-reveal {
+  position: absolute;
+  right: 62px; /* left of the 52px mark + gap */
+  bottom: 0;
+  width: 214px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.9rem 1rem 0.95rem;
+  border-radius: 16px;
+  background: var(--ink);
+  border: 1px solid rgb(244 244 242 / 0.1);
+  box-shadow: 0 14px 40px -14px rgb(20 20 20 / 0.55);
+  opacity: 0;
+  transform: translateX(12px) scale(0.98);
+  transform-origin: bottom right;
+  pointer-events: none;
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sponsor:hover .sponsor-reveal,
+.sponsor:focus-within .sponsor-reveal,
+.sponsor.is-teasing .sponsor-reveal {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
 }
 
 .sponsor-logo {
   display: block;
-  width: 94%;
+  width: 100%;
   height: auto;
-  margin: 0 auto;
-  /* Foil pops off the dark card with a faint glow. */
   filter: drop-shadow(0 0 8px rgb(255 46 136 / 0.15));
 }
 
-
-/* Moving specular highlight: a soft light band that follows the pointer,
-   reinforcing the metallic read on top of the SVG foil. */
-.sponsor-sheen {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  mix-blend-mode: soft-light;
-  background: radial-gradient(
-    120px 120px at var(--sheen-x) 0%,
-    rgb(255 255 255 / 0.5),
-    transparent 60%
-  );
-  opacity: 0.7;
+.sponsor-cta {
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: rgb(244 244 242 / 0.72);
 }
+
+.sponsor-arrow {
+  color: var(--pink);
+}
+
+.sponsor-tab:hover .sponsor-cta {
+  color: var(--paper);
+}
+
+/* ---------- Close ---------- */
 
 .sponsor-close {
   position: absolute;
@@ -112,6 +141,7 @@
 }
 
 .sponsor:hover .sponsor-close,
+.sponsor.is-teasing .sponsor-close,
 .sponsor-close:focus-visible {
   opacity: 1;
   transform: scale(1);
@@ -132,26 +162,27 @@
 }
 
 /* Dismissing: fade out, then sponsor.ts sets [hidden]. */
-.sponsor.is-out .sponsor-card {
+.sponsor.is-out {
   opacity: 0;
-  transform: translateY(10px) scale(0.96);
+  transform: translateY(10px);
   transition:
     opacity 0.25s ease,
     transform 0.25s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sponsor.is-in .sponsor-card {
+  .sponsor.is-teasing .sponsor-mark {
     animation: none;
   }
-  .sponsor-card {
+  .sponsor-reveal {
+    transition: opacity 0.2s ease;
     transform: none;
   }
 }
 
-/* Keep the badge out of the way on small screens. */
-@media (max-width: 560px) {
-  .sponsor-card {
-    width: 140px;
+/* Narrow screens: keep the panel on-screen. */
+@media (max-width: 380px) {
+  .sponsor-reveal {
+    width: min(214px, calc(100vw - 5rem));
   }
 }

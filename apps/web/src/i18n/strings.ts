@@ -449,13 +449,13 @@ export const STRINGS: Record<string, Entry> = {
     es: 'Re-cose tus bordados en otro formato.',
     pt: 'Re-costure seus bordados em outro formato.',
   },
-  'footer.credit': {
-    it: 'Un progetto di Federico Calicchia.',
-    en: 'A project by Federico Calicchia.',
-    fr: 'Un projet de Federico Calicchia.',
-    de: 'Ein Projekt von Federico Calicchia.',
-    es: 'Un proyecto de Federico Calicchia.',
-    pt: 'Um projeto de Federico Calicchia.',
+  'footer.creditBy': {
+    it: 'Un progetto di',
+    en: 'A project by',
+    fr: 'Un projet de',
+    de: 'Ein Projekt von',
+    es: 'Un proyecto de',
+    pt: 'Um projeto de',
   },
   'footer.docsLink': {
     it: 'Come funziona Ricuci',
@@ -468,8 +468,15 @@ export const STRINGS: Record<string, Entry> = {
   'footer.formatsLink': { it: 'Formati supportati', en: 'Supported formats', fr: 'Formats pris en charge', de: 'Unterstützte Formate', es: 'Formatos soportados', pt: 'Formatos suportados' },
   'footer.privacyLink': { it: 'Privacy', en: 'Privacy', fr: 'Confidentialité', de: 'Datenschutz', es: 'Privacidad', pt: 'Privacidade' },
 
-  // Floating sponsor badge
-  'sponsor.kicker': { it: 'Sostenuto da', en: 'Sponsored by', fr: 'Soutenu par', de: 'Gesponsert von', es: 'Apoyado por', pt: 'Apoiado por' },
+  // Floating sponsor tab (Calicchia Design)
+  'sponsor.cta': {
+    it: 'Sito o piattaforma web? Parliamone',
+    en: 'A website or a platform? Let’s talk',
+    fr: 'Un site ou une plateforme ? Parlons-en',
+    de: 'Website oder Plattform? Sprich mich an',
+    es: '¿Una web o una plataforma? Hablemos',
+    pt: 'Um site ou uma plataforma? Vamos conversar',
+  },
   'sponsor.close': { it: 'Chiudi', en: 'Close', fr: 'Fermer', de: 'Schließen', es: 'Cerrar', pt: 'Fechar' },
 
   // Docs pages

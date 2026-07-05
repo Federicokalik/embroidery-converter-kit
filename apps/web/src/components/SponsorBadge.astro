@@ -1,10 +1,10 @@
 ---
-// Floating sponsor badge, shown bottom-right on every page. A holographic
-// foil rendering of the Calicchia Design wordmark on a dark card — like a
-// holo sticker — linking to calicchia.design. Dismissible: sponsor.ts
-// remembers the choice in localStorage and reveals the badge (hidden here
-// so a dismissed visitor never sees a flash). The pointer tilt + reduced-
-// motion handling also live in sponsor.ts.
+// Floating sponsor tab (Calicchia Design), bottom-right on every page.
+// Collapsed by default to a small iridescent mark (the brand tilde); it
+// teases open once shortly after load and expands on hover into the full
+// holographic wordmark + a CTA, advertising the studio's web/platform work.
+// Dismissible (sponsor.ts remembers it in localStorage; the aside starts
+// [hidden] so a dismissed visitor sees no flash).
 import CalicchiaLogo from './CalicchiaLogo.astro';
 import { translate } from '../i18n/i18n';
 import type { Lang } from '../i18n/i18n';
@@ -13,11 +13,32 @@ interface Props {
   lang?: Lang;
 }
 const { lang = 'it' } = Astro.props;
-const kicker = translate(lang, 'sponsor.kicker');
+const cta = translate(lang, 'sponsor.cta');
 const closeLabel = translate(lang, 'sponsor.close');
+
+// The signature tilde (from the Calicchia Design wordmark), framed tight.
+const TILDE =
+  'M113.9,303.8c10.1,4.2,20.6,8.5,31.4,12.7,10,3.9,21.2,5.9,33.4,5.9,17.7,0,32.5-6.1,45.3-18.5v-30.9c-13.5,12.3-28.8,18.5-45.7,18.5s-23.5-2.3-34.4-6.9c-10.2-4.3-20.7-8.5-31.4-12.7-10-3.9-21.2-5.9-33.4-5.9-17.7,0-32.5,6.1-45.3,18.5v30.9c13.5-12.3,28.8-18.5,45.7-18.5s23.5,2.3,34.4,6.9Z';
 ---
 
-<aside class="sponsor" id="sponsor" hidden aria-label={kicker}>
+<aside class="sponsor" id="sponsor" hidden aria-label="Calicchia Design">
+  <a
+    class="sponsor-tab"
+    id="sponsor-card"
+    href="https://calicchia.design"
+    target="_blank"
+    rel="noopener sponsored"
+  >
+    <span class="sponsor-reveal">
+      <CalicchiaLogo class="sponsor-logo" />
+      <span class="sponsor-cta mono" data-i18n="sponsor.cta">{cta} <span class="sponsor-arrow" aria-hidden="true">→</span></span>
+    </span>
+    <span class="sponsor-mark" aria-hidden="true">
+      <svg viewBox="26 250 240 88" xmlns="http://www.w3.org/2000/svg">
+        <path d={TILDE} fill="#F57F44"></path>
+      </svg>
+    </span>
+  </a>
   <button
     type="button"
     class="sponsor-close"
@@ -27,15 +48,4 @@ const closeLabel = translate(lang, 'sponsor.close');
   >
     <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" /></svg>
   </button>
-  <a
-    class="sponsor-card"
-    id="sponsor-card"
-    href="https://calicchia.design"
-    target="_blank"
-    rel="noopener sponsored"
-  >
-    <span class="sponsor-kicker mono" data-i18n="sponsor.kicker">{kicker}</span>
-    <CalicchiaLogo class="sponsor-logo" />
-    <span class="sponsor-sheen" aria-hidden="true"></span>
-  </a>
 </aside>

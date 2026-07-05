@@ -1,8 +1,7 @@
-// Floating sponsor badge behavior, shared by every page (landing, /convert,
-// docs). Reveals the badge unless the visitor dismissed it, wires the close
-// button (persisted in localStorage), and adds a pointer-driven tilt +
-// specular sheen. Under prefers-reduced-motion it stays flat and pauses the
-// SVG foil animation.
+// Floating sponsor tab behavior, shared by every page. Reveals the tab
+// unless dismissed, plays a one-time tease (pop open, then tuck back), and
+// wires the close button (persisted in localStorage). Hover/focus expansion
+// is pure CSS. Under prefers-reduced-motion the SVG foil is paused.
 
 const DISMISS_KEY = 'ricuci-sponsor-dismissed';
 
@@ -19,22 +18,24 @@ export function initSponsor(): void {
   if (root === null) return;
   if (isDismissed()) return; // stays [hidden]
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   root.hidden = false;
-  requestAnimationFrame(() => root.classList.add('is-in'));
 
-  const card = document.getElementById('sponsor-card');
+  // One-time tease: pop the panel open a moment after load, then tuck it
+  // back to the mark (CSS :hover keeps it open if the visitor engages).
+  const openTimer = window.setTimeout(() => root.classList.add('is-teasing'), 3800);
+  const closeTimer = window.setTimeout(() => root.classList.remove('is-teasing'), 7400);
+
   const close = document.getElementById('sponsor-close');
-
   close?.addEventListener('click', (e) => {
     e.preventDefault();
+    window.clearTimeout(openTimer);
+    window.clearTimeout(closeTimer);
     try {
       localStorage.setItem(DISMISS_KEY, '1');
     } catch {
       // storage unavailable: dismiss for this view only
     }
-    root.classList.remove('is-in');
+    root.classList.remove('is-teasing');
     root.classList.add('is-out');
     window.setTimeout(() => {
       root.hidden = true;
@@ -42,27 +43,7 @@ export function initSponsor(): void {
     }, 280);
   });
 
-  if (reduced) {
-    // Freeze the SVG foil shimmer.
-    root.querySelector<SVGSVGElement>('svg.cd-logo')?.pauseAnimations?.();
-    return;
-  }
-
-  // Pointer tilt + sheen: map the cursor over the card to a small 3D tilt
-  // and move the highlight with it.
-  if (card !== null) {
-    card.addEventListener('pointermove', (e) => {
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width; // 0..1
-      const py = (e.clientY - r.top) / r.height; // 0..1
-      root.style.setProperty('--tilt-y', `${(px - 0.5) * 10}deg`);
-      root.style.setProperty('--tilt-x', `${(0.5 - py) * 10}deg`);
-      root.style.setProperty('--sheen-x', `${px * 100}%`);
-    });
-    card.addEventListener('pointerleave', () => {
-      root.style.setProperty('--tilt-x', '0deg');
-      root.style.setProperty('--tilt-y', '0deg');
-      root.style.setProperty('--sheen-x', '50%');
-    });
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    root.querySelector<SVGSVGElement>('.sponsor-reveal svg.cd-logo')?.pauseAnimations?.();
   }
 }

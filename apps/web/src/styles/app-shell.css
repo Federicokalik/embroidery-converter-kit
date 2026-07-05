@@ -1,0 +1,276 @@
+/* Desktop app-shell: a persistent left rail + a scrolling content column.
+   Layout only — every colour, font and radius comes from base.css tokens.
+   Used exclusively by the desktop build (DesktopLayout.astro); the public
+   site never ships this file. */
+
+:root {
+  --rail: 248px;
+}
+
+/* The rail replaces the web's fixed top nav, so the page grid owns the height. */
+body.app-shell {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+/* ---------- Left rail ---------- */
+
+.app-rail {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.6rem 1.1rem;
+  background: var(--paper-2);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+}
+
+.app-rail .wordmark {
+  font-size: 1.35rem;
+  padding-inline: 0.5rem;
+}
+
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.app-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  font: 500 0.95rem var(--font-sans);
+  border-left: 3px solid transparent;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.app-nav-link:hover {
+  background: rgb(20 20 20 / 0.05);
+}
+
+.app-nav-link[aria-current='page'] {
+  background: rgb(20 20 20 / 0.06);
+  border-left-color: var(--pink);
+  font-weight: 600;
+}
+
+.app-nav-link svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex: none;
+}
+
+/* Push the footer (language + version) to the bottom of the rail. */
+.app-rail-spacer {
+  flex: 1;
+}
+
+.app-rail-foot {
+  display: grid;
+  gap: 0.75rem;
+  padding-inline: 0.25rem;
+}
+
+.app-rail-foot .lang-select {
+  width: 100%;
+}
+
+.app-version {
+  font: 400 0.72rem var(--font-mono);
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+  padding-inline: 0.5rem;
+}
+
+/* ---------- Content column ---------- */
+
+.app-content {
+  min-width: 0;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* No fixed top nav in the app: drop the nav-height offset the web page bakes
+   into .app-main, and let the content breathe from the rail instead. */
+body.app-shell .app-main {
+  width: 100%;
+  max-width: 1040px;
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vh, 3rem) 4rem;
+}
+
+/* The convert-all bar sticks to the top of the scroll, not below a phantom nav. */
+body.app-shell .studio .queue-bar {
+  top: 0.75rem;
+}
+
+/* ---------- Prose pages (Credits / License / About) ---------- */
+
+.app-page {
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vh, 3rem) 4rem;
+}
+
+.app-page h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0 0 0.4rem;
+}
+
+.app-page .app-lede {
+  color: var(--ink-soft);
+  margin: 0 0 2.25rem;
+  font-size: 1rem;
+}
+
+.app-page h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-size: 1.3rem;
+  margin: 2.25rem 0 0.6rem;
+}
+
+.app-page p,
+.app-page li {
+  color: var(--ink);
+  max-width: 68ch;
+}
+
+.app-page a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
+  text-underline-offset: 3px;
+}
+
+.app-page code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.08em 0.4em;
+}
+
+/* A framed block for long legal / license text. */
+.app-legal {
+  margin-top: 1rem;
+  padding: 1.1rem 1.3rem;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-surface);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  color: var(--ink-soft);
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.app-credit-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.app-credit-list li {
+  padding-left: 1rem;
+  border-left: 2px solid var(--line);
+}
+
+.app-credit-list strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.app-credit-list .app-credit-lic {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Narrow windows (the app can be resized down to 600px) ---------- */
+
+@media (max-width: 760px) {
+  body.app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .app-rail {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .app-rail .wordmark {
+    padding-inline: 0;
+  }
+
+  .app-nav {
+    flex-direction: row;
+    gap: 0.15rem;
+  }
+
+  .app-nav-link {
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+
+  .app-nav-link[aria-current='page'] {
+    border-left-color: transparent;
+    border-bottom-color: var(--pink);
+  }
+
+  .app-nav-link svg {
+    display: none;
+  }
+
+  .app-rail-spacer {
+    display: none;
+  }
+
+  .app-rail-foot {
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 0.6rem;
+    margin-left: auto;
+  }
+
+  .app-rail-foot .lang-select {
+    width: auto;
+  }
+
+  .app-version {
+    display: none;
+  }
+}
