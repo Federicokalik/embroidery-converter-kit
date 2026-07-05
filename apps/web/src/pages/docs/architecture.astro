@@ -1,5 +1,6 @@
 ---
 import DocLayout from '../../layouts/DocLayout.astro';
+import { withBase } from '../../core/base';
 ---
 
 <DocLayout title="Restitch — Architettura">
@@ -39,7 +40,7 @@ import DocLayout from '../../layouts/DocLayout.astro';
   <h2>IR condivisa</h2>
   <p>
     Il <code>Pattern</code> è modellato su <code>EmbPattern</code> di
-    pyembroidery, ma in TypeScript strict. Vedi la <a href="/docs/ir">pagina
+    pyembroidery, ma in TypeScript strict. Vedi la <a href={withBase('docs/ir')}>pagina
     IR</a> per il tipo esatto. È il contratto tra ogni reader e ogni writer.
   </p>
 
@@ -60,7 +61,7 @@ import DocLayout from '../../layouts/DocLayout.astro';
     <li>Scrittori: DST, PES (facili, ben documentati). Poi JEF, VP3, HUS, VIP, XXX.</li>
     <li>Web app: drag-drop + scarico singolo + Studio (coda + pannello).</li>
     <li>CLI batch. (Desktop è futuro.)</li>
-    <li>Multi-colore / trim ZHS writing — <strong>solo dopo</strong> aver ottenuto sample <code>.zhs</code> con trims (vedi <a href="/docs/formats/zhs">ZHS</a>).</li>
+    <li>Multi-colore / trim ZHS writing — <strong>solo dopo</strong> aver ottenuto sample <code>.zhs</code> con trims (vedi <a href={withBase('docs/formats/zhs')}>ZHS</a>).</li>
   </ol>
 
   <h2>Perché un monorepo</h2>
@@ -72,7 +73,7 @@ import DocLayout from '../../layouts/DocLayout.astro';
   </p>
 
   <p class="docs-prevnext">
-    <a href="/docs/how-it-works">← Come funziona</a>
-    <a href="/docs/formats">Tutti i formati →</a>
+    <a href={withBase('docs/how-it-works')}>← Come funziona</a>
+    <a href={withBase('docs/formats')}>Tutti i formati →</a>
   </p>
 </DocLayout>

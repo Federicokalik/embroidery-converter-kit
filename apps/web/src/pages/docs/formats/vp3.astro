@@ -1,5 +1,6 @@
 ---
 import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
 ---
 
 <DocLayout title="Restitch — VP3">
@@ -16,7 +17,7 @@ import DocLayout from '../../../layouts/DocLayout.astro';
     <li><strong>Trims</strong>: supportati.</li>
     <li><strong>Colori</strong>: thread objects con metadati estesi (manufacturer-style).</li>
     <li><strong>Telaio</strong>: memorizzato nel formato.</li>
-    <li><strong>Compressione</strong>: EmbCompress (<a href="/docs/embcompress">vedi</a>).</li>
+    <li><strong>Compressione</strong>: EmbCompress (<a href={withBase('docs/embcompress')}>vedi</a>).</li>
   </ul>
 
   <h2>Strumento di riferimento</h2>
@@ -27,7 +28,7 @@ import DocLayout from '../../../layouts/DocLayout.astro';
   </p>
 
   <p class="docs-prevnext">
-    <a href="/docs/formats/jef">← JEF</a>
-    <a href="/docs/formats/exp">EXP →</a>
+    <a href={withBase('docs/formats/jef')}>← JEF</a>
+    <a href={withBase('docs/formats/exp')}>EXP →</a>
   </p>
 </DocLayout>

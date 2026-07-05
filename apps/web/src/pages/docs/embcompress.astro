@@ -1,5 +1,6 @@
 ---
 import DocLayout from '../../layouts/DocLayout.astro';
+import { withBase } from '../../core/base';
 ---
 
 <DocLayout title="Restitch — EmbCompress">
@@ -51,11 +52,11 @@ compress(data: Uint8Array): Uint8Array</code></pre>
     <li>Edge case: 1 record, 65535 record (gate), byte nulli, delta di ctrl.</li>
   </ul>
   <p>
-    Vedi anche <a href="/docs/testing">Test &amp; fixture</a>.
+    Vedi anche <a href={withBase('docs/testing')}>Test &amp; fixture</a>.
   </p>
 
   <p class="docs-prevnext">
-    <a href="/docs/ir">← IR</a>
-    <a href="/docs/testing">Test →</a>
+    <a href={withBase('docs/ir')}>← IR</a>
+    <a href={withBase('docs/testing')}>Test →</a>
   </p>
 </DocLayout>

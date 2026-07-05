@@ -1,5 +1,6 @@
 ---
 import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
 ---
 
 <DocLayout title="Restitch — EXP">
@@ -32,7 +33,7 @@ import DocLayout from '../../../layouts/DocLayout.astro';
   </p>
 
   <p class="docs-prevnext">
-    <a href="/docs/formats/vp3">← VP3</a>
-    <a href="/docs/ir">Intermediate Representation →</a>
+    <a href={withBase('docs/formats/vp3')}>← VP3</a>
+    <a href={withBase('docs/ir')}>Intermediate Representation →</a>
   </p>
 </DocLayout>

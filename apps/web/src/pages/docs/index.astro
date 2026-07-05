@@ -1,6 +1,7 @@
 ---
 import DocLayout from '../../layouts/DocLayout.astro';
 const title = 'Restitch — Docs';
+import { withBase } from '../../core/base';
 ---
 
 <DocLayout title={title}>
@@ -14,10 +15,10 @@ const title = 'Restitch — Docs';
 
   <h2>Da dove partire</h2>
   <ul>
-    <li><a href="/docs/how-it-works">Come funziona</a> — il flusso di una conversione, dalla prima all'ultima istruzione.</li>
-    <li><a href="/docs/architecture">Architettura</a> — come è organizzato il monorepo (core + web + cli) e perché.</li>
-    <li><a href="/docs/formats">Tutti i formati</a> — quali formati legge e scrive, e cosa sa o non sa di ciascuno.</li>
-    <li><a href="/docs/privacy">Privacy</a> — perché tutto può accendere nel browser senza nemmeno un server.</li>
+    <li><a href={withBase('docs/how-it-works')}>Come funziona</a> — il flusso di una conversione, dalla prima all'ultima istruzione.</li>
+    <li><a href={withBase('docs/architecture')}>Architettura</a> — come è organizzato il monorepo (core + web + cli) e perché.</li>
+    <li><a href={withBase('docs/formats')}>Tutti i formati</a> — quali formati legge e scrive, e cosa sa o non sa di ciascuno.</li>
+    <li><a href={withBase('docs/privacy')}>Privacy</a> — perché tutto può accendere nel browser senza nemmeno un server.</li>
   </ul>
 
   <h2>Per chi è scritto</h2>
@@ -39,7 +40,7 @@ const title = 'Restitch — Docs';
       </tr>
     </thead>
     <tbody>
-      <tr><td><code>/docs/how-it-works</code></td><td>Da file上传 a download: lettura, IR, scrittura.</td></tr>
+      <tr><td><code>/docs/how-it-works</code></td><td>Dal drop del file al download: lettura, IR, scrittura.</td></tr>
       <tr><td><code>/docs/architecture</code></td><td>Monorepo, IR, ordine di porting, testing.</td></tr>
       <tr><td><code>/docs/formats</code></td><td>Tabella di ciò che viene letto e scritto.</td></tr>
       <tr><td><code>/docs/formats/[fmt]</code></td><td>Una pagina per ogni formato supportato.</td></tr>
@@ -52,6 +53,6 @@ const title = 'Restitch — Docs';
 
   <p class="docs-prevnext">
     <span></span>
-    <a href="/docs/how-it-works">Come funziona →</a>
+    <a href={withBase('docs/how-it-works')}>Come funziona →</a>
   </p>
 </DocLayout>

@@ -7,6 +7,11 @@ import '../styles/footer.css';
 import '../styles/docs.css';
 import DocsNav from '../components/DocsNav.astro';
 import Footer from '../components/Footer.astro';
+import { siteBase, withBase } from '../core/base';
+// Same Vite-piped font URLs as the other pages (hashed, base-aware).
+import displayFontUrl from '../assets/fonts/BricolageGrotesque-SemiBold.woff2?url';
+import sansFontUrl from '../assets/fonts/InstrumentSans-Regular.woff2?url';
+import monoFontUrl from '../assets/fonts/JetBrainsMono-Regular.woff2?url';
 
 interface NavItem {
   href: string;
@@ -51,8 +56,9 @@ const groups: NavGroup[] = [
 ];
 
 // Mark the active item via aria-current when the current path equals the
-// item href (or starts with it, for index pages).
-const here = Astro.url.pathname;
+// item href (or starts with it, for index pages). Compare base-relative:
+// Astro.url.pathname includes the site base on Pages builds.
+const here = `/${Astro.url.pathname.slice(siteBase.length)}`;
 const isActive = (href: string): boolean => {
   if (href === '/docs') return here === '/docs/';
   return href !== '/docs' && (here === href + '/' || here === href);
@@ -60,7 +66,9 @@ const isActive = (href: string): boolean => {
 ---
 
 <!doctype html>
-<html lang="it">
+{/* data-theme="light": the site identity is light-only; without this Pico
+    follows prefers-color-scheme and flips the docs to its dark palette. */}
+<html lang="it" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -69,8 +77,9 @@ const isActive = (href: string): boolean => {
       name="description"
       content={Astro.props.description ?? 'Come funziona Restitch, dentro e fuori.'}
     />
-    <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={displayFontUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansFontUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={monoFontUrl} as="font" type="font/woff2" crossorigin />
     <link
       rel="icon"
       type="image/svg+xml"
@@ -88,7 +97,7 @@ const isActive = (href: string): boolean => {
             <ul>
               {group.items.map((item) => (
                 <li>
-                  <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                  <a href={withBase(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
                     {item.label}
                   </a>
                 </li>

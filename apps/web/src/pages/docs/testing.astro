@@ -1,5 +1,6 @@
 ---
 import DocLayout from '../../layouts/DocLayout.astro';
+import { withBase } from '../../core/base';
 ---
 
 <DocLayout title="Restitch — Test & fixture">
@@ -82,7 +83,7 @@ python3 reference/zhs_vip_reference.py verify fixtures/028-B.vip fixtures/028-B.
   </p>
 
   <p class="docs-prevnext">
-    <a href="/docs/embcompress">← EmbCompress</a>
-    <a href="/docs/privacy">Privacy →</a>
+    <a href={withBase('docs/embcompress')}>← EmbCompress</a>
+    <a href={withBase('docs/privacy')}>Privacy →</a>
   </p>
 </DocLayout>

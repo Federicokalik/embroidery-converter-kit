@@ -1,5 +1,6 @@
 ---
 import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
 ---
 
 <DocLayout title="Restitch — Formato VIP">
@@ -99,11 +100,11 @@ ys       = EmbCompress.expand(y_block,       numberOfStitches)  // signed8 delta
     <code>pyembroidery/EmbCompress.py</code> (licenza MIT). Per
     <strong>leggere</strong> VIP/HUS/VP3 serve solo <code>expand()</code>; per
     scrivere serve anche <code>compress()</code>. Vedi la pagina
-    <a href="/docs/embcompress">EmbCompress</a>.
+    <a href={withBase('docs/embcompress')}>EmbCompress</a>.
   </p>
 
   <p class="docs-prevnext">
-    <a href="/docs/formats">← Tutti i formati</a>
-    <a href="/docs/formats/zhs">ZHS →</a>
+    <a href={withBase('docs/formats')}>← Tutti i formati</a>
+    <a href={withBase('docs/formats/zhs')}>ZHS →</a>
   </p>
 </DocLayout>

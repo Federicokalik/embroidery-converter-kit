@@ -1,5 +1,6 @@
 ---
 import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
 ---
 
 <DocLayout title="Restitch — Formato ZHS">
@@ -159,7 +160,7 @@ y.bit4 <- b2.bit4   y.bit5 <- b1.bit5   y.bit6 <- b2.bit6   y.bit7 <- b1.bit7</c
   </ul>
 
   <p class="docs-prevnext">
-    <a href="/docs/formats/vip">← VIP</a>
-    <a href="/docs/formats/pes">PES / PEC →</a>
+    <a href={withBase('docs/formats/vip')}>← VIP</a>
+    <a href={withBase('docs/formats/pes')}>PES / PEC →</a>
   </p>
 </DocLayout>

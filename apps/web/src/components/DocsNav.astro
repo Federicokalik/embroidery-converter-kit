@@ -3,17 +3,18 @@
 // converter nav (wordmark + Docs entry hidden on docs pages themselves +
 // language selector), so the i18n dropdown still works here.
 import { LANGS } from '../i18n/i18n';
+import { siteBase, withBase } from '../core/base';
 ---
 
 <nav class="nav" aria-label="Restitch">
-  <a class="wordmark" href="/">
+  <a class="wordmark" href={siteBase}>
     Restitch
     <svg class="wordmark-stitch" viewBox="0 0 120 8" aria-hidden="true" preserveAspectRatio="none">
       <path d="M2 5 Q16 1 30 5 T58 5 T86 5 T114 5" pathLength="1"></path>
     </svg>
   </a>
   <div class="nav-right">
-    <a class="nav-docs" href="/convert" data-i18n="nav.cta">Converti ora</a>
+    <a class="nav-docs" href={withBase('convert/')} data-i18n="nav.cta">Converti ora</a>
     <select
       id="lang-select"
       class="lang-select"

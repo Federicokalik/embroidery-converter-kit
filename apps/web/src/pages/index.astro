@@ -7,6 +7,7 @@ import '../styles/converter.css';
 import '../styles/preloader.css';
 import '../styles/footer.css';
 import ConverterSection from '../components/ConverterSection.astro';
+import Footer from '../components/Footer.astro';
 // Preloaded through the Vite pipeline so the URLs stay in sync with the
 // hashed assets the CSS @font-face rules resolve to (base-aware on Pages).
 import displayFontUrl from '../assets/fonts/BricolageGrotesque-SemiBold.woff2?url';
@@ -19,7 +20,6 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   : `${import.meta.env.BASE_URL}/`;
 const convertHref = `${base}convert/`;
 const docsHref = `${base}docs/`;
-import Footer from '../components/Footer.astro';
 ---
 
 <!doctype html>
@@ -169,9 +169,9 @@ import Footer from '../components/Footer.astro';
           </p>
 
           <nav class="footer-links" aria-label="Footer">
-            <a href="/docs" data-i18n="footer.docsLink">Come funziona Restitch</a>
-            <a href="/docs/formats" data-i18n="footer.formatsLink">Formati supportati</a>
-            <a href="/docs/privacy" data-i18n="footer.privacyLink">Privacy</a>
+            <a href={docsHref} data-i18n="footer.docsLink">Come funziona Restitch</a>
+            <a href={`${docsHref}formats/`} data-i18n="footer.formatsLink">Formati supportati</a>
+            <a href={`${docsHref}privacy/`} data-i18n="footer.privacyLink">Privacy</a>
           </nav>
 
           <a

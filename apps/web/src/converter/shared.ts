@@ -223,11 +223,8 @@ export function describePattern(pattern: Pattern): { text: string; overflow: boo
   return { text, overflow: !fit.fits };
 }
 
-/** Base-aware internal path: withBase('convert/') works at '/' and on Pages. */
-export function withBase(path: string): string {
-  const base = import.meta.env.BASE_URL;
-  return `${base.endsWith('/') ? base : `${base}/`}${path}`;
-}
+// Single implementation in core/base.ts; re-exported for converter callers.
+export { withBase } from '../core/base';
 
 export function triggerDownload(bytes: Uint8Array, name: string): void {
   const blob = new Blob([bytes.slice().buffer], { type: 'application/octet-stream' });

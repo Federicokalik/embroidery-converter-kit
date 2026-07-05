@@ -1,5 +1,6 @@
 ---
 import DocLayout from '../../layouts/DocLayout.astro';
+import { withBase } from '../../core/base';
 ---
 
 <DocLayout title="Restitch — Intermediate Representation">
@@ -106,7 +107,7 @@ interface Pattern {
   </p>
 
   <p class="docs-prevnext">
-    <a href="/docs/formats/exp">← EXP</a>
-    <a href="/docs/embcompress">EmbCompress →</a>
+    <a href={withBase('docs/formats/exp')}>← EXP</a>
+    <a href={withBase('docs/embcompress')}>EmbCompress →</a>
   </p>
 </DocLayout>

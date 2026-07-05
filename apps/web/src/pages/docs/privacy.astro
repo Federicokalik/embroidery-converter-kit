@@ -1,5 +1,6 @@
 ---
 import DocLayout from '../../layouts/DocLayout.astro';
+import { withBase } from '../../core/base';
 ---
 
 <DocLayout title="Restitch — Privacy">
@@ -55,7 +56,7 @@ import DocLayout from '../../layouts/DocLayout.astro';
   </p>
 
   <p class="docs-prevnext">
-    <a href="/docs/testing">← Test</a>
-    <a href="/convert">Converti ora →</a>
+    <a href={withBase('docs/testing')}>← Test</a>
+    <a href={withBase('convert')}>Converti ora →</a>
   </p>
 </DocLayout>
