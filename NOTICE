@@ -20,8 +20,8 @@ output for interoperability purposes (see docs/ZHS_FORMAT.md).
 Bundled assets
 --------------
 
-- Fonts: "Space Grotesk", "Plus Jakarta Sans" and "JetBrains Mono", all
-  licensed under the SIL Open Font License 1.1 and self-hosted (no
+- Fonts: "Bricolage Grotesque", "Instrument Sans" and "JetBrains Mono",
+  all licensed under the SIL Open Font License 1.1 and self-hosted (no
   third-party font requests at runtime, no CDN). The woff2 files live in
   apps/web/src/assets/fonts with their OFL.txt license texts alongside;
   the OFL permits bundling them in the site build and in the desktop
