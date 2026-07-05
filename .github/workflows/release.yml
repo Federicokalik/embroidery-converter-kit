@@ -123,3 +123,40 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: out/embconv-windows-x64.exe
+
+  # Publish the `ricuci` package to npm (npx ricuci …). Zero runtime deps:
+  # tsup bundles @embroidery/core into a single self-contained file. Needs
+  # the NPM_TOKEN secret (an npm automation token); id-token: write lets npm
+  # attach a provenance attestation (repo is public).
+  npm:
+    needs: create-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The tag is the source of truth for the version.
+      - run: npm pkg set version="${GITHUB_REF_NAME#v}"
+        working-directory: packages/cli
+
+      # Bundle, then ship the license texts inside the tarball.
+      - run: pnpm --filter ricuci build
+      - run: cp LICENSE NOTICE packages/cli/
+
+      - run: pnpm publish --no-git-checks --access public
+        working-directory: packages/cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'

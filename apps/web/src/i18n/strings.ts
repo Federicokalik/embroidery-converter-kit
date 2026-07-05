@@ -398,6 +398,7 @@ export const STRINGS: Record<string, Entry> = {
   'dl.macos': { it: 'Ricuci per macOS — .dmg', en: 'Ricuci for macOS — .dmg', fr: 'Ricuci pour macOS — .dmg', de: 'Ricuci für macOS — .dmg', es: 'Ricuci para macOS — .dmg', pt: 'Ricuci para macOS — .dmg' },
   'dl.linux': { it: 'Ricuci per Linux — AppImage', en: 'Ricuci for Linux — AppImage', fr: 'Ricuci pour Linux — AppImage', de: 'Ricuci für Linux — AppImage', es: 'Ricuci para Linux — AppImage', pt: 'Ricuci para Linux — AppImage' },
   'dl.cli': { it: 'embconv CLI — tutte le piattaforme', en: 'embconv CLI — all platforms', fr: 'embconv CLI — toutes les plateformes', de: 'embconv CLI — alle Plattformen', es: 'embconv CLI — todas las plataformas', pt: 'embconv CLI — todas as plataformas' },
+  'dl.npx': { it: 'npx ricuci — riga di comando (Node)', en: 'npx ricuci — command line (Node)', fr: 'npx ricuci — ligne de commande (Node)', de: 'npx ricuci — Kommandozeile (Node)', es: 'npx ricuci — línea de comandos (Node)', pt: 'npx ricuci — linha de comando (Node)' },
   'dl.get': { it: 'Scarica', en: 'Download', fr: 'Télécharger', de: 'Herunterladen', es: 'Descargar', pt: 'Baixar' },
   'dl.releases': { it: 'Releases', en: 'Releases', fr: 'Versions', de: 'Releases', es: 'Versiones', pt: 'Versões' },
   'dl.soon': { it: 'In arrivo', en: 'Coming soon', fr: 'Bientôt', de: 'Demnächst', es: 'Próximamente', pt: 'Em breve' },

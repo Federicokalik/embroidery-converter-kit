@@ -14,11 +14,13 @@ and fully documented in [`docs/ZHS_FORMAT.md`](docs/ZHS_FORMAT.md).
 | Channel | Where |
 |---|---|
 | **Web** | <https://ricuci.app> — landing with an instant demo, full studio at [/convert/](https://ricuci.app/convert/), docs in [IT](https://ricuci.app/docs/) and [EN](https://ricuci.app/en/docs/) |
+| **CLI (npx)** | `npx ricuci in.vip out.zhs` — no install, needs Node ≥18 ([npmjs.com/package/ricuci](https://www.npmjs.com/package/ricuci)) |
 | **Desktop** | [Latest release](https://github.com/Federicokalik/embroidery-converter-kit/releases/latest): `Ricuci-Windows.exe`, `Ricuci-macOS.dmg`, `Ricuci-Linux.AppImage` |
-| **CLI** | Same releases page: `embconv-windows-x64.exe`, `embconv-macos-arm64`, `embconv-macos-x64`, `embconv-linux-x64` |
+| **CLI (standalone binary)** | Same releases page, no Node needed: `embconv-windows-x64.exe`, `embconv-macos-arm64`, `embconv-macos-x64`, `embconv-linux-x64` |
 
-The desktop and CLI builds are unsigned: Windows SmartScreen and macOS
-Gatekeeper will warn on first launch (macOS: right-click → Open).
+The desktop and standalone CLI builds are unsigned: Windows SmartScreen and
+macOS Gatekeeper will warn on first launch (macOS: right-click → Open). The
+npx package is signed by npm with a provenance attestation.
 
 ## Formats
 
@@ -36,14 +38,16 @@ color handling).
 ## CLI
 
 ```bash
-embconv input.vip output.zhs                 # single conversion
-embconv input.pes output.jef --hoop 130x180  # declare a hoop (pes, jef, zhs)
-embconv --batch designs/ --to zhs --out out/ # convert a whole folder
-embconv info design.vip --brand janome       # stitches, colors, size, hoop fit
+npx ricuci input.vip output.zhs                 # single conversion
+npx ricuci input.pes output.jef --hoop 130x180  # declare a hoop (pes, jef, zhs)
+npx ricuci --batch designs/ --to zhs --out out/ # convert a whole folder
+npx ricuci info design.vip --brand janome       # stitches, colors, size, hoop fit
 ```
 
 `--center` recenters the design on the origin; `--pause-trims` makes ZHS
-machines stop at mid-color trims instead of dropping them silently.
+machines stop at mid-color trims instead of dropping them silently. The same
+commands run from the standalone `embconv` binaries (no Node) or, once
+installed, from the `embconv` alias the package also provides.
 
 ## The ZHS work
 

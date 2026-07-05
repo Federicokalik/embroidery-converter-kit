@@ -91,6 +91,12 @@ const dl = (asset: string): string => `${REPO}/releases/latest/download/${asset}
             </a>
           </li>
           <li>
+            <a class="dl-card" href="https://www.npmjs.com/package/ricuci" rel="noopener">
+              <span class="mono" data-i18n="dl.npx">{tt('dl.npx')}</span>
+              <span class="soon-tag mono">npm</span>
+            </a>
+          </li>
+          <li>
             <a class="dl-card" href={`${REPO}/releases/latest`} rel="noopener">
               <span class="mono" data-i18n="dl.cli">{tt('dl.cli')}</span>
               <span class="soon-tag mono" data-i18n="dl.releases">{tt('dl.releases')}</span>

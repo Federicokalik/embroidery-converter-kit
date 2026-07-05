@@ -11,6 +11,11 @@ __pycache__/
 apps/desktop/renderer/
 apps/desktop/release/
 
+# License texts are copied into the npm package at publish time (release.yml);
+# the canonical copies live at the repo root.
+packages/cli/LICENSE
+packages/cli/NOTICE
+
 # Private test data: real embroidery designs and their derived goldens are
 # NOT redistributable (see NOTICE). They live only on the owner's machine;
 # the test suite self-skips when they are absent.

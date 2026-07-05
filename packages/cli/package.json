@@ -1,18 +1,58 @@
 {
-  "name": "@embroidery/cli",
-  "license": "SEE LICENSE IN LICENSE",
+  "name": "ricuci",
   "version": "0.1.0",
+  "description": "Universal embroidery file converter (VIP, ZHS, PES, DST, JEF, VP3, HUS, EXP and more) — 100% local. Run with: npx ricuci in.vip out.zhs",
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Federico Kalik",
+  "homepage": "https://ricuci.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Federicokalik/embroidery-converter-kit.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/Federicokalik/embroidery-converter-kit/issues"
+  },
+  "keywords": [
+    "embroidery",
+    "converter",
+    "cli",
+    "vip",
+    "zhs",
+    "pes",
+    "dst",
+    "jef",
+    "vp3",
+    "hus",
+    "exp",
+    "pec",
+    "stitch",
+    "sewing",
+    "pyembroidery"
+  ],
   "type": "module",
   "bin": {
+    "ricuci": "./dist/index.js",
     "embconv": "./dist/index.js"
   },
-  "scripts": {
-    "build": "tsup"
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=18"
   },
-  "dependencies": {
-    "@embroidery/core": "workspace:*"
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "tsup"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "devDependencies": {
+    "@embroidery/core": "workspace:*",
     "@types/node": "^26.1.0",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
