@@ -6,15 +6,70 @@
  * unchanged. The app is the converter only: the root route is mapped onto
  * /convert/, the marketing landing is never reachable.
  *
- * Conversion stays 100% local, exactly like in the browser: no network
- * access is required and none is performed (fonts are bundled, OFL).
+ * Conversion stays 100% local, exactly like in the browser: no design data
+ * ever leaves the machine (fonts are bundled, OFL). The ONLY network call
+ * is an optional once-per-launch update check against the GitHub releases
+ * metadata — no payload, disable with RICUCI_NO_UPDATE_CHECK=1.
  */
-const { app, BrowserWindow, net, protocol, shell } = require('electron');
+const { app, BrowserWindow, dialog, net, protocol, shell } = require('electron');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
 const RENDERER_DIR = path.join(__dirname, 'renderer');
 const SMOKE_TEST = process.argv.includes('--smoke-test');
+const UPDATE_CHECK_TEST = process.argv.includes('--update-check-test');
+
+const RELEASES_API =
+  'https://api.github.com/repos/Federicokalik/embroidery-converter-kit/releases/latest';
+const RELEASES_PAGE =
+  'https://github.com/Federicokalik/embroidery-converter-kit/releases/latest';
+
+/** 'v0.2.1' → [0, 2, 1]; anything unparsable → null. */
+function parseVersion(tag) {
+  const m = /^v?(\d+)\.(\d+)\.(\d+)/.exec(String(tag).trim());
+  return m === null ? null : [Number(m[1]), Number(m[2]), Number(m[3])];
+}
+
+function isNewer(latest, current) {
+  for (let i = 0; i < 3; i++) {
+    if (latest[i] !== current[i]) return latest[i] > current[i];
+  }
+  return false;
+}
+
+/** One GET to the releases metadata; resolves to null when up to date,
+ *  offline, rate-limited or anything else — never throws, never blocks. */
+async function checkForUpdate() {
+  const current = parseVersion(app.getVersion());
+  if (current === null) return null;
+  try {
+    const res = await net.fetch(RELEASES_API, {
+      headers: { Accept: 'application/vnd.github+json' },
+    });
+    if (!res.ok) return null;
+    const release = await res.json();
+    const latest = parseVersion(release.tag_name);
+    if (latest === null || !isNewer(latest, current)) return null;
+    return { tag: release.tag_name, url: release.html_url ?? RELEASES_PAGE };
+  } catch {
+    return null;
+  }
+}
+
+async function notifyUpdate(win) {
+  const update = await checkForUpdate();
+  if (update === null || win.isDestroyed()) return;
+  const { response } = await dialog.showMessageBox(win, {
+    type: 'info',
+    title: 'Ricuci',
+    message: `È disponibile Ricuci ${update.tag}`,
+    detail: 'Scarica la nuova versione dalla pagina delle release.',
+    buttons: ['Scarica', 'Più tardi'],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (response === 0) void shell.openExternal(update.url);
+}
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -90,7 +145,21 @@ app.whenReady().then(() => {
     return net.fetch(pathToFileURL(file).toString());
   });
 
-  createWindow();
+  if (UPDATE_CHECK_TEST) {
+    // CI probe: run the check headlessly and report, no window, no dialog.
+    void checkForUpdate().then((update) => {
+      console.log('UPDATE_CHECK current=%s result=%j', app.getVersion(), update);
+      app.quit();
+    });
+    return;
+  }
+
+  const win = createWindow();
+
+  // Once per launch, after the converter is up; silent when up to date.
+  if (!SMOKE_TEST && process.env['RICUCI_NO_UPDATE_CHECK'] !== '1') {
+    win.webContents.once('did-finish-load', () => void notifyUpdate(win));
+  }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
