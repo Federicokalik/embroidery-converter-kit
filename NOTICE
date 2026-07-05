@@ -25,7 +25,10 @@ Bundled assets
   third-party font requests at runtime, no CDN). The woff2 files live in
   apps/web/src/assets/fonts with their OFL.txt license texts alongside;
   the OFL permits bundling them in the site build and in the desktop
-  and CLI executables.
+  and CLI executables. The Bricolage Grotesque woff2 files have had their
+  overlapping contours merged (apps/web/scripts/clean-fonts.py) for clean
+  outline rendering; the OFL has no Reserved Font Name, so the
+  modification keeps the family name.
 - The three stage designs in apps/web/src/assets/designs
   (unicorn-6x10.jef, lobster.pes, octopus.dst) are designs the owner is
   entitled to publish; they ship with the site and desktop builds by the
