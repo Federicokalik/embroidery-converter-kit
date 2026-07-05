@@ -1,0 +1,80 @@
+---
+// The working tool: converter only, no scrolltelling, no Three.js, no
+// preloader. Only base + converter styles ship; the entry is lean too.
+import '../styles/base.css';
+import '../styles/converter.css';
+import ConverterSection from '../components/ConverterSection.astro';
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restitch — Convertitore</title>
+    <meta
+      name="description"
+      content="Converti un file di ricamo nel browser: anteprima nei colori reali, scelta del telaio, download immediato."
+    />
+    <link rel="preload" href="/fonts/ClashDisplay-Semibold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff2e88' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M3 17 Q7 13 12 15 T21 11'/%3E%3Cpath d='M17 4 l3 3 M20 4 l-3 3'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body data-i18n-title="meta.convertTitle" data-i18n-description="meta.convertDescription">
+    <nav class="nav" aria-label="Restitch">
+      <a class="wordmark" href="/">
+        Restitch
+        <svg class="wordmark-stitch" viewBox="0 0 120 8" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M2 5 Q16 1 30 5 T58 5 T86 5 T114 5" pathLength="1"></path>
+        </svg>
+      </a>
+      <div class="nav-right">
+        <div class="lang-switch" role="group" data-i18n-aria="nav.langLabel">
+          <button type="button" data-lang="it">IT</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="app-main">
+      <header class="app-head">
+        <h1 class="display" data-i18n="convert.headline">Converti i tuoi ricami.</h1>
+        <p class="mono app-privacy" data-i18n="privacy.line">
+          Tutto accade nel tuo browser. Niente server, niente caricamenti.
+        </p>
+      </header>
+
+      <ConverterSection />
+
+      <section class="downloads" aria-labelledby="dl-title">
+        <h2 id="dl-title" class="display" data-i18n="dl.title">Anche fuori dal browser</h2>
+        <p class="dl-sub" data-i18n="dl.sub">
+          Le stesse conversioni, sul tuo computer, senza aprire una pagina.
+        </p>
+        <ul class="dl-cards">
+          <li>
+            <button type="button" class="dl-card" disabled>
+              <span class="mono" data-i18n="dl.exe">embconv.exe — Windows</span>
+              <span class="soon-tag mono" data-i18n="dl.soon">In arrivo</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dl-card" disabled>
+              <span class="mono" data-i18n="dl.cli">CLI — riga di comando</span>
+              <span class="soon-tag mono" data-i18n="dl.soon">In arrivo</span>
+            </button>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <script>
+      import '../convert-entry';
+    </script>
+  </body>
+</html>

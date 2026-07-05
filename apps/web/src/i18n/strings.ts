@@ -29,8 +29,7 @@ export const STRINGS: Record<string, Entry> = {
   // Navigation
   'nav.cta': { it: 'Converti ora', en: 'Convert now' },
   'nav.langLabel': { it: 'Cambia lingua', en: 'Switch language' },
-  'nav.audioOn': { it: 'Attiva i suoni della macchina', en: 'Turn machine sounds on' },
-  'nav.audioOff': { it: 'Disattiva i suoni della macchina', en: 'Turn machine sounds off' },
+  'nav.appLink': { it: 'Convertitore', en: 'Converter' },
 
   // S1 Hero
   'hero.headline': {
@@ -96,6 +95,75 @@ export const STRINGS: Record<string, Entry> = {
       'I read files from Husqvarna, Brother, Janome, Tajima and more: {list}. ' +
       'Several at once? You get a ZIP.',
   },
+
+  // /convert page
+  'meta.convertTitle': { it: 'Restitch — Convertitore', en: 'Restitch — Converter' },
+  'meta.convertDescription': {
+    it:
+      'Converti un file di ricamo nel browser: anteprima nei colori reali, ' +
+      'scelta del telaio, download immediato.',
+    en:
+      'Convert an embroidery file in your browser: real-color preview, hoop ' +
+      'choice, instant download.',
+  },
+  'convert.headline': { it: 'Converti i tuoi ricami.', en: 'Convert your designs.' },
+
+  // Single-file panel
+  'panel.previewAria': {
+    it: 'Anteprima di {name} nei colori reali dei fili',
+    en: 'Preview of {name} in its real thread colors',
+  },
+  'panel.source': { it: 'Sorgente', en: 'Source' },
+  'panel.stitches': { it: 'Punti', en: 'Stitches' },
+  'panel.colors': { it: 'Colori', en: 'Colors' },
+  'panel.size': { it: 'Misure', en: 'Size' },
+  'panel.sourceHoop': { it: 'Telaio nel file', en: 'Hoop in file' },
+  'panel.sizeValue': { it: '{w}×{h} mm', en: '{w}×{h} mm' },
+  'panel.hoopLabel': { it: 'Telaio di destinazione', en: 'Target hoop' },
+  'panel.hoopAuto': { it: 'Automatico (il più piccolo adatto)', en: 'Automatic (smallest that fits)' },
+  'panel.hoopDeclaredOpt': { it: 'Come nel file ({w}×{h} mm)', en: 'As declared ({w}×{h} mm)' },
+  'panel.hoopNone': {
+    it: 'Nessun telaio a catalogo contiene il ricamo: scrivo il default della macchina.',
+    en: 'No catalog hoop holds this design: writing the machine default.',
+  },
+  'panel.hoopFits': { it: 'Ci sta nel telaio scelto.', en: 'Fits the chosen hoop.' },
+  'panel.hoopRecenter': {
+    it: 'Ci sta se lo centri: spunta “Centra nel telaio”.',
+    en: 'Fits once centered: tick “Center in hoop”.',
+  },
+  'panel.hoopOverflow': {
+    it: 'Sborda di {ow}×{oh} mm dal telaio scelto.',
+    en: 'Overflows the chosen hoop by {ow}×{oh} mm.',
+  },
+  'panel.center': { it: 'Centra nel telaio', en: 'Center in hoop' },
+  'panel.trimsLabel': { it: 'Tagli del filo', en: 'Thread trims' },
+  'panel.trimsDrop': { it: 'Fili volanti', en: 'Floating threads' },
+  'panel.trimsDropHint': {
+    it: 'La macchina non si ferma: i fili tra i blocchi li spunti a fine lavoro.',
+    en: 'The machine keeps going: you snip the floats when the job is done.',
+  },
+  'panel.trimsPause': { it: 'Pausa a ogni taglio', en: 'Pause at every trim' },
+  'panel.trimsPauseHint': {
+    it: 'La macchina si ferma a ogni taglio, così spunti il filo subito.',
+    en: 'The machine stops at every trim so you can snip right away.',
+  },
+  'panel.trimsStops': { it: '{n} fermate macchina', en: '{n} machine stops' },
+  'panel.convert': { it: 'Converti in {fmt}', en: 'Convert to {fmt}' },
+  'panel.discard': { it: 'Scarta', en: 'Discard' },
+  'panel.sameFormat': {
+    it: 'Il file è già in {fmt}: scegli un altro formato.',
+    en: 'This file is already {fmt}: pick another format.',
+  },
+
+  // Download section (/convert)
+  'dl.title': { it: 'Anche fuori dal browser', en: 'Beyond the browser' },
+  'dl.sub': {
+    it: 'Le stesse conversioni, sul tuo computer, senza aprire una pagina.',
+    en: 'The same conversions, on your own machine, no page required.',
+  },
+  'dl.exe': { it: 'embconv.exe — Windows', en: 'embconv.exe — Windows' },
+  'dl.cli': { it: 'CLI — riga di comando', en: 'CLI — command line' },
+  'dl.soon': { it: 'In arrivo', en: 'Coming soon' },
 
   // Stitch-out panel (conversion animation)
   'stitch.working': { it: 'Sto ricucendo {name}', en: 'Re-stitching {name}' },

@@ -5,6 +5,7 @@ import '../styles/base.css';
 import '../styles/scenes.css';
 import '../styles/converter.css';
 import '../styles/preloader.css';
+import ConverterSection from '../components/ConverterSection.astro';
 ---
 
 <!doctype html>
@@ -38,13 +39,11 @@ import '../styles/preloader.css';
         </svg>
       </a>
       <div class="nav-right">
+        <a class="nav-link" href="/convert" data-i18n="nav.appLink">Convertitore</a>
         <div class="lang-switch" role="group" data-i18n-aria="nav.langLabel">
           <button type="button" data-lang="it">IT</button>
           <button type="button" data-lang="en">EN</button>
         </div>
-        <button id="audio-toggle" class="audio-toggle" type="button" aria-pressed="false" hidden>
-          audio
-        </button>
         <a class="btn btn-primary nav-cta" href="#converter" data-i18n="nav.cta">Converti ora</a>
       </div>
     </nav>
@@ -134,28 +133,7 @@ import '../styles/preloader.css';
       <section class="scene scene-finale" id="converter">
         <div class="scene-inner">
           <h2 class="display" data-i18n="finale.headline">Tocca a te.</h2>
-          <div class="conv-body">
-            <div class="conv-side">
-              <p class="target-label mono" data-i18n="conv.targetLabel">Cuci in formato</p>
-              <ul id="format-chips" class="chips"></ul>
-              <p id="accept-hint" class="hint mono"></p>
-            </div>
-            <div
-              id="dropzone"
-              class="dropzone"
-              tabindex="0"
-              role="button"
-              data-i18n-aria="conv.dropAria"
-            >
-              <svg class="stitch-border" aria-hidden="true" preserveAspectRatio="none">
-                <rect x="6" y="6" rx="14" pathLength="100"></rect>
-              </svg>
-              <p class="drop-title" data-i18n="conv.dropTitle">Trascina qui i tuoi file di ricamo</p>
-              <p class="drop-sub" data-i18n="conv.dropSub">oppure clicca per sceglierli</p>
-              <input id="file-input" type="file" multiple hidden />
-            </div>
-          </div>
-          <ul id="results" class="results" hidden></ul>
+          <ConverterSection />
         </div>
       </section>
 

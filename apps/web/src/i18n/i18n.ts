@@ -45,10 +45,11 @@ export function applyI18n(root: ParentNode = document): void {
     el.setAttribute('aria-label', t(el.dataset['i18nAria']!));
   }
   document.documentElement.lang = lang;
-  document.title = t('meta.title');
+  // Pages other than the landing set their own keys on <body>.
+  document.title = t(document.body?.dataset['i18nTitle'] ?? 'meta.title');
   document
     .querySelector('meta[name="description"]')
-    ?.setAttribute('content', t('meta.description'));
+    ?.setAttribute('content', t(document.body?.dataset['i18nDescription'] ?? 'meta.description'));
 }
 
 export function onLangChange(cb: (l: Lang) => void): void {

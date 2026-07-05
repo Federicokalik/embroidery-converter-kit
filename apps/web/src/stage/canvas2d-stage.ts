@@ -8,7 +8,9 @@
  * state toward `state` (this replaces ScrollSmoother inertia for the
  * thread layer) and skips the frame when nothing moved.
  */
-import { gsap } from '../core/gsap';
+// Plain 'gsap' (same singleton the landing configures): this class only
+// needs the ticker + utils, and /convert must not pull the plugin bundle.
+import { gsap } from 'gsap';
 import { pointAtSegment, visibleThreadColor } from '../stitch/runs';
 import type { StitchData } from '../stitch/runs';
 import { layoutCast, layoutOverlay } from './layout';

@@ -294,6 +294,246 @@ body.stitchout-open #stage {
   font-size: 0.92rem;
 }
 
+/* ---------- Single-file preview panel ---------- */
+
+.preview-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(280px, 4fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-surface);
+  padding: clamp(1.25rem, 2vw, 2rem);
+}
+
+.preview-window {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+#preview-canvas,
+#preview-canvas canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.preview-name {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.preview-info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0.9rem 0 0;
+  font-size: 0.88rem;
+}
+
+.preview-info dt {
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  align-self: baseline;
+}
+
+.preview-info dd {
+  margin: 0;
+}
+
+.panel-field {
+  display: grid;
+  gap: 0.5rem;
+  border: 0;
+  margin: 1.25rem 0 0;
+  padding: 0;
+}
+
+.panel-label {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+
+.hoop-select {
+  appearance: none;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 500 0.85rem var(--font-mono);
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.panel-fit {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.panel-fit.warning {
+  color: var(--warn);
+}
+
+.trims-option {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+  cursor: pointer;
+  background: var(--paper);
+}
+
+.trims-option:has(input:checked) {
+  border-color: var(--ink);
+  border-style: dashed;
+}
+
+.trims-option input {
+  margin-top: 0.2rem;
+  accent-color: var(--pink);
+}
+
+.trims-copy {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.trims-copy strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.trims-copy small {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.trims-copy .trims-stops {
+  color: var(--ink);
+  font-size: 0.75rem;
+}
+
+.panel-check {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  margin-top: 1.1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.panel-check input {
+  accent-color: var(--pink);
+}
+
+.panel-note {
+  margin: 1rem 0 0;
+  color: var(--warn);
+  font-size: 0.85rem;
+}
+
+.panel-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.4rem;
+}
+
+#convert-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---------- /convert page shell ---------- */
+
+.app-main {
+  width: min(1100px, 92vw);
+  margin-inline: auto;
+  padding-block: calc(var(--nav-h) + clamp(2rem, 6vh, 4rem)) 5rem;
+  display: grid;
+  gap: clamp(2rem, 5vh, 3.5rem);
+}
+
+.app-head {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.app-head h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  line-height: 1.02;
+}
+
+.app-privacy {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+/* ---------- Downloads (coming soon) ---------- */
+
+.downloads h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+.dl-sub {
+  margin: 0.5rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.dl-cards {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+.dl-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius-surface);
+  background: var(--paper-2);
+  padding: 1rem 1.25rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.dl-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.soon-tag {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
 /* ---------- Mobile ---------- */
 
 @media (max-width: 1023px) {
@@ -303,5 +543,9 @@ body.stitchout-open #stage {
 
   .dropzone {
     min-height: 280px;
+  }
+
+  .preview-panel {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,11 +1,14 @@
 /**
- * Converter UI: spool chips (target format), dropzone, results list,
- * and the stitch-out handoff. Conversion itself is @embroidery/core; the
- * pattern is parsed once and reused for both writing and the sewn preview.
+ * Converter UI: spool chips (target format), dropzone, results list.
+ * One file dropped → the single-file panel (preview + hoop + trims,
+ * explicit Convert). Several files → automatic bulk conversion with the
+ * declared hoop passed through source→destination, downloaded as a ZIP.
+ *
+ * Landing-only behavior (stitch-out spectacle, ScrollTrigger refresh) is
+ * injected via ConverterHooks so the /convert page ships none of it.
  */
 import {
-  checkFit,
-  computeExtents,
+  center,
   detectFormat,
   getReader,
   getWriter,
@@ -13,38 +16,25 @@ import {
   UnsupportedDesignError,
   FormatError,
 } from '@embroidery/core';
-import type { ConversionWarning, Pattern } from '@embroidery/core';
+import type { WriterOptions } from '@embroidery/core';
 import { zipSync } from 'fflate';
-import { t, currentLang, onLangChange } from '../i18n/i18n';
+import { t, onLangChange } from '../i18n/i18n';
 import { toStitchData } from '../stitch/runs';
-import { playStitchOut } from './stitchout';
+import {
+  describePattern,
+  extensionOf,
+  FORMAT_BRANDS,
+  NOTED_FORMATS,
+  triggerDownload,
+} from './shared';
+import type { FileOutcome, ParsedFile, StitchOutJob } from './shared';
+import { initPanel } from './panel';
 
-export const FORMAT_BRANDS: Record<string, string> = {
-  vip: 'Husqvarna Viking / Pfaff',
-  zhs: 'Zeng Hsing',
-  dst: 'Tajima',
-  exp: 'Melco',
-  jef: 'Janome',
-  pec: 'Brother',
-  pes: 'Brother',
-  vp3: 'Husqvarna Viking / Pfaff',
-  hus: 'Husqvarna Viking',
-  xxx: 'Singer',
-  sew: 'Janome / Elna',
-  shv: 'Husqvarna Viking',
-  pcs: 'Pfaff',
-};
-
-/** Formats that carry an i18n caveat note ("note.<fmt>"). */
-const NOTED_FORMATS = new Set(['zhs', 'pes', 'pec', 'jef', 'exp', 'hus', 'vip', 'xxx']);
-
-interface FileOutcome {
-  inputName: string;
-  outputName: string;
-  bytes: Uint8Array | null;
-  warnings: ConversionWarning[];
-  error: string | null;
-  pattern: Pattern | null;
+export interface ConverterHooks {
+  /** Landing only: the stitch-out spectacle, awaited before download. */
+  playStitchOut?: (job: StitchOutJob) => Promise<void>;
+  /** Landing only: page height changed → ScrollTrigger must re-measure. */
+  onLayoutChange?: () => void;
 }
 
 const { read: readableFormats, write: writableFormats } = supportedFormats();
@@ -53,17 +43,12 @@ let target = 'zhs';
 let busy = false;
 let lastOutcomes: FileOutcome[] = [];
 
-function extensionOf(name: string): string | null {
-  const dot = name.lastIndexOf('.');
-  return dot >= 0 && dot < name.length - 1 ? name.slice(dot + 1).toLowerCase() : null;
-}
-
 function outputNameFor(inputName: string): string {
   return `${inputName.replace(/\.[^.]*$/, '')}.${target}`;
 }
 
-/** i18n message for input that never reaches the converter. */
-function rejectInput(
+/** Resolve the source format, or an i18n reason the file can't be read. */
+function resolveSource(
   fileName: string,
   detected: string | undefined,
 ): { error: string } | { from: string } {
@@ -77,91 +62,100 @@ function rejectInput(
     }
     return { error: t('err.unrecognized', { list }) };
   }
-  if (from === target) {
-    return { error: t('err.alreadyTarget', { fmt: target.toUpperCase() }) };
-  }
   return { from };
 }
 
-async function convertFile(file: File): Promise<FileOutcome> {
+function errorMessage(e: unknown): string {
+  if (e instanceof UnsupportedDesignError) {
+    const key = `err.${e.reason}`;
+    const translated = t(key);
+    return translated === key ? t('err.unsupportedFallback', { msg: e.message }) : translated;
+  }
+  if (e instanceof FormatError) return t('err.corrupt', { msg: e.message });
+  return t('err.unexpected', { msg: String(e) });
+}
+
+function failedOutcome(fileName: string, error: string): FileOutcome {
+  return {
+    inputName: fileName,
+    outputName: outputNameFor(fileName),
+    bytes: null,
+    warnings: [],
+    error,
+    pattern: null,
+  };
+}
+
+/**
+ * Read bytes, sniff the format, run the reader. Never writes. With
+ * allowTarget the from===target rejection is skipped: the panel disables
+ * Convert instead, and the chip may change without re-parsing.
+ */
+async function parseFile(
+  file: File,
+  allowTarget: boolean,
+): Promise<{ parsed: ParsedFile } | { outcome: FileOutcome }> {
+  try {
+    const data = new Uint8Array(await file.arrayBuffer());
+    const verdict = resolveSource(file.name, detectFormat(data));
+    if ('error' in verdict) return { outcome: failedOutcome(file.name, verdict.error) };
+    if (!allowTarget && verdict.from === target) {
+      return {
+        outcome: failedOutcome(file.name, t('err.alreadyTarget', { fmt: target.toUpperCase() })),
+      };
+    }
+    const pattern = getReader(verdict.from)(data);
+    return {
+      parsed: {
+        fileName: file.name,
+        sourceFormat: verdict.from,
+        pattern,
+        stitchData: toStitchData(pattern),
+        hasTrims: pattern.stitches.some((s) => s.command === 'TRIM'),
+      },
+    };
+  } catch (e) {
+    return { outcome: failedOutcome(file.name, errorMessage(e)) };
+  }
+}
+
+/** Write with explicit options; optionally recenter the design first. */
+function writePattern(
+  parsed: ParsedFile,
+  options: WriterOptions | undefined,
+  centerFirst: boolean,
+): FileOutcome {
   const outcome: FileOutcome = {
-    inputName: file.name,
-    outputName: outputNameFor(file.name),
+    inputName: parsed.fileName,
+    outputName: outputNameFor(parsed.fileName),
     bytes: null,
     warnings: [],
     error: null,
-    pattern: null,
+    pattern: parsed.pattern,
   };
   try {
-    const data = new Uint8Array(await file.arrayBuffer());
-    const verdict = rejectInput(file.name, detectFormat(data));
-    if ('error' in verdict) {
-      outcome.error = verdict.error;
-      return outcome;
-    }
-    const pattern = getReader(verdict.from)(data);
-    outcome.pattern = pattern;
-    const { bytes, warnings } = getWriter(target)(pattern);
+    const pattern = centerFirst ? center(parsed.pattern) : parsed.pattern;
+    const { bytes, warnings } = getWriter(target)(pattern, options);
     outcome.bytes = bytes;
     outcome.warnings = warnings;
   } catch (e) {
-    if (e instanceof UnsupportedDesignError) {
-      const key = `err.${e.reason}`;
-      const translated = t(key);
-      outcome.error =
-        translated === key ? t('err.unsupportedFallback', { msg: e.message }) : translated;
-    } else if (e instanceof FormatError) {
-      outcome.error = t('err.corrupt', { msg: e.message });
-    } else {
-      outcome.error = t('err.unexpected', { msg: String(e) });
-    }
+    outcome.error = errorMessage(e);
   }
   return outcome;
 }
 
-/** 0.1mm units → localized mm string ("77" / "77,5"). */
-function mm(tenths: number): string {
-  const locale = currentLang() === 'it' ? 'it-IT' : 'en-US';
-  return (tenths / 10).toLocaleString(locale, { maximumFractionDigits: 1 });
-}
-
-/**
- * Design size plus, when the source declared a hoop, whether it still fits.
- * Built at render time so it re-localizes on language switch.
- */
-function describePattern(pattern: Pattern): { text: string; overflow: boolean } {
-  const ext = computeExtents(pattern.stitches);
-  let text = t('result.size', { w: mm(ext.maxX - ext.minX), h: mm(ext.maxY - ext.minY) });
-  const hoop = pattern.hoop;
-  if (hoop === undefined) return { text, overflow: false };
-  const fit = checkFit(pattern, hoop);
-  const dims = { w: mm(hoop.width), h: mm(hoop.height) };
-  if (!fit.fits) {
-    text += ` ${t('result.hoopOverflow', { ...dims, ow: mm(fit.overflowX), oh: mm(fit.overflowY) })}`;
-  } else if (fit.requiresCentering) {
-    text += ` ${t('result.hoopRecenter', dims)}`;
-  } else {
-    text += ` ${t('result.hoopFits', dims)}`;
-  }
-  return { text, overflow: !fit.fits };
-}
-
-function triggerDownload(bytes: Uint8Array, name: string): void {
-  const blob = new Blob([bytes.slice().buffer], { type: 'application/octet-stream' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = name;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-export function initConverter(): void {
+export function initConverter(hooks: ConverterHooks = {}): void {
   const dropzone = document.getElementById('dropzone')!;
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
   const resultsList = document.getElementById('results') as HTMLUListElement;
   const chipsList = document.getElementById('format-chips') as HTMLUListElement;
   const acceptHint = document.getElementById('accept-hint')!;
+
+  const panel = initPanel({
+    getTarget: () => target,
+    convert: convertSingle,
+    onLayoutChange: hooks.onLayoutChange,
+  });
 
   function renderChips(): void {
     chipsList.replaceChildren(
@@ -188,6 +182,7 @@ export function initConverter(): void {
           renderChips();
           refreshHint();
           renderResults();
+          panel.onTargetChange();
         });
         li.append(button);
         return li;
@@ -208,6 +203,7 @@ export function initConverter(): void {
     if (lastOutcomes.length === 0) {
       resultsList.hidden = true;
       resultsList.replaceChildren();
+      hooks.onLayoutChange?.();
       return;
     }
     resultsList.hidden = false;
@@ -238,8 +234,11 @@ export function initConverter(): void {
           }
         }
         // The fixed ZHS 0x83 note lives in the footer; show only
-        // design-specific warnings here.
-        for (const w of o.warnings.filter((w) => w.code !== 'METADATA_0X83_ZEROED')) {
+        // design-specific warnings here. TRIM_DROPPED is noise when the
+        // user explicitly chose the drop mode in the panel.
+        const hidden = new Set(['METADATA_0X83_ZEROED']);
+        if (o.trimsChosen === true) hidden.add('TRIM_DROPPED');
+        for (const w of o.warnings.filter((w) => !hidden.has(w.code))) {
           const p = document.createElement('p');
           p.className = 'warning';
           p.textContent = t(`warn.${w.code}`);
@@ -248,23 +247,79 @@ export function initConverter(): void {
         return li;
       }),
     );
+    hooks.onLayoutChange?.();
   }
 
-  async function handleFiles(files: File[]): Promise<void> {
-    if (files.length === 0 || busy) return;
+  /** Explicit Convert from the single-file panel. */
+  async function convertSingle(
+    parsed: ParsedFile,
+    options: WriterOptions,
+    centerFirst: boolean,
+  ): Promise<void> {
+    if (busy) return;
     busy = true;
     dropzone.classList.add('busy');
     try {
-      const outcomes = await Promise.all(files.map((f) => convertFile(f)));
+      const outcome = writePattern(parsed, options, centerFirst);
+      if (options.trims !== undefined) outcome.trimsChosen = true;
+      lastOutcomes = [outcome];
+      if (outcome.bytes !== null && hooks.playStitchOut !== undefined) {
+        try {
+          await hooks.playStitchOut({
+            data: parsed.stitchData,
+            fileName: parsed.fileName,
+            extraCount: 0,
+          });
+        } catch (e) {
+          console.error('stitch-out animation failed, downloading anyway', e);
+        }
+      }
+      renderResults();
+      if (outcome.bytes !== null) triggerDownload(outcome.bytes, outcome.outputName);
+    } finally {
+      busy = false;
+      dropzone.classList.remove('busy');
+    }
+  }
+
+  async function openSingle(file: File): Promise<void> {
+    const result = await parseFile(file, true);
+    if ('outcome' in result) {
+      lastOutcomes = [result.outcome];
+      renderResults();
+      return;
+    }
+    lastOutcomes = [];
+    renderResults();
+    panel.open(result.parsed);
+  }
+
+  /** 2+ files: automatic conversion, declared hoop passed through. */
+  async function convertBulk(files: File[]): Promise<void> {
+    busy = true;
+    dropzone.classList.add('busy');
+    try {
+      const outcomes = await Promise.all(
+        files.map(async (file) => {
+          const result = await parseFile(file, false);
+          if ('outcome' in result) return result.outcome;
+          const hoop = result.parsed.pattern.hoop;
+          return writePattern(
+            result.parsed,
+            hoop !== undefined ? { hoop } : undefined,
+            false,
+          );
+        }),
+      );
       lastOutcomes = outcomes;
 
       const converted = outcomes.filter(
         (o): o is FileOutcome & { bytes: Uint8Array } => o.bytes !== null,
       );
       const star = converted.find((o) => o.pattern !== null);
-      if (star?.pattern != null) {
+      if (star?.pattern != null && hooks.playStitchOut !== undefined) {
         try {
-          await playStitchOut({
+          await hooks.playStitchOut({
             data: toStitchData(star.pattern),
             fileName: star.inputName,
             extraCount: converted.length - 1,
@@ -286,6 +341,13 @@ export function initConverter(): void {
       busy = false;
       dropzone.classList.remove('busy');
     }
+  }
+
+  async function handleFiles(files: File[]): Promise<void> {
+    if (files.length === 0 || busy) return;
+    panel.close();
+    if (files.length === 1) return openSingle(files[0]!);
+    return convertBulk(files);
   }
 
   dropzone.addEventListener('click', () => fileInput.click());
@@ -312,6 +374,7 @@ export function initConverter(): void {
   onLangChange(() => {
     refreshHint();
     renderResults();
+    panel.refresh();
   });
 }
 

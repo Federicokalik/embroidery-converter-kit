@@ -14,6 +14,7 @@ import { t } from '../i18n/i18n';
 import { decimate } from '../stitch/runs';
 import type { StitchData } from '../stitch/runs';
 import type { StitchStage, ThreadState } from '../stage/types';
+import type { StitchOutJob } from './shared';
 
 /** Needle tip position within the panel window (see stitchout-head CSS). */
 const ANCHOR_Y = 0.353;
@@ -33,11 +34,7 @@ export function registerStitchOutStage(stage: StitchStage | null): void {
   currentStage = stage;
 }
 
-export interface StitchOutJob {
-  data: StitchData;
-  fileName: string;
-  extraCount: number;
-}
+export type { StitchOutJob } from './shared';
 
 export function playStitchOut(job: StitchOutJob): Promise<void> {
   const stage = currentStage;

@@ -1,0 +1,84 @@
+---
+// Shared converter markup: chips + dropzone, the single-file panel and the
+// results list. converter.ts / panel.ts own every id in here.
+---
+
+<div class="conv-body">
+  <div class="conv-side">
+    <p class="target-label mono" data-i18n="conv.targetLabel">Cuci in formato</p>
+    <ul id="format-chips" class="chips"></ul>
+    <p id="accept-hint" class="hint mono"></p>
+  </div>
+  <div
+    id="dropzone"
+    class="dropzone"
+    tabindex="0"
+    role="button"
+    data-i18n-aria="conv.dropAria"
+  >
+    <svg class="stitch-border" aria-hidden="true" preserveAspectRatio="none">
+      <rect x="6" y="6" rx="14" pathLength="100"></rect>
+    </svg>
+    <p class="drop-title" data-i18n="conv.dropTitle">Trascina qui i tuoi file di ricamo</p>
+    <p class="drop-sub" data-i18n="conv.dropSub">oppure clicca per sceglierli</p>
+    <input id="file-input" type="file" multiple hidden />
+  </div>
+</div>
+
+<!-- Single-file session: preview + facts + options + explicit Convert. -->
+<section id="preview-panel" class="preview-panel" hidden>
+  <div class="preview-window">
+    <div id="preview-canvas" role="img"></div>
+  </div>
+  <div class="preview-side">
+    <p id="preview-name" class="mono preview-name"></p>
+    <dl id="preview-info" class="preview-info"></dl>
+
+    <div id="hoop-field" class="panel-field" hidden>
+      <label class="mono panel-label" for="hoop-select" data-i18n="panel.hoopLabel">
+        Telaio di destinazione
+      </label>
+      <select id="hoop-select" class="hoop-select"></select>
+      <p id="hoop-fit" class="panel-fit"></p>
+    </div>
+
+    <fieldset id="trims-field" class="panel-field trims-field" hidden>
+      <legend class="mono panel-label" data-i18n="panel.trimsLabel">Tagli del filo</legend>
+      <label class="trims-option">
+        <input type="radio" name="trims" value="drop" checked />
+        <span class="trims-copy">
+          <strong data-i18n="panel.trimsDrop">Fili volanti</strong>
+          <small data-i18n="panel.trimsDropHint">
+            La macchina non si ferma: i fili tra i blocchi li spunti a fine lavoro.
+          </small>
+          <small id="trims-drop-stops" class="mono trims-stops"></small>
+        </span>
+      </label>
+      <label class="trims-option">
+        <input type="radio" name="trims" value="pause" />
+        <span class="trims-copy">
+          <strong data-i18n="panel.trimsPause">Pausa a ogni taglio</strong>
+          <small data-i18n="panel.trimsPauseHint">
+            La macchina si ferma a ogni taglio, così spunti il filo subito.
+          </small>
+          <small id="trims-pause-stops" class="mono trims-stops"></small>
+        </span>
+      </label>
+    </fieldset>
+
+    <label id="center-field" class="panel-check" hidden>
+      <input id="center-check" type="checkbox" />
+      <span data-i18n="panel.center">Centra nel telaio</span>
+    </label>
+
+    <p id="panel-note" class="panel-note" hidden></p>
+    <div class="panel-actions">
+      <button id="convert-btn" type="button" class="btn btn-primary">Converti</button>
+      <button id="discard-btn" type="button" class="btn btn-ghost" data-i18n="panel.discard">
+        Scarta
+      </button>
+    </div>
+  </div>
+</section>
+
+<ul id="results" class="results" hidden></ul>
