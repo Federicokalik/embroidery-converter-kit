@@ -76,12 +76,8 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
-      - name: Compile embconv for every platform
+      - name: Compile embconv (linux + macOS)
         run: |
-          bun build --compile --minify packages/cli/src/index.ts \
-            --target=bun-windows-x64 \
-            --windows-icon=apps/desktop/build/icon.ico \
-            --outfile out/embconv-windows-x64.exe
           bun build --compile --minify packages/cli/src/index.ts \
             --target=bun-linux-x64 --outfile out/embconv-linux-x64
           bun build --compile --minify packages/cli/src/index.ts \
@@ -92,3 +88,32 @@ jobs:
       - uses: softprops/action-gh-release@v2
         with:
           files: out/*
+
+  # bun refuses --windows-icon when cross-compiling, so the Windows CLI
+  # builds on a Windows runner to keep the branded icon.
+  cli-windows:
+    needs: create-release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Compile embconv for Windows (with icon)
+        run: >
+          bun build --compile --minify packages/cli/src/index.ts
+          --windows-icon=apps/desktop/build/icon.ico
+          --outfile out/embconv-windows-x64.exe
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: out/embconv-windows-x64.exe
