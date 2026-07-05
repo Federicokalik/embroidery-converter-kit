@@ -1,5 +1,6 @@
 {
   "name": "embroidery-converter",
+  "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "version": "0.1.0",
   "packageManager": "pnpm@10.33.2",

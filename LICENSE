@@ -1,0 +1,73 @@
+Restitch Source-Available License 1.0
+
+Copyright (c) 2026 Federico ("the Licensor")
+
+This license governs the Restitch software: the web application, the
+command-line tool (embconv), any packaged executables, and the source
+code in this repository (together, "the Software"). Third-party
+components bundled with or ported into the Software remain under their
+own licenses, listed in the NOTICE file, which prevails for those
+portions.
+
+1. Free use.
+   You may use the Software, free of charge, for any purpose, personal
+   or commercial, for an unlimited time. "Use" means running the web
+   application, the command-line tool or an official executable, as
+   distributed by the Licensor, without alteration.
+
+2. Integration.
+   You may invoke the UNMODIFIED command-line tool or executable from
+   your own software, scripts or services, including commercial ones.
+   This is permitted use, not a derivative work, provided the Software
+   itself is obtained by each user from the Licensor's official
+   channels and is not embedded in, or redistributed with, your
+   product.
+
+3. No changes, no derivative works.
+   You may not modify, adapt, translate, or create derivative works of
+   the Software or any part of it. You may not use the source code, in
+   whole or in part, as a basis for other software.
+
+4. No redistribution.
+   You may not distribute, publish, sublicense, sell, rent, lend or
+   otherwise make the Software or its source code available to third
+   parties, in original or modified form. Direct others to the
+   Licensor's official channels instead. Copies strictly necessary for
+   your own permitted use (e.g. backups, deployment caches) are
+   allowed.
+
+5. Source visibility.
+   The source code is made visible for transparency, auditing and
+   study. Reading it grants no rights beyond those in this license.
+   Where the code is hosted on a platform whose terms of service grant
+   platform-internal rights (e.g. viewing or platform forks), those
+   terms apply only within that platform and grant no usage rights
+   under copyright.
+
+6. Reverse engineering.
+   Nothing in this license limits rights that applicable law grants
+   and that cannot be contractually waived (e.g. interoperability
+   analysis under EU Directive 2009/24/EC). All other reverse
+   engineering, decompilation or extraction of parts of the Software
+   is prohibited.
+
+7. Trademarks.
+   "Restitch" and "embconv" identify the Licensor's builds. You may
+   not use these names for modified or third-party versions.
+
+8. Termination.
+   This license terminates automatically if you breach it. If you
+   cease the breach within 30 days of becoming aware of it, the
+   license is reinstated, unless the Licensor notifies you otherwise.
+
+9. No warranty; no liability.
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+   EMBROIDERY OUTPUT FILES ARE GENERATED ON A BEST-EFFORT BASIS;
+   ALWAYS TEST DESIGNS BEFORE PRODUCTION STITCHING. TO THE MAXIMUM
+   EXTENT PERMITTED BY LAW, THE LICENSOR SHALL NOT BE LIABLE FOR ANY
+   DAMAGES ARISING FROM THE USE OF, OR INABILITY TO USE, THE SOFTWARE.
+
+10. Files you convert.
+    Designs you process with the Software remain yours (or their
+    respective owners'). The Licensor claims no rights over your
+    input or output files; conversion happens locally on your device.

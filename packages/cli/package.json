@@ -1,5 +1,6 @@
 {
   "name": "@embroidery/cli",
+  "license": "SEE LICENSE IN LICENSE",
   "version": "0.1.0",
   "type": "module",
   "bin": {
