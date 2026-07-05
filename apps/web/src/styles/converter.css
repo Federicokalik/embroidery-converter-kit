@@ -801,7 +801,7 @@ body.stitchout-open #stage {
   font-size: 0.85rem;
 }
 
-/* ---------- Downloads (coming soon) ---------- */
+/* ---------- Downloads (GitHub Releases) ---------- */
 
 .downloads h2 {
   margin: 0;
@@ -829,17 +829,22 @@ body.stitchout-open #stage {
   align-items: center;
   gap: 1rem;
   width: 100%;
-  border: 1.5px dashed var(--line);
+  border: 1.5px solid var(--line);
   border-radius: var(--radius-surface);
   background: var(--paper-2);
   padding: 1rem 1.25rem;
-  color: var(--ink-soft);
+  color: var(--ink);
   font-size: 0.9rem;
+  text-decoration: none;
 }
 
-.dl-card:disabled {
-  cursor: not-allowed;
-  opacity: 0.75;
+.dl-card:hover {
+  border-color: var(--ink);
+}
+
+.dl-card:hover .soon-tag {
+  border-color: var(--pink);
+  color: var(--pink);
 }
 
 .soon-tag {

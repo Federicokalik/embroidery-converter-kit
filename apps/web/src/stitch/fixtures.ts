@@ -1,6 +1,7 @@
 /**
- * The narrative cast, all real files from /fixtures (imported with ?url
- * so the repo keeps a single source of truth and Vite bundles copies):
+ * The narrative cast: real embroidery files, owned by the project owner and
+ * cleared for publication (they ship with the site build — they are the only
+ * design files allowed in the public repo; test fixtures stay private):
  * - unicorn-6x10.jef: the hero showpiece (~39k stitches, 6 colors);
  * - lobster.pes: Babel station + the translation re-stitch (~9k, 10 colors);
  * - octopus.dst: Babel station + the precision macro subject (~31k).
@@ -13,9 +14,9 @@ import type { Pattern } from '@embroidery/core';
 import { decimate, toStitchData } from './runs';
 import type { StitchData } from './runs';
 import type { CastData } from '../stage/types';
-import showpieceUrl from '../../../../fixtures/unicorn-6x10.jef?url';
-import lobsterUrl from '../../../../fixtures/lobster.pes?url';
-import octopusUrl from '../../../../fixtures/octopus.dst?url';
+import showpieceUrl from '../assets/designs/unicorn-6x10.jef?url';
+import lobsterUrl from '../assets/designs/lobster.pes?url';
+import octopusUrl from '../assets/designs/octopus.dst?url';
 
 /** Point budget per design on the narrative stage. */
 const BUDGET = 12_000;

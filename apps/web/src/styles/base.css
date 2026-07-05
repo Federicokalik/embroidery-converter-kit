@@ -5,45 +5,48 @@
    The pink accent NEVER colors body-size text (contrast ~3.4:1 on paper):
    it is reserved for display type, thread graphics and button surfaces. */
 
+/* All fonts are OFL-licensed and self-hosted (no third-party requests):
+   the woff2 files live in src/assets/fonts (Vite pipeline, base-aware URLs)
+   with their OFL.txt licenses alongside. */
 @font-face {
-  font-family: 'Clash Display';
-  src: url('/fonts/ClashDisplay-Medium.woff2') format('woff2');
+  font-family: 'Space Grotesk';
+  src: url('../assets/fonts/SpaceGrotesk-Medium.woff2') format('woff2');
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Clash Display';
-  src: url('/fonts/ClashDisplay-Semibold.woff2') format('woff2');
+  font-family: 'Space Grotesk';
+  src: url('../assets/fonts/SpaceGrotesk-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
+  font-family: 'Plus Jakarta Sans';
+  src: url('../assets/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Medium.woff2') format('woff2');
+  font-family: 'Plus Jakarta Sans';
+  src: url('../assets/fonts/PlusJakartaSans-Medium.woff2') format('woff2');
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Bold.woff2') format('woff2');
+  font-family: 'Plus Jakarta Sans';
+  src: url('../assets/fonts/PlusJakartaSans-Bold.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  src: url('../assets/fonts/JetBrainsMono-Regular.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-SemiBold.woff2') format('woff2');
+  src: url('../assets/fonts/JetBrainsMono-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-display: swap;
 }
@@ -60,8 +63,8 @@
   --err: #b3372e;
   --warn: #8a6116;
   --radius-surface: 16px;
-  --font-display: 'Clash Display', 'Satoshi', system-ui, sans-serif;
-  --font-sans: 'Satoshi', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --nav-h: 64px;
 }

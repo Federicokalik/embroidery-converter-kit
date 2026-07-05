@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { convert, detectFormat, FormatError, readVip, readZhs } from '../src/index';
 import type { Stitch } from '../src/index';
-import { loadFixture } from './helpers';
+import { HAS_PRIVATE_FIXTURES, loadFixture } from './helpers';
 
 function path(stitches: Stitch[]): Array<[number, number]> {
   const out: Array<[number, number]> = [];
@@ -15,7 +15,7 @@ function path(stitches: Stitch[]): Array<[number, number]> {
   return out;
 }
 
-describe('convert()', () => {
+describe.skipIf(!HAS_PRIVATE_FIXTURES)('convert()', () => {
   it('converts VIP → ZHS (extension spellings are normalized)', () => {
     const vip = loadFixture('028-B.vip');
     const a = convert(vip, 'vip', 'zhs');
@@ -40,7 +40,7 @@ describe('convert()', () => {
   });
 });
 
-describe('detectFormat()', () => {
+describe.skipIf(!HAS_PRIVATE_FIXTURES)('detectFormat()', () => {
   it('sniffs VIP and ZHS from magic bytes', () => {
     expect(detectFormat(loadFixture('052-Z.vip'))).toBe('vip');
     expect(detectFormat(loadFixture('028-B.zhs'))).toBe('zhs');
@@ -48,7 +48,7 @@ describe('detectFormat()', () => {
   });
 });
 
-describe('cross-fixture sanity', () => {
+describe.skipIf(!HAS_PRIVATE_FIXTURES)('cross-fixture sanity', () => {
   it('052-Z.vip (no reference .zhs) converts and round-trips functionally', () => {
     const source = readVip(loadFixture('052-Z.vip'));
     const result = convert(loadFixture('052-Z.vip'), 'vip', 'zhs');

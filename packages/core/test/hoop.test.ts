@@ -16,6 +16,7 @@ import { writeJef } from '../src/writers/jef';
 import { writePes } from '../src/writers/pes';
 import {
   GOLDEN_PATTERNS,
+  HAS_PRIVATE_FIXTURES,
   loadGoldenBytes,
   loadGoldenJson,
   patternFromDump,
@@ -75,7 +76,7 @@ describe('hoop catalog and fit', () => {
   });
 });
 
-describe('geometry transforms', () => {
+describe.skipIf(!HAS_PRIVATE_FIXTURES)('geometry transforms', () => {
   it('translate shifts stitches and extents', () => {
     const p = pattern028();
     const moved = translate(p, 100, -40);
@@ -94,7 +95,7 @@ describe('geometry transforms', () => {
   });
 });
 
-describe('PES hoop', () => {
+describe.skipIf(!HAS_PRIVATE_FIXTURES)('PES hoop', () => {
   it('default output is byte-identical with and without the stock 130x180 hoop', () => {
     const p = pattern028();
     const plain = writePes(p).bytes;
@@ -125,7 +126,7 @@ describe('PES hoop', () => {
   });
 });
 
-describe('JEF hoop', () => {
+describe.skipIf(!HAS_PRIVATE_FIXTURES)('JEF hoop', () => {
   it('reads the declared hoop code from every golden file', () => {
     for (const name of GOLDEN_PATTERNS) {
       const bytes = loadGoldenBytes(name, 'jef');

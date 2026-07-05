@@ -3,7 +3,7 @@ import type { Stitch } from '../src/ir';
 import { readPes } from '../src/readers/pes';
 import { readZhs } from '../src/readers/zhs';
 import { writeZhs } from '../src/writers/zhs';
-import { loadFixture } from './helpers';
+import { HAS_PRIVATE_FIXTURES, loadFixture } from './helpers';
 
 /**
  * Ground truth: SHE2215A_003, a real factory multicolor design shipped both
@@ -29,17 +29,20 @@ function penPath(stitches: Stitch[]): Array<[number, number]> {
   return out;
 }
 
-describe('ZHS multicolor (SHE2215A_003 factory sample)', () => {
-  const factory = readZhs(loadFixture('zhs-samples/SHE2215A_003.zhs'));
+describe.skipIf(!HAS_PRIVATE_FIXTURES)('ZHS multicolor (SHE2215A_003 factory sample)', () => {
+  // Lazy + cached: the describe body runs at collection even when skipped,
+  // so the fixture must not be read before the first (non-skipped) test.
+  let cached: ReturnType<typeof readZhs> | undefined;
+  const loadFactory = () => (cached ??= readZhs(loadFixture('zhs-samples/SHE2215A_003.zhs')));
 
   it('reads one thread per color block via the COLOR_CHANGE payload', () => {
-    expect(factory.threads.map((t) => t.rgb)).toEqual(EXPECTED_RGBS);
-    expect(factory.threads.map((t) => t.description)).toEqual(EXPECTED_NAMES);
+    expect(loadFactory().threads.map((t) => t.rgb)).toEqual(EXPECTED_RGBS);
+    expect(loadFactory().threads.map((t) => t.description)).toEqual(EXPECTED_NAMES);
   });
 
   it('reads the expected stream structure', () => {
-    expect(factory.stitches.filter((s) => s.command === 'STITCH')).toHaveLength(9302);
-    expect(factory.stitches.filter((s) => s.command === 'COLOR_CHANGE')).toHaveLength(9);
+    expect(loadFactory().stitches.filter((s) => s.command === 'STITCH')).toHaveLength(9302);
+    expect(loadFactory().stitches.filter((s) => s.command === 'COLOR_CHANGE')).toHaveLength(9);
   });
 
   it('agrees with the PES twin on threads and block structure', () => {
@@ -50,11 +53,11 @@ describe('ZHS multicolor (SHE2215A_003 factory sample)', () => {
   });
 
   it('rewrites the factory design preserving path, blocks and palette', () => {
-    const { bytes, warnings } = writeZhs(factory);
+    const { bytes, warnings } = writeZhs(loadFactory());
     const back = readZhs(bytes);
-    expect(back.threads).toEqual(factory.threads);
+    expect(back.threads).toEqual(loadFactory().threads);
     expect(back.stitches.filter((s) => s.command === 'COLOR_CHANGE')).toHaveLength(9);
-    expect(penPath(back.stitches)).toEqual(penPath(factory.stitches));
+    expect(penPath(back.stitches)).toEqual(penPath(loadFactory().stitches));
     expect(warnings.some((w) => w.code === 'FILLER_THREAD')).toBe(false);
 
     // The regenerated header must agree with the factory file on the

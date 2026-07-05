@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { expand } from '../src/embcompress';
-import { FIXTURE_STEMS, loadFixture, loadGolden } from './helpers';
+import { FIXTURE_STEMS, HAS_PRIVATE_FIXTURES, loadFixture, loadGolden } from './helpers';
 
 // Golden vectors were produced by pyembroidery's proven expand() via
 // scripts/gen_golden.py. The TS port must match them element-for-element.
-describe('EmbCompress.expand', () => {
+// Explicit gate: with no private fixtures the loop below would leave an
+// empty suite, which vitest reports as an error.
+describe.skipIf(!HAS_PRIVATE_FIXTURES)('EmbCompress.expand', () => {
   for (const stem of FIXTURE_STEMS) {
     it(`expands the three streams of ${stem}.vip identically to pyembroidery`, () => {
       const golden = loadGolden(stem);

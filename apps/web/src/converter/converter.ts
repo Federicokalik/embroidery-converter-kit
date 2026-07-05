@@ -32,6 +32,7 @@ import {
   resolveHoop,
   triggerDownload,
   uniqueEntryName,
+  withBase,
 } from './shared';
 import type {
   FileOutcome,
@@ -208,7 +209,7 @@ export function initConverter(hooks: ConverterHooks): void {
       const p = document.createElement('p');
       p.textContent = t('conv.batchNudge');
       const a = document.createElement('a');
-      a.href = '/convert';
+      a.href = withBase('convert/');
       a.textContent = t('conv.batchNudgeLink');
       p.append(' ', a);
       li.append(p);

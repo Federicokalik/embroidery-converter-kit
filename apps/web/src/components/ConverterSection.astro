@@ -10,6 +10,12 @@ interface Props {
 }
 const { mode } = Astro.props;
 const studio = mode === 'studio';
+
+// Base-aware link (BASE_URL is '/<repo>/' on GitHub Pages).
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const convertHref = `${base}convert/`;
 ---
 
 <div class="conv-body">
@@ -32,7 +38,7 @@ const studio = mode === 'studio';
     )}
     <p id="accept-hint" class="hint mono"></p>
     {!studio && (
-      <a class="btn btn-ghost conv-full-link" href="/convert" data-i18n="conv.fullLink">Apri il Convertitore completo →</a>
+      <a class="btn btn-ghost conv-full-link" href={convertHref} data-i18n="conv.fullLink">Apri il Convertitore completo →</a>
     )}
   </div>
   <div

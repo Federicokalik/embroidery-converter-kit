@@ -6,6 +6,17 @@ import '../styles/scenes.css';
 import '../styles/converter.css';
 import '../styles/preloader.css';
 import ConverterSection from '../components/ConverterSection.astro';
+// Preloaded through the Vite pipeline so the URLs stay in sync with the
+// hashed assets the CSS @font-face rules resolve to (base-aware on Pages).
+import displayFontUrl from '../assets/fonts/SpaceGrotesk-SemiBold.woff2?url';
+import sansFontUrl from '../assets/fonts/PlusJakartaSans-Regular.woff2?url';
+import monoFontUrl from '../assets/fonts/JetBrainsMono-Regular.woff2?url';
+
+// Base-aware internal links (BASE_URL is '/<repo>/' on GitHub Pages).
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const convertHref = `${base}convert/`;
 ---
 
 <!doctype html>
@@ -18,9 +29,9 @@ import ConverterSection from '../components/ConverterSection.astro';
       name="description"
       content="Converti i tuoi file da ricamo (VIP, ZHS, PES, DST, JEF e altri) direttamente nel browser. I file non lasciano mai il tuo computer."
     />
-    <link rel="preload" href="/fonts/ClashDisplay-Semibold.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={displayFontUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansFontUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={monoFontUrl} as="font" type="font/woff2" crossorigin />
     <link
       rel="icon"
       type="image/svg+xml"
@@ -43,7 +54,7 @@ import ConverterSection from '../components/ConverterSection.astro';
           <button type="button" data-lang="it">IT</button>
           <button type="button" data-lang="en">EN</button>
         </div>
-        <a class="btn btn-primary nav-cta" href="/convert" data-i18n="nav.cta">Converti ora</a>
+        <a class="btn btn-primary nav-cta" href={convertHref} data-i18n="nav.cta">Converti ora</a>
       </div>
     </nav>
 
@@ -57,7 +68,7 @@ import ConverterSection from '../components/ConverterSection.astro';
               VIP, PES, DST e altri. Convertiti dentro il tuo browser.
             </p>
             <div class="hero-ctas">
-              <a class="btn btn-primary" href="/convert" data-i18n="hero.cta">Converti ora</a>
+              <a class="btn btn-primary" href={convertHref} data-i18n="hero.cta">Converti ora</a>
               <a class="btn btn-ghost" href="#babel" data-i18n="hero.learn">Scopri di più</a>
             </div>
           </div>

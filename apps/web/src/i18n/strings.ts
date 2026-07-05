@@ -227,9 +227,12 @@ export const STRINGS: Record<string, Entry> = {
     it: 'Le stesse conversioni, sul tuo computer, senza aprire una pagina.',
     en: 'The same conversions, on your own machine, no page required.',
   },
-  'dl.exe': { it: 'embconv.exe — Windows', en: 'embconv.exe — Windows' },
-  'dl.cli': { it: 'CLI — riga di comando', en: 'CLI — command line' },
-  'dl.soon': { it: 'In arrivo', en: 'Coming soon' },
+  'dl.windows': { it: 'Restitch per Windows — .exe', en: 'Restitch for Windows — .exe' },
+  'dl.macos': { it: 'Restitch per macOS — .dmg', en: 'Restitch for macOS — .dmg' },
+  'dl.linux': { it: 'Restitch per Linux — AppImage', en: 'Restitch for Linux — AppImage' },
+  'dl.cli': { it: 'embconv CLI — tutte le piattaforme', en: 'embconv CLI — all platforms' },
+  'dl.get': { it: 'Scarica', en: 'Download' },
+  'dl.releases': { it: 'Releases', en: 'Releases' },
 
   // Stitch-out panel (conversion animation)
   'stitch.working': { it: 'Sto ricucendo {name}', en: 'Re-stitching {name}' },

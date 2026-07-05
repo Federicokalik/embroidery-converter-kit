@@ -4,6 +4,20 @@
 import '../styles/base.css';
 import '../styles/converter.css';
 import ConverterSection from '../components/ConverterSection.astro';
+// Same Vite-piped font URLs as index.astro (hashed, base-aware).
+import displayFontUrl from '../assets/fonts/SpaceGrotesk-SemiBold.woff2?url';
+import sansFontUrl from '../assets/fonts/PlusJakartaSans-Regular.woff2?url';
+import monoFontUrl from '../assets/fonts/JetBrainsMono-Regular.woff2?url';
+
+// Base-aware internal links (BASE_URL is '/<repo>/' on GitHub Pages).
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+// Desktop and CLI builds are attached to each GitHub Release with stable
+// asset names, so /releases/latest/download/<name> always serves the newest.
+const REPO = 'https://github.com/Federicokalik/embroidery-converter-kit';
+const dl = (asset: string) => `${REPO}/releases/latest/download/${asset}`;
 ---
 
 <!doctype html>
@@ -16,9 +30,9 @@ import ConverterSection from '../components/ConverterSection.astro';
       name="description"
       content="Converti un file di ricamo nel browser: anteprima nei colori reali, scelta del telaio, download immediato."
     />
-    <link rel="preload" href="/fonts/ClashDisplay-Semibold.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={displayFontUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansFontUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={monoFontUrl} as="font" type="font/woff2" crossorigin />
     <link
       rel="icon"
       type="image/svg+xml"
@@ -27,7 +41,7 @@ import ConverterSection from '../components/ConverterSection.astro';
   </head>
   <body data-i18n-title="meta.convertTitle" data-i18n-description="meta.convertDescription">
     <nav class="nav" aria-label="Restitch">
-      <a class="wordmark" href="/">
+      <a class="wordmark" href={base}>
         Restitch
         <svg class="wordmark-stitch" viewBox="0 0 120 8" aria-hidden="true" preserveAspectRatio="none">
           <path d="M2 5 Q16 1 30 5 T58 5 T86 5 T114 5" pathLength="1"></path>
@@ -58,16 +72,28 @@ import ConverterSection from '../components/ConverterSection.astro';
         </p>
         <ul class="dl-cards">
           <li>
-            <button type="button" class="dl-card" disabled>
-              <span class="mono" data-i18n="dl.exe">embconv.exe — Windows</span>
-              <span class="soon-tag mono" data-i18n="dl.soon">In arrivo</span>
-            </button>
+            <a class="dl-card" href={dl('Restitch-Windows.exe')}>
+              <span class="mono" data-i18n="dl.windows">Restitch per Windows — .exe</span>
+              <span class="soon-tag mono" data-i18n="dl.get">Scarica</span>
+            </a>
           </li>
           <li>
-            <button type="button" class="dl-card" disabled>
-              <span class="mono" data-i18n="dl.cli">CLI — riga di comando</span>
-              <span class="soon-tag mono" data-i18n="dl.soon">In arrivo</span>
-            </button>
+            <a class="dl-card" href={dl('Restitch-macOS.dmg')}>
+              <span class="mono" data-i18n="dl.macos">Restitch per macOS — .dmg</span>
+              <span class="soon-tag mono" data-i18n="dl.get">Scarica</span>
+            </a>
+          </li>
+          <li>
+            <a class="dl-card" href={dl('Restitch-Linux.AppImage')}>
+              <span class="mono" data-i18n="dl.linux">Restitch per Linux — AppImage</span>
+              <span class="soon-tag mono" data-i18n="dl.get">Scarica</span>
+            </a>
+          </li>
+          <li>
+            <a class="dl-card" href={`${REPO}/releases/latest`} rel="noopener">
+              <span class="mono" data-i18n="dl.cli">embconv CLI — tutte le piattaforme</span>
+              <span class="soon-tag mono" data-i18n="dl.releases">Releases</span>
+            </a>
           </li>
         </ul>
       </section>

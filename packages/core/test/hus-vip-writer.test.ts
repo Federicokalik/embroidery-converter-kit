@@ -12,6 +12,7 @@ import { writeVip } from '../src/writers/vip';
 import {
   FIXTURE_STEMS,
   GOLDEN_PATTERNS,
+  HAS_PRIVATE_FIXTURES,
   loadFixture,
   loadGoldenJson,
   patternFromDump,
@@ -122,7 +123,7 @@ describe('VIP writer', () => {
     });
   }
 
-  it('fixture threads decode to the known #348D1A', () => {
+  it.skipIf(!HAS_PRIVATE_FIXTURES)('fixture threads decode to the known #348D1A', () => {
     const pattern = readVip(loadFixture('028-B.vip'));
     expect(pattern.threads.map((t) => t.rgb)).toEqual([0x348d1a]);
   });

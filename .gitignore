@@ -6,3 +6,18 @@ __pycache__/
 *.pyc
 .astro/
 .serena/
+
+# Desktop build products (renderer/ is synced from apps/web/dist).
+apps/desktop/renderer/
+apps/desktop/release/
+
+# Private test data: real embroidery designs and their derived goldens are
+# NOT redistributable (see NOTICE). They live only on the owner's machine;
+# the test suite self-skips when they are absent.
+/fixtures/
+packages/core/test/golden/001s-A*
+packages/core/test/golden/028-B*
+packages/core/test/golden/052-Z*
+packages/core/test/golden/formats/001s-A*
+packages/core/test/golden/formats/028-B*
+packages/core/test/golden/formats/052-Z*

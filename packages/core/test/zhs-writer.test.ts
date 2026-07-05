@@ -5,7 +5,7 @@ import { computeExtents } from '../src/ir';
 import { readVip } from '../src/readers/vip';
 import { readZhs } from '../src/readers/zhs';
 import { writeZhs } from '../src/writers/zhs';
-import { FIXTURE_STEMS, loadFixture } from './helpers';
+import { FIXTURE_STEMS, HAS_PRIVATE_FIXTURES, loadFixture } from './helpers';
 
 function byteDiffOffsets(a: Uint8Array, b: Uint8Array): number[] {
   const diffs: number[] = [];
@@ -35,7 +35,7 @@ function patternOf(points: Array<[number, number]>): Pattern {
 }
 
 describe('writeZhs — ground truth', () => {
-  it('regenerates 028-B.zhs byte-identically except exactly offset 0x83', () => {
+  it.skipIf(!HAS_PRIVATE_FIXTURES)('regenerates 028-B.zhs byte-identically except exactly offset 0x83', () => {
     const generated = writeZhs(readVip(loadFixture('028-B.vip'))).bytes;
     const reference = loadFixture('028-B.zhs');
     expect(generated.length).toBe(reference.length);
@@ -44,7 +44,7 @@ describe('writeZhs — ground truth', () => {
     expect(byteDiffOffsets(generated, reference)).toEqual([0x83]);
   });
 
-  it('does NOT chase byte-identity for 001s-A (documented Artist Toolkit quirk)', () => {
+  it.skipIf(!HAS_PRIVATE_FIXTURES)('does NOT chase byte-identity for 001s-A (documented Artist Toolkit quirk)', () => {
     // Artist Toolkit appended an extra (0,0) tie stitch in this sample; the
     // clean record mapping is 2 records (6 bytes) shorter. Functional
     // equivalence is asserted in the round-trip suite below.
