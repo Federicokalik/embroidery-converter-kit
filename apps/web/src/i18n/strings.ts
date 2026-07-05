@@ -103,6 +103,10 @@ export const STRINGS: Record<string, Entry> = {
       'I read files from Husqvarna, Brother, Janome, Tajima and more: {list}. ' +
       'Drop several at once: they line up in the queue.',
   },
+  'conv.fullLink': {
+    it: 'Apri il Convertitore completo →',
+    en: 'Open the full Converter →',
+  },
   'conv.batchNudge': {
     it: 'Qui cucio un file alla volta.',
     en: 'Here I stitch one file at a time.',

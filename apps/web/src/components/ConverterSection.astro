@@ -29,6 +29,9 @@ const studio = mode === 'studio';
       </fieldset>
     )}
     <p id="accept-hint" class="hint mono"></p>
+    {!studio && (
+      <a class="btn btn-ghost conv-full-link" href="/convert" data-i18n="conv.fullLink">Apri il Convertitore completo →</a>
+    )}
   </div>
   <div
     id="dropzone"

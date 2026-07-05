@@ -462,6 +462,15 @@ body.stitchout-open #stage {
   cursor: not-allowed;
 }
 
+/* The landing's door to the full tool: last of the .conv-side column
+   (finale.ts staggers these children, the link just joins the reveal). */
+.conv-full-link {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 /* ---------- Studio toolbar (preset + extra formats) ---------- */
 
 .toolbar-field {
