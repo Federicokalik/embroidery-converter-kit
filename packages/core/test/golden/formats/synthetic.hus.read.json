@@ -1,0 +1,1 @@
+{"stitches": [[5, -5, "STITCH"], [15, -2, "STITCH"], [35, -2, "JUMP"], [35, -2, "TRIM"], [28, -14, "STITCH"], [28, -14, "COLOR_CHANGE"], [34, -20, "STITCH"], [37, -21, "JUMP"], [37, -21, "TRIM"], [35, -12, "STITCH"], [35, -12, "END"]], "threads": [{"rgb": 16711680, "description": "Red", "catalog": "014"}, {"rgb": 8671744, "description": "Brown", "catalog": "028"}]}

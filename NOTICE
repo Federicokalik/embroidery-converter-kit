@@ -1,0 +1,13 @@
+This project ports embroidery format logic from the following MIT-licensed
+open-source projects:
+
+- pyembroidery (https://github.com/inkstitch/pyembroidery) — MIT License.
+  The EmbCompress (Greg-Hus) decompressor, the ZHS reader logic, and the
+  HUS/VIP command conventions in packages/core are TypeScript ports of
+  pyembroidery source code.
+
+- libembroidery (https://github.com/Embroidermodder/libembroidery) —
+  permissive license. Used as format documentation reference.
+
+The ZHS writer is original work, reverse-engineered from Artist Toolkit
+output for interoperability purposes (see docs/ZHS_FORMAT.md).

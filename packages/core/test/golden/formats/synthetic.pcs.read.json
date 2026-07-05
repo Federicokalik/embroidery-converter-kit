@@ -1,0 +1,1 @@
+{"stitches": [[50.0, -50.0, "STITCH"], [100.0, 20.0, "STITCH"], [150.0, -150.0, "JUMP"], [150.0, -150.0, "COLOR_CHANGE"], [200.0, -10.0, "STITCH"], [200.0, -10.0, "END"]], "threads": [{"rgb": 16711680, "description": null, "catalog": null}, {"rgb": 255, "description": null, "catalog": null}]}

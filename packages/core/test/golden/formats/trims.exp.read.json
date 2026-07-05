@@ -1,0 +1,1 @@
+{"stitches": [[0, 0, "STITCH"], [30, 0, "STITCH"], [30, 30, "STITCH"], [30, 30, "TRIM"], [100, 30, "JUMP"], [100, 60, "JUMP"], [100, 60, "STITCH"], [130, 60, "STITCH"], [130, 60, "COLOR_CHANGE"], [160, 60, "JUMP"], [160, 60, "STITCH"], [190, 60, "STITCH"], [190, 60, "COLOR_CHANGE"], [190, 90, "JUMP"], [190, 90, "STITCH"], [220, 90, "STITCH"], [220, 90, "END"]], "threads": []}

@@ -1,0 +1,19 @@
+{
+  "name": "@embroidery/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "embconv": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@embroidery/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
+  }
+}

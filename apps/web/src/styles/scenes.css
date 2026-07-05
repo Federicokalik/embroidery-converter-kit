@@ -1,0 +1,323 @@
+/* Scene layouts. Sections keep transparent backgrounds so the fixed
+   stitch stage (canvas) reads through; only strips/footer paint over it. */
+
+.scene {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  align-content: center;
+  padding-block: clamp(6rem, 14vh, 10rem);
+}
+
+.scene-inner {
+  width: min(1400px, 92vw);
+  margin-inline: auto;
+  position: relative;
+}
+
+.scene h1.display {
+  font-size: clamp(3.2rem, 10.5vw, 10.2rem);
+  max-width: 12ch;
+}
+
+.scene h2.display {
+  font-size: clamp(2.5rem, 7.2vw, 7rem);
+  max-width: 16ch;
+}
+
+/* ---------- S1 Hero ---------- */
+
+.scene-hero .scene-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4rem);
+}
+
+/* Right column is reserved space for the stitched letter on the stage. */
+.hero-stagehold {
+  min-height: 40vh;
+}
+
+.hero-tech {
+  margin: 2rem 0 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
+.hero-ctas {
+  margin-top: 2.2rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- S2 Babel ---------- */
+
+.babel-stations {
+  list-style: none;
+  margin: clamp(3rem, 8vh, 6rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+.babel-stations .ext {
+  display: block;
+  font: 600 clamp(1.6rem, 3.2vw, 2.6rem) var(--font-mono);
+  letter-spacing: -0.02em;
+}
+
+.babel-stations .brand {
+  display: block;
+  margin-top: 0.4rem;
+  font: 400 0.85rem var(--font-mono);
+  color: var(--ink-soft);
+}
+
+/* Space under the copy where the three letters stitch on the stage. */
+.babel-stagehold {
+  min-height: 34vh;
+}
+
+/* ---------- S3 Translation ---------- */
+
+.scene-translation .scene-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4rem);
+}
+
+.coord-stream {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  max-height: 52vh;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+}
+
+.coord-stream .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  white-space: nowrap;
+}
+
+.coord-stream .row.sewn {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.coord-stream .row span:first-child {
+  opacity: 0.4;
+}
+
+/* ---------- S4 From A to Z ---------- */
+
+.scene-atoz {
+  overflow: clip;
+}
+
+.atoz-sub {
+  margin: 1.2rem 0 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+.format-wall-wrap {
+  margin-top: clamp(3rem, 8vh, 6rem);
+  position: relative;
+}
+
+/* Desktop pinned mode: the wall becomes a single viewport-height row
+   that pans horizontally under scrub. */
+.scene-atoz.is-hijack .format-wall {
+  flex-wrap: nowrap;
+  width: max-content;
+  align-items: baseline;
+  column-gap: clamp(4rem, 8vw, 9rem);
+  padding-right: 10vw;
+  will-change: transform;
+}
+
+.scene-atoz.is-hijack .format-wall li {
+  font-size: clamp(7rem, 26vh, 15rem);
+}
+
+.wall-thread {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16%;
+  height: 3px;
+  background: var(--pink);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.format-wall {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: clamp(1.5rem, 4vw, 4rem);
+  row-gap: 1rem;
+}
+
+.format-wall li {
+  font-size: clamp(2.8rem, 8vw, 8rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.format-wall .wall-read {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ink);
+}
+
+.format-wall .wall-write {
+  color: var(--ink);
+}
+
+.format-wall .wall-zhs {
+  color: var(--pink);
+}
+
+/* ---------- S5 Precision ---------- */
+
+.scene-precision .scene-inner {
+  text-align: center;
+  display: grid;
+  justify-items: center;
+}
+
+/* Accent marker bars behind each headline line (SplitText linesClass):
+   ink text stays readable over the ink-colored macro render. */
+.hl-line {
+  background: var(--pink);
+  width: fit-content;
+  margin-inline: auto;
+  padding: 0.03em 0.16em 0.06em;
+}
+
+/* Reduced-motion fallback: no split, inline marker on the raw heading. */
+.headline-highlight {
+  display: inline;
+  background: var(--pink);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.03em 0.16em 0.06em;
+}
+
+.precision-compare {
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  column-gap: clamp(2rem, 6vw, 5rem);
+  row-gap: 0.4rem;
+  font-size: 0.95rem;
+  text-align: left;
+  /* Readable over the macro thread render behind it. */
+  background: rgb(244 244 242 / 0.82);
+  backdrop-filter: blur(4px);
+  padding: 1.1rem 1.5rem;
+  border-radius: 12px;
+}
+
+.precision-compare .label {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+/* ---------- Privacy strip (transition, not a scene) ---------- */
+
+.privacy-strip {
+  position: relative;
+  z-index: 1;
+  padding: clamp(3rem, 8vh, 5rem) 1.5rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  text-align: center;
+}
+
+.privacy-strip p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+  padding: clamp(3.5rem, 8vh, 5rem) 0 3rem;
+}
+
+.footer .scene-inner {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+.wordmark-footer {
+  font: 600 1.6rem var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.footer-tagline {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.footer-credit {
+  margin: 1.2rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.footer-knot {
+  width: 44px;
+  height: 32px;
+  margin-top: 0.5rem;
+}
+
+.footer-knot path {
+  stroke: var(--pink);
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+}
+
+/* ---------- Mobile collapse ---------- */
+
+@media (max-width: 1023px) {
+  .scene-hero .scene-inner,
+  .scene-translation .scene-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-stagehold {
+    min-height: 30vh;
+  }
+
+  .babel-stations {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .babel-stagehold {
+    min-height: 22vh;
+  }
+}

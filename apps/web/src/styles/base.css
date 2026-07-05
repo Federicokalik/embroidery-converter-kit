@@ -1,0 +1,301 @@
+/* Restitch — monochrome paper + shocking pink (light only).
+   Radius rule: interactive = pill, surfaces = 16px.
+   Z scale: 0 stage canvas, 1 content, 2 thread svg, 50 nav,
+            60 grain, 80 stitch-out overlay, 90 preloader.
+   The pink accent NEVER colors body-size text (contrast ~3.4:1 on paper):
+   it is reserved for display type, thread graphics and button surfaces. */
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+:root {
+  --paper: #f4f4f2;
+  --paper-2: #ebebe8;
+  --ink: #141414;
+  --ink-soft: #5a5a58;
+  --line: #d9d9d5;
+  --pink: #ff2e88;
+  --pink-deep: #e01973;
+  --ok: #2e7d4f;
+  --err: #b3372e;
+  --warn: #8a6116;
+  --radius-surface: 16px;
+  --font-display: 'Clash Display', 'Satoshi', system-ui, sans-serif;
+  --font-sans: 'Satoshi', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --nav-h: 64px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  /* Keep layout width stable when a modal locks scrolling. */
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--pink);
+  color: var(--paper);
+}
+
+/* Paper grain: fixed, non-interactive, below the overlays. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:focus-visible {
+  outline: 2px dashed var(--ink);
+  outline-offset: 3px;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* The persistent stitch stage: 2D canvas or WebGL, behind everything. */
+#stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#stage canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.8rem;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font: 700 1rem var(--font-sans);
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--ink);
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--pink);
+  color: var(--ink);
+}
+
+.btn-primary:hover {
+  background: var(--pink-deep);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  border-color: var(--ink);
+  background: transparent;
+}
+
+.btn-ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---------- Navigation ---------- */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: clamp(1rem, 3.5vw, 2.5rem);
+  background: rgb(244 244 242 / 0.88);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.wordmark {
+  position: relative;
+  font: 600 1.3rem var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+  padding-bottom: 4px;
+}
+
+.wordmark-stitch {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 8px;
+  overflow: visible;
+}
+
+.wordmark-stitch path {
+  stroke: var(--pink);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lang-switch {
+  display: flex;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.lang-switch button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 600 0.78rem var(--font-mono);
+  letter-spacing: 0.06em;
+  padding: 0.42rem 0.8rem;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 32px;
+}
+
+.lang-switch button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.audio-toggle {
+  appearance: none;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: 600 0.78rem var(--font-mono);
+  letter-spacing: 0.06em;
+  padding: 0.42rem 0.9rem;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Stitched strike-through = muted. */
+.audio-toggle[aria-pressed='false']::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  border-top: 2px dashed var(--ink);
+  transform: rotate(-6deg);
+}
+
+.nav-cta {
+  padding: 0.55rem 1.3rem;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+  .nav-cta {
+    display: none;
+  }
+}

@@ -1,0 +1,44 @@
+/* Preloader overlay: paper field, wordmark revealed left-to-right by the
+   same progress that draws the pink thread line beneath it. */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  clip-path: inset(0 0 0 0);
+}
+
+.preloader-inner {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  gap: 0.6rem;
+}
+
+.preloader-word {
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  clip-path: inset(0 100% 0 0);
+}
+
+.preloader-stitch {
+  width: 100%;
+  height: 10px;
+  overflow: visible;
+}
+
+.preloader-stitch path {
+  stroke: var(--pink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.preloader-pct {
+  justify-self: end;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
