@@ -9,32 +9,32 @@
    the woff2 files live in src/assets/fonts (Vite pipeline, base-aware URLs)
    with their OFL.txt licenses alongside. */
 @font-face {
-  font-family: 'Space Grotesk';
-  src: url('../assets/fonts/SpaceGrotesk-Medium.woff2') format('woff2');
+  font-family: 'Bricolage Grotesque';
+  src: url('../assets/fonts/BricolageGrotesque-Medium.woff2') format('woff2');
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Space Grotesk';
-  src: url('../assets/fonts/SpaceGrotesk-SemiBold.woff2') format('woff2');
+  font-family: 'Bricolage Grotesque';
+  src: url('../assets/fonts/BricolageGrotesque-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Plus Jakarta Sans';
-  src: url('../assets/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
+  font-family: 'Instrument Sans';
+  src: url('../assets/fonts/InstrumentSans-Regular.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Plus Jakarta Sans';
-  src: url('../assets/fonts/PlusJakartaSans-Medium.woff2') format('woff2');
+  font-family: 'Instrument Sans';
+  src: url('../assets/fonts/InstrumentSans-Medium.woff2') format('woff2');
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Plus Jakarta Sans';
-  src: url('../assets/fonts/PlusJakartaSans-Bold.woff2') format('woff2');
+  font-family: 'Instrument Sans';
+  src: url('../assets/fonts/InstrumentSans-Bold.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
 }
@@ -63,8 +63,8 @@
   --err: #b3372e;
   --warn: #8a6116;
   --radius-surface: 16px;
-  --font-display: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
+  --font-sans: 'Instrument Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --nav-h: 64px;
 }

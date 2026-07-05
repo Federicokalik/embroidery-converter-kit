@@ -34,10 +34,10 @@ export async function runLoader(
 /** Preload the display faces the first paint depends on. */
 export function loadFonts(): Promise<unknown> {
   const faces = [
-    '500 1em "Space Grotesk"',
-    '600 1em "Space Grotesk"',
-    '400 1em "Plus Jakarta Sans"',
-    '700 1em "Plus Jakarta Sans"',
+    '500 1em "Bricolage Grotesque"',
+    '600 1em "Bricolage Grotesque"',
+    '400 1em "Instrument Sans"',
+    '700 1em "Instrument Sans"',
     '400 1em "JetBrains Mono"',
     '600 1em "JetBrains Mono"',
   ];
