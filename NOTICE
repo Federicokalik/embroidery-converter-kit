@@ -1,4 +1,7 @@
-This project ports embroidery format logic from the following MIT-licensed
+Third-party code
+----------------
+
+This project ports embroidery format logic from the following
 open-source projects:
 
 - pyembroidery (https://github.com/inkstitch/pyembroidery) — MIT License.
@@ -7,7 +10,37 @@ open-source projects:
   pyembroidery source code.
 
 - libembroidery (https://github.com/Embroidermodder/libembroidery) —
-  permissive license. Used as format documentation reference.
+  zlib license. Used as format documentation reference; the files under
+  reference/vendor/ are unmodified excerpts kept for reverse-engineering
+  reference only and are not part of the shipped product.
 
 The ZHS writer is original work, reverse-engineered from Artist Toolkit
 output for interoperability purposes (see docs/ZHS_FORMAT.md).
+
+Bundled assets — REPO MUST STAY PRIVATE
+---------------------------------------
+
+- Fonts "Clash Display" and "Satoshi" (apps/web/public/fonts) are
+  licensed under the Fontshare Free Font EULA (see
+  ClashDisplay-LICENSE.txt; the same EULA covers Satoshi). The EULA
+  permits personal/commercial use and self-hosting on the licensee's
+  own website, but PROHIBITS redistribution, including "uploading them
+  in a public server". A public repository would violate it.
+- Font "JetBrains Mono" is licensed under the SIL Open Font License 1.1
+  (https://github.com/JetBrains/JetBrainsMono/blob/master/OFL.txt) —
+  public redistribution would be fine, but only with the OFL text
+  included alongside.
+- fixtures/ contains embroidery designs used as test golden files:
+  personal designs, community designs shared within the owner's group,
+  and a factory sample shipped with a Zeng Hsing machine
+  (fixtures/zhs-samples/). These are test data for interoperability
+  work, not redistributable content.
+
+Checklist before ever making this repository public:
+1. Remove Clash Display + Satoshi binaries (switch to the Fontshare API
+   or self-host outside the repo) or obtain written permission.
+2. Add the OFL 1.1 text next to the JetBrains Mono files.
+3. Review/replace every file in fixtures/ (especially zhs-samples/)
+   with designs cleared for redistribution.
+4. Pick a license for the project's own code (the pyembroidery-derived
+   parts must keep the MIT notice above either way).
