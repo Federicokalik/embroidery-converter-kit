@@ -30,7 +30,9 @@ export function createPreloader(): Preloader {
     word.style.clipPath = `inset(0 ${(1 - v) * 100}% 0 0)`;
   };
 
-  gsap.set(path, { drawSVG: '0%' });
+  // The CSS keeps the line invisible until it is zeroed here: at first
+  // paint (pre-module) a bare path renders fully drawn.
+  gsap.set(path, { drawSVG: '0%', visibility: 'visible' });
   apply();
   const chase = gsap.quickTo(proxy, 'v', {
     duration: 0.4,

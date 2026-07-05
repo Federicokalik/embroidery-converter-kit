@@ -45,15 +45,20 @@ export function hero(ctx: SceneContext): SceneHandle {
     ctx.stage.state.progS = 1;
     ctx.stage.requestRender();
   } else {
+    // Hide the entrance cast NOW, while the preloader still covers the
+    // page: creating these states only after the wipe flashes raw text.
+    gsap.set(h1, { autoAlpha: 0 });
+    gsap.set([tech, ctas], { autoAlpha: 0, y: 24 });
     void ctx.revealed.then(() => {
       if (cancelled) return;
       played = true;
       headline = rise(h1, { delay: 0.1 });
+      gsap.set(h1, { autoAlpha: 1 }); // SplitText owns the words from here
       entrance = gsap
         .timeline()
         .to(ctx.stage.state, { progS: 1, duration: 3.2, ease: 'power1.inOut' }, 0)
-        .from(tech, { autoAlpha: 0, y: 24, duration: 0.7 }, 0.7)
-        .from(ctas, { autoAlpha: 0, y: 24, duration: 0.7 }, 0.85);
+        .to(tech, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.7)
+        .to(ctas, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.85);
 
       // 3D flavor: a slow idle orbit while the user reads the hero.
       // Paused as soon as the story leaves; the scrubs own theta after.
@@ -85,6 +90,9 @@ export function hero(ctx: SceneContext): SceneHandle {
       if (entrance !== null) {
         // Never leave the hero half-sewn on rebuild.
         entrance.progress(1).kill();
+      } else if (!played && !reduceMotion) {
+        // Destroyed before the reveal: undo the pre-hidden states.
+        gsap.set([h1, tech, ctas], { clearProps: 'opacity,visibility,transform' });
       }
     },
   };
