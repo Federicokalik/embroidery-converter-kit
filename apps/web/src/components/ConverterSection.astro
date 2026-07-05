@@ -20,8 +20,10 @@ const studio = mode === 'studio';
         <select id="preset-select" class="hoop-select preset-select"></select>
       </div>
     )}
-    <p class="target-label mono" data-i18n="conv.targetLabel">Cuci in formato</p>
-    <ul id="format-chips" class="chips"></ul>
+    <div class="target-field">
+      <p class="target-label mono" data-i18n="conv.targetLabel">Cuci in formato</p>
+      <ul id="format-chips" class="chips"></ul>
+    </div>
     {studio && (
       <fieldset id="extra-field" class="toolbar-field extra-field">
         <legend class="panel-label mono" data-i18n="tool.extraLabel">Esporta anche in</legend>
