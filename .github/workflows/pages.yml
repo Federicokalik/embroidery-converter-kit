@@ -32,12 +32,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Project sites are served under /<repo>/; ASTRO_SITE turns on the
+      # Custom domain: the site is served at the ROOT of ricuci.app (the
+      # old github.io project URL 301s there). ASTRO_SITE turns on the
       # absolute-URL SEO output (canonical, hreflang, og:*, sitemap).
       - run: pnpm --filter web build
         env:
-          ASTRO_BASE: /${{ github.event.repository.name }}/
-          ASTRO_SITE: https://${{ github.repository_owner }}.github.io
+          ASTRO_SITE: https://ricuci.app
 
       - uses: actions/configure-pages@v5
 

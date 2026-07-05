@@ -13,7 +13,7 @@ and fully documented in [`docs/ZHS_FORMAT.md`](docs/ZHS_FORMAT.md).
 
 | Channel | Where |
 |---|---|
-| **Web** | <https://federicokalik.github.io/embroidery-converter-kit/> — landing with an instant demo, full studio at `/convert/` |
+| **Web** | <https://ricuci.app> — landing with an instant demo, full studio at [/convert/](https://ricuci.app/convert/), docs in [IT](https://ricuci.app/docs/) and [EN](https://ricuci.app/en/docs/) |
 | **Desktop** | [Latest release](https://github.com/Federicokalik/embroidery-converter-kit/releases/latest): `Ricuci-Windows.exe`, `Ricuci-macOS.dmg`, `Ricuci-Linux.AppImage` |
 | **CLI** | Same releases page: `embconv-windows-x64.exe`, `embconv-macos-arm64`, `embconv-macos-x64`, `embconv-linux-x64` |
 
