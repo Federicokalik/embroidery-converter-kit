@@ -3,6 +3,7 @@
 import { applyI18n, t } from './i18n/i18n';
 import { initLangSwitch } from './i18n/lang-switch';
 import { initConverter } from './converter/converter';
+import { initSponsor } from './sponsor';
 
 /** Flag the visitor's desktop OS and wire the CLI "copy" button. */
 function initDownloads(): void {
@@ -40,4 +41,5 @@ function initDownloads(): void {
 applyI18n();
 initLangSwitch();
 initDownloads();
+initSponsor();
 initConverter({ mode: 'studio' });

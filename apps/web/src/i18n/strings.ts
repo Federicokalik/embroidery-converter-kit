@@ -450,23 +450,13 @@ export const STRINGS: Record<string, Entry> = {
     pt: 'Re-costure seus bordados em outro formato.',
   },
   'footer.credit': {
-    it: 'Progetto, codice e design di Federico Calicchia.',
-    en: 'Project, code and design by Federico Calicchia.',
-    fr: 'Projet, code et design par Federico Calicchia.',
-    de: 'Projekt, Code und Design von Federico Calicchia.',
-    es: 'Proyecto, código y diseño por Federico Calicchia.',
-    pt: 'Projeto, código e design por Federico Calicchia.',
+    it: 'Un progetto di Federico Calicchia.',
+    en: 'A project by Federico Calicchia.',
+    fr: 'Un projet de Federico Calicchia.',
+    de: 'Ein Projekt von Federico Calicchia.',
+    es: 'Un proyecto de Federico Calicchia.',
+    pt: 'Um projeto de Federico Calicchia.',
   },
-  'footer.sponsor': { it: 'Sponsor', en: 'Sponsor', fr: 'Sponsor', de: 'Sponsor', es: 'Patrocinador', pt: 'Patrocinador' },
-  'footer.sponsorBy': {
-    it: 'Sostenuto da',
-    en: 'Sponsored by',
-    fr: 'Soutenu par',
-    de: 'Gesponsert von',
-    es: 'Apoyado por',
-    pt: 'Apoiado por',
-  },
-  'footer.docsTitle': { it: 'Documentazione', en: 'Documentation', fr: 'Documentation', de: 'Dokumentation', es: 'Documentación', pt: 'Documentação' },
   'footer.docsLink': {
     it: 'Come funziona Ricuci',
     en: 'How Ricuci works',
@@ -477,6 +467,10 @@ export const STRINGS: Record<string, Entry> = {
   },
   'footer.formatsLink': { it: 'Formati supportati', en: 'Supported formats', fr: 'Formats pris en charge', de: 'Unterstützte Formate', es: 'Formatos soportados', pt: 'Formatos suportados' },
   'footer.privacyLink': { it: 'Privacy', en: 'Privacy', fr: 'Confidentialité', de: 'Datenschutz', es: 'Privacidad', pt: 'Privacidade' },
+
+  // Floating sponsor badge
+  'sponsor.kicker': { it: 'Sostenuto da', en: 'Sponsored by', fr: 'Soutenu par', de: 'Gesponsert von', es: 'Apoyado por', pt: 'Apoiado por' },
+  'sponsor.close': { it: 'Chiudi', en: 'Close', fr: 'Fermer', de: 'Schließen', es: 'Cerrar', pt: 'Fechar' },
 
   // Docs pages
   'docs.tagline': {

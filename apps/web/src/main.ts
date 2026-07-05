@@ -6,6 +6,7 @@ import { initConverter, renderFormatWall } from './converter/converter';
 import { playStitchOut } from './converter/stitchout';
 import { scrollToSection, refreshScroll } from './core/gsap';
 import { initExperience } from './experience';
+import { initSponsor } from './sponsor';
 
 function initAnchors(): void {
   for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')) {
@@ -24,4 +25,5 @@ renderFormatWall(
   document.getElementById('atoz-sub')!,
 );
 initAnchors();
+initSponsor();
 void initExperience();

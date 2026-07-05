@@ -54,56 +54,6 @@
   border-color: var(--pink);
 }
 
-.footer-sponsor {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.4rem;
-  margin-top: 1.4rem;
-  padding: 0.9rem 1.2rem;
-  border: 1.5px solid var(--pink);
-  border-radius: var(--radius-surface);
-  text-decoration: none;
-  color: var(--ink);
-  background: color-mix(in srgb, var(--pink) 6%, var(--paper));
-  transition:
-    transform 0.18s ease,
-    background-color 0.18s ease;
-}
-
-.footer-sponsor:hover {
-  transform: translateY(-1px);
-  background: color-mix(in srgb, var(--pink) 12%, var(--paper));
-}
-
-.footer-sponsor-label {
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-.footer-sponsor-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font: 600 1.05rem var(--font-display);
-  letter-spacing: -0.01em;
-}
-
-.footer-sponsor-text {
-  background: linear-gradient(90deg, var(--ink) 0%, var(--pink-deep) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.footer-sponsor-arrow {
-  width: 12px;
-  height: 12px;
-  color: var(--pink-deep);
-}
-
 .footer-knot {
   width: 44px;
   height: 32px;

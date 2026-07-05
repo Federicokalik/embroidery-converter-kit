@@ -6,9 +6,11 @@
 import '../../styles/base.css';
 import '../../styles/converter.css';
 import '../../styles/footer.css';
+import '../../styles/sponsor.css';
 import ConverterSection from '../ConverterSection.astro';
 import Footer from '../Footer.astro';
 import SiteHead from '../SiteHead.astro';
+import SponsorBadge from '../SponsorBadge.astro';
 import { DOCS_LANGS, LANGS, localeUrl, translate } from '../../i18n/i18n';
 import type { Lang } from '../../i18n/i18n';
 
@@ -131,6 +133,8 @@ const dl = (asset: string): string => `${REPO}/releases/latest/download/${asset}
     </main>
 
     <Footer lang={lang} />
+
+    <SponsorBadge lang={lang} />
 
     <script>
       import '../../convert-entry';

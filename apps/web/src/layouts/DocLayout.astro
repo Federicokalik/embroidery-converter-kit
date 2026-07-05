@@ -6,9 +6,11 @@
 import '../styles/base.css';
 import '../styles/footer.css';
 import '../styles/docs.css';
+import '../styles/sponsor.css';
 import DocsNav from '../components/DocsNav.astro';
 import Footer from '../components/Footer.astro';
 import SiteHead from '../components/SiteHead.astro';
+import SponsorBadge from '../components/SponsorBadge.astro';
 import { DOCS_LANGS, localeUrl, pageLogicalPath } from '../i18n/i18n';
 import type { Lang } from '../i18n/i18n';
 
@@ -114,11 +116,15 @@ const logical = `${here}/`;
 
     <Footer lang={lang} />
 
+    <SponsorBadge lang={lang} />
+
     <script>
       import { applyI18n } from '../i18n/i18n';
       import { initLangSwitch } from '../i18n/lang-switch';
+      import { initSponsor } from '../sponsor';
       applyI18n();
       initLangSwitch();
+      initSponsor();
     </script>
   </body>
 </html>
