@@ -1033,4 +1033,14 @@ body.stitchout-open #stage {
     min-width: 0;
     width: 100%;
   }
+
+  /* The npx command is long: let the box wrap so the copy button drops
+     onto its own line instead of scrolling out of reach. */
+  .dl-cmd {
+    flex-wrap: wrap;
+  }
+
+  .dl-copy {
+    margin-left: auto;
+  }
 }
