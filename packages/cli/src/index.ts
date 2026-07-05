@@ -27,13 +27,15 @@ function usage(): never {
   console.error(
     [
       'Usage:',
-      '  embconv <input> <output> [--hoop <WxH>] [--center]',
-      '  embconv --batch <dir> --to <format> [--out <dir>] [--hoop <WxH>] [--center]',
+      '  embconv <input> <output> [--hoop <WxH>] [--center] [--pause-trims]',
+      '  embconv --batch <dir> --to <format> [--out <dir>] [--hoop <WxH>] [--center] [--pause-trims]',
       '  embconv info <file> [--hoop <WxH>] [--brand <brand>]',
       '',
       '  --hoop <WxH>   target hoop in mm (e.g. 130x180) for formats that',
-      '                 declare one (pes, jef); in `info`, fit-check against it',
+      '                 declare one (pes, jef, zhs); in `info`, fit-check against it',
       '  --center       center the design on the origin before writing',
+      '  --pause-trims  zhs: stop the machine at each mid-color trim (cut the',
+      '                 thread there) instead of dropping trims silently',
       `  --brand        one of: ${Object.keys(HOOP_CATALOG).join(', ')}`,
       '',
       `Readable formats: ${read.join(', ')}`,
@@ -204,6 +206,7 @@ if (args[0] === 'info') {
   args.shift();
   const hoopSpec = takeOption(args, '--hoop');
   const doCenter = takeFlag(args, '--center');
+  const pauseTrims = takeFlag(args, '--pause-trims');
   const target = takeOption(args, '--to');
   const outDirOpt = takeOption(args, '--out');
   const dir = args[0];
@@ -215,6 +218,7 @@ if (args[0] === 'info') {
   }
   const options: WriterOptions = {};
   if (hoopSpec !== undefined) options.hoop = parseHoop(hoopSpec);
+  if (pauseTrims) options.trims = 'pause';
   mkdirSync(outDir, { recursive: true });
   const readable = new Set(supportedFormats().read);
   let ok = 0;
@@ -235,8 +239,10 @@ if (args[0] === 'info') {
 } else {
   const hoopSpec = takeOption(args, '--hoop');
   const doCenter = takeFlag(args, '--center');
+  const pauseTrims = takeFlag(args, '--pause-trims');
   const options: WriterOptions = {};
   if (hoopSpec !== undefined) options.hoop = parseHoop(hoopSpec);
+  if (pauseTrims) options.trims = 'pause';
   if (args.length === 2 && args[0] !== undefined && args[1] !== undefined) {
     process.exit(convertFile(args[0], args[1], options, doCenter) ? 0 : 1);
   } else {

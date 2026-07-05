@@ -100,24 +100,42 @@ export function writeZhs(pattern: Pattern, options?: WriterOptions): ZhsWriteRes
 
   const warnings: ConversionWarning[] = [];
 
-  // No ZHS trim record is known (the factory multicolor sample uses none):
-  // TRIMs are dropped, like the JEF writer's trims=False default.
-  const trimCount = pattern.stitches.filter((s) => s.command === 'TRIM').length;
-  if (trimCount > 0) {
+  // No ZHS trim record is known (the factory multicolor sample uses none).
+  // 'drop' (default, what factory files do): remove TRIMs, floating threads
+  // are cut by hand. 'pause': a mid-block TRIM becomes a STOP — a machine
+  // pause where the thread can be cut — unless a pause already follows it
+  // (color change / stop / end of design), in which case it is redundant.
+  const trimMode = options?.trims ?? 'drop';
+  const raw = pattern.stitches.filter((s) => s.command !== 'END');
+  const pauseFollows = (from: number): boolean => {
+    for (let j = from + 1; j < raw.length; j++) {
+      const c = raw[j]!.command;
+      if (c === 'JUMP' || c === 'TRIM') continue;
+      return c === 'COLOR_CHANGE' || c === 'STOP';
+    }
+    return true; // nothing but jumps left: the design ends here
+  };
+  const stitches: Stitch[] = [];
+  let dropped = 0;
+  raw.forEach((s, i) => {
+    if (s.command !== 'TRIM') {
+      stitches.push({ ...s });
+    } else if (trimMode === 'pause' && !pauseFollows(i)) {
+      stitches.push({ x: s.x, y: s.y, command: 'STOP' });
+    } else {
+      dropped += 1;
+    }
+  });
+  if (dropped > 0 && trimMode === 'drop') {
     warnings.push({
       code: 'TRIM_DROPPED',
       message:
-        `${trimCount} trim command(s) dropped: ZHS has no known trim record ` +
+        `${dropped} trim command(s) dropped: ZHS has no known trim record ` +
         '(the machine has no thread trimmer); floating threads between color ' +
-        'blocks must be cut by hand.',
+        'blocks must be cut by hand. Use the pause-at-trims option to stop ' +
+        'the machine at each mid-color trim instead.',
     });
   }
-
-  // Work on copies: interpolateStopAsDuplicateColor mutates, and STOP becomes
-  // a color change to a duplicated thread (same trick the PEC/PES writers use).
-  const stitches = pattern.stitches
-    .filter((s) => s.command !== 'END' && s.command !== 'TRIM')
-    .map((s) => ({ ...s }));
   const threads = pattern.threads.map((t) => ({ ...t }));
   interpolateStopAsDuplicateColor(stitches, threads);
 

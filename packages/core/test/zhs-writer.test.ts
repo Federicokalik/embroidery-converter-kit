@@ -76,24 +76,56 @@ describe('writeZhs — gates and formerly-gated features', () => {
       .toThrow(UnsupportedDesignError);
   });
 
+  const trimPattern: Pattern = {
+    ...base,
+    stitches: [
+      ...base.stitches,
+      { x: 2, y: 2, command: 'TRIM' }, // mid-color trim: no pause follows
+      { x: 30, y: 30, command: 'JUMP' },
+      { x: 30, y: 30, command: 'STITCH' },
+      { x: 35, y: 35, command: 'STITCH' },
+    ],
+    threads: [{ rgb: 0x336699 }],
+  };
+
   it('drops TRIM with a warning (no trim record exists in any ZHS sample)', () => {
+    const { bytes, warnings } = writeZhs(trimPattern);
+    expect(warnings.filter((w) => w.code === 'TRIM_DROPPED')).toHaveLength(1);
+    const back = readZhs(bytes);
+    expect(back.stitches.some((s) => s.command === 'TRIM')).toBe(false);
+    expect(back.stitches.filter((s) => s.command === 'COLOR_CHANGE')).toHaveLength(0);
+    expect(strippedPath(back.stitches)).toEqual(
+      strippedPath(trimPattern.stitches.filter((s) => s.command !== 'TRIM')),
+    );
+  });
+
+  it('trims: "pause" turns a mid-color trim into a same-color machine stop', () => {
+    const { bytes, warnings } = writeZhs(trimPattern, { trims: 'pause' });
+    expect(warnings.filter((w) => w.code === 'TRIM_DROPPED')).toHaveLength(0);
+    const back = readZhs(bytes);
+    // the pause is a color change onto the SAME color (duplicated thread)
+    expect(back.stitches.filter((s) => s.command === 'COLOR_CHANGE')).toHaveLength(1);
+    expect(back.threads.map((t) => t.rgb)).toEqual([0x336699, 0x336699]);
+    expect(strippedPath(back.stitches)).toEqual(
+      strippedPath(trimPattern.stitches.filter((s) => s.command !== 'TRIM')),
+    );
+  });
+
+  it('trims: "pause" drops a trim that already precedes a color change', () => {
     const pattern: Pattern = {
       ...base,
       stitches: [
         ...base.stitches,
-        { x: 2, y: 2, command: 'TRIM' },
-        { x: 30, y: 30, command: 'JUMP' },
+        { x: 2, y: 2, command: 'TRIM' }, // redundant: the machine pauses at the CC
+        { x: 2, y: 2, command: 'COLOR_CHANGE' },
         { x: 30, y: 30, command: 'STITCH' },
         { x: 35, y: 35, command: 'STITCH' },
       ],
+      threads: [{ rgb: 0xff0000 }, { rgb: 0x0000ff }],
     };
-    const { bytes, warnings } = writeZhs(pattern);
-    expect(warnings.filter((w) => w.code === 'TRIM_DROPPED')).toHaveLength(1);
-    const back = readZhs(bytes);
-    expect(back.stitches.some((s) => s.command === 'TRIM')).toBe(false);
-    expect(strippedPath(back.stitches)).toEqual(
-      strippedPath(pattern.stitches.filter((s) => s.command !== 'TRIM')),
-    );
+    const back = readZhs(writeZhs(pattern, { trims: 'pause' }).bytes);
+    expect(back.stitches.filter((s) => s.command === 'COLOR_CHANGE')).toHaveLength(1);
+    expect(back.threads.map((t) => t.rgb)).toEqual([0xff0000, 0x0000ff]);
   });
 
   it('mid-design jumps become MOVE runs and survive the round trip', () => {
