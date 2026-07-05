@@ -6,7 +6,6 @@
  * WebGL context loss mid-session downgrades to the 2D stage and
  * rebuilds the scenes in place.
  */
-import { initAudioToggle } from './audio/toggle';
 import { isDesktop, reduceMotion, refreshScroll } from './core/gsap';
 import { loadFonts, runLoader } from './core/loader';
 import { atoz } from './scenes/atoz';
@@ -34,7 +33,6 @@ export async function initExperience(): Promise<void> {
   let manager: SceneManager | null = null;
   let ctx: SceneContext | null = null;
   let cast: CastData | null = null;
-  const audio = initAudioToggle();
 
   const downgrade = (): void => {
     if (ctx === null || cast === null) return;
@@ -45,7 +43,6 @@ export async function initExperience(): Promise<void> {
     s2.setCast(cast);
     ctx.stage = s2;
     registerStitchOutStage(s2);
-    audio.attach(s2);
     manager?.rebuild();
     s2.start();
     s2.requestRender();
@@ -78,7 +75,6 @@ export async function initExperience(): Promise<void> {
   }
 
   registerStitchOutStage(stage);
-  audio.attach(stage);
   const revealed = pre.finish();
   ctx = { stage, cast, desktop, revealed };
 
