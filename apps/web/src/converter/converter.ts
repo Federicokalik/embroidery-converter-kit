@@ -400,7 +400,7 @@ export function initConverter(hooks: ConverterHooks): void {
         triggerDownload(files[0]!.bytes, files[0]!.name);
       } else if (files.length > 1) {
         const base = item.fileName.replace(/\.[^.]*$/, '');
-        downloadZip(files, `restitch-${base}.zip`);
+        downloadZip(files, `ricuci-${base}.zip`);
       }
     } finally {
       busy = false;
@@ -430,7 +430,7 @@ export function initConverter(hooks: ConverterHooks): void {
       } else if (all.length > 1) {
         const exts = new Set(all.map((f) => extensionOf(f.name)));
         const zipName =
-          exts.size === 1 ? `restitch-${[...exts][0]}.zip` : 'restitch-batch.zip';
+          exts.size === 1 ? `ricuci-${[...exts][0]}.zip` : 'ricuci-batch.zip';
         downloadZip(all, zipName);
       }
     } finally {

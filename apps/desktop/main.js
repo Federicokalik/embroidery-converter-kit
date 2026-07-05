@@ -1,5 +1,5 @@
 /**
- * Restitch desktop — Electron shell around the web converter.
+ * Ricuci desktop — Electron shell around the web converter.
  *
  * Loads the Astro build (synced into renderer/ by scripts/sync-renderer.mjs)
  * through a custom app:// protocol so the site's absolute asset URLs work

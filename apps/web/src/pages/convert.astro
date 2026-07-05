@@ -28,7 +28,7 @@ const dl = (asset: string) => `${REPO}/releases/latest/download/${asset}`;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Restitch — Convertitore</title>
+    <title>Ricuci — Convertitore</title>
     <meta
       name="description"
       content="Converti un file di ricamo nel browser: anteprima nei colori reali, scelta del telaio, download immediato."
@@ -43,9 +43,9 @@ const dl = (asset: string) => `${REPO}/releases/latest/download/${asset}`;
     />
   </head>
   <body data-i18n-title="meta.convertTitle" data-i18n-description="meta.convertDescription">
-    <nav class="nav" aria-label="Restitch">
+    <nav class="nav" aria-label="Ricuci">
       <a class="wordmark" href={base}>
-        Restitch
+        Ricuci
         <svg class="wordmark-stitch" viewBox="0 0 120 8" aria-hidden="true" preserveAspectRatio="none">
           <path d="M2 5 Q16 1 30 5 T58 5 T86 5 T114 5" pathLength="1"></path>
         </svg>
@@ -85,20 +85,20 @@ const dl = (asset: string) => `${REPO}/releases/latest/download/${asset}`;
         </p>
         <ul class="dl-cards">
           <li>
-            <a class="dl-card" href={dl('Restitch-Windows.exe')}>
-              <span class="mono" data-i18n="dl.windows">Restitch per Windows — .exe</span>
+            <a class="dl-card" href={dl('Ricuci-Windows.exe')}>
+              <span class="mono" data-i18n="dl.windows">Ricuci per Windows — .exe</span>
               <span class="soon-tag mono" data-i18n="dl.get">Scarica</span>
             </a>
           </li>
           <li>
-            <a class="dl-card" href={dl('Restitch-macOS.dmg')}>
-              <span class="mono" data-i18n="dl.macos">Restitch per macOS — .dmg</span>
+            <a class="dl-card" href={dl('Ricuci-macOS.dmg')}>
+              <span class="mono" data-i18n="dl.macos">Ricuci per macOS — .dmg</span>
               <span class="soon-tag mono" data-i18n="dl.get">Scarica</span>
             </a>
           </li>
           <li>
-            <a class="dl-card" href={dl('Restitch-Linux.AppImage')}>
-              <span class="mono" data-i18n="dl.linux">Restitch per Linux — AppImage</span>
+            <a class="dl-card" href={dl('Ricuci-Linux.AppImage')}>
+              <span class="mono" data-i18n="dl.linux">Ricuci per Linux — AppImage</span>
               <span class="soon-tag mono" data-i18n="dl.get">Scarica</span>
             </a>
           </li>

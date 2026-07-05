@@ -23,7 +23,7 @@ export const LANGS: ReadonlyArray<{ code: Lang; label: string; flag: string }> =
 
 const FALLBACK: Lang = 'en';
 
-const STORAGE_KEY = 'restitch-lang';
+const STORAGE_KEY = 'ricuci-lang';
 
 function normalizeBrowserLang(tag: string): Lang | null {
   const low = tag.toLowerCase();

@@ -3,7 +3,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "version": "0.1.0",
-  "description": "Restitch — embroidery file converter (desktop)",
+  "description": "Ricuci — embroidery file converter (desktop)",
   "author": "Federico Kalik",
   "main": "main.js",
   "scripts": {
@@ -20,8 +20,8 @@
     "sharp": "^0.34.4"
   },
   "build": {
-    "appId": "dev.federicokalik.restitch",
-    "productName": "Restitch",
+    "appId": "dev.federicokalik.ricuci",
+    "productName": "Ricuci",
     "files": ["main.js", "renderer/**", "build/icon.png"],
     "directories": {
       "buildResources": "build",
@@ -33,7 +33,7 @@
       "icon": "build/icon.png"
     },
     "portable": {
-      "artifactName": "Restitch-Windows.exe"
+      "artifactName": "Ricuci-Windows.exe"
     },
     "mac": {
       "target": [{ "target": "dmg", "arch": ["universal"] }],
@@ -41,7 +41,7 @@
       "category": "public.app-category.graphics-design"
     },
     "dmg": {
-      "artifactName": "Restitch-macOS.dmg"
+      "artifactName": "Ricuci-macOS.dmg"
     },
     "linux": {
       "target": ["AppImage"],
@@ -49,7 +49,7 @@
       "category": "Graphics"
     },
     "appImage": {
-      "artifactName": "Restitch-Linux.AppImage"
+      "artifactName": "Ricuci-Linux.AppImage"
     }
   }
 }

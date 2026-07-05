@@ -27,7 +27,7 @@ const docsHref = `${base}docs/`;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Restitch, il convertitore di ricami nel browser</title>
+    <title>Ricuci, il convertitore di ricami nel browser</title>
     <meta
       name="description"
       content="Converti i tuoi file da ricamo (VIP, ZHS, PES, DST, JEF e altri) direttamente nel browser. I file non lasciano mai il tuo computer."
@@ -45,9 +45,9 @@ const docsHref = `${base}docs/`;
     <!-- Persistent stitch stage: the pink thread lives here (2D or WebGL). -->
     <div id="stage" aria-hidden="true"></div>
 
-    <nav class="nav" aria-label="Restitch">
+    <nav class="nav" aria-label="Ricuci">
       <a class="wordmark" href="#hero">
-        Restitch
+        Ricuci
         <svg class="wordmark-stitch" viewBox="0 0 120 8" aria-hidden="true" preserveAspectRatio="none">
           <path d="M2 5 Q16 1 30 5 T58 5 T86 5 T114 5" pathLength="1"></path>
         </svg>
@@ -116,7 +116,7 @@ const docsHref = `${base}docs/`;
       <section class="scene scene-translation" id="translation">
         <div class="scene-inner">
           <h2 class="display" data-i18n="translation.headline">
-            Restitch le traduce tutte. Punto per punto.
+            Ricuci le traduce tutte. Punto per punto.
           </h2>
           <div class="coord-stream mono" id="coord-stream" aria-hidden="true"></div>
         </div>
@@ -163,13 +163,13 @@ const docsHref = `${base}docs/`;
 
       <footer class="footer">
         <div class="scene-inner">
-          <span class="wordmark-footer">Restitch</span>
+          <span class="wordmark-footer">Ricuci</span>
           <p class="footer-tagline" data-i18n="footer.tagline">
             Ricuci i tuoi ricami in un altro formato.
           </p>
 
           <nav class="footer-links" aria-label="Footer">
-            <a href={docsHref} data-i18n="footer.docsLink">Come funziona Restitch</a>
+            <a href={docsHref} data-i18n="footer.docsLink">Come funziona Ricuci</a>
             <a href={`${docsHref}formats/`} data-i18n="footer.formatsLink">Formati supportati</a>
             <a href={`${docsHref}privacy/`} data-i18n="footer.privacyLink">Privacy</a>
           </nav>
@@ -232,7 +232,7 @@ const docsHref = `${base}docs/`;
     <!-- Preloader: the wordmark stitches in while fonts + fixtures load. -->
     <div id="preloader" class="preloader">
       <div class="preloader-inner">
-        <span class="preloader-word display" aria-hidden="true">Restitch</span>
+        <span class="preloader-word display" aria-hidden="true">Ricuci</span>
         <svg class="preloader-stitch" viewBox="0 0 240 10" preserveAspectRatio="none" aria-hidden="true">
           <path id="preloader-path" d="M2 6 Q22 1 42 6 T82 6 T122 6 T162 6 T202 6 T238 6"></path>
         </svg>

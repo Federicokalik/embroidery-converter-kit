@@ -1,4 +1,4 @@
-# Restitch — universal embroidery file converter
+# Ricuci — universal embroidery file converter
 
 Convert embroidery designs between machine formats — **entirely on your own
 machine**. No uploads, no server, no account: the converter runs in your
@@ -14,7 +14,7 @@ and fully documented in [`docs/ZHS_FORMAT.md`](docs/ZHS_FORMAT.md).
 | Channel | Where |
 |---|---|
 | **Web** | <https://federicokalik.github.io/embroidery-converter-kit/> — landing with an instant demo, full studio at `/convert/` |
-| **Desktop** | [Latest release](https://github.com/Federicokalik/embroidery-converter-kit/releases/latest): `Restitch-Windows.exe`, `Restitch-macOS.dmg`, `Restitch-Linux.AppImage` |
+| **Desktop** | [Latest release](https://github.com/Federicokalik/embroidery-converter-kit/releases/latest): `Ricuci-Windows.exe`, `Ricuci-macOS.dmg`, `Ricuci-Linux.AppImage` |
 | **CLI** | Same releases page: `embconv-windows-x64.exe`, `embconv-macos-arm64`, `embconv-macos-x64`, `embconv-linux-x64` |
 
 The desktop and CLI builds are unsigned: Windows SmartScreen and macOS

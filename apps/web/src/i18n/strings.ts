@@ -24,12 +24,12 @@ export type Entry = {
 export const STRINGS: Record<string, Entry> = {
   // Document metadata
   'meta.title': {
-    it: 'Restitch, il convertitore di ricami nel browser',
-    en: 'Restitch, the in-browser embroidery converter',
-    fr: 'Restitch, le convertisseur de broderies dans le navigateur',
-    de: 'Restitch, der Stickdatei-Konverter im Browser',
-    es: 'Restitch, el convertidor de bordados en el navegador',
-    pt: 'Restitch, o conversor de bordados no navegador',
+    it: 'Ricuci, il convertitore di ricami nel browser',
+    en: 'Ricuci, the in-browser embroidery converter',
+    fr: 'Ricuci, le convertisseur de broderies dans le navigateur',
+    de: 'Ricuci, der Stickdatei-Konverter im Browser',
+    es: 'Ricuci, el convertidor de bordados en el navegador',
+    pt: 'Ricuci, o conversor de bordados no navegador',
   },
   'meta.description': {
     it:
@@ -89,12 +89,12 @@ export const STRINGS: Record<string, Entry> = {
 
   // S3 Translation
   'translation.headline': {
-    it: 'Restitch le traduce tutte. Punto per punto.',
-    en: 'Restitch translates them all. Stitch by stitch.',
-    fr: 'Restitch les traduit toutes. Point par point.',
-    de: 'Restitch übersetzt sie alle. Punkt für Punkt.',
-    es: 'Restitch los traduce todos. Punto por punto.',
-    pt: 'Restitch traduz todos. Ponto por ponto.',
+    it: 'Ricuci le traduce tutte. Punto per punto.',
+    en: 'Ricuci translates them all. Stitch by stitch.',
+    fr: 'Ricuci les traduit toutes. Point par point.',
+    de: 'Ricuci übersetzt sie alle. Punkt für Punkt.',
+    es: 'Ricuci los traduce todos. Punto por punto.',
+    pt: 'Ricuci traduz todos. Ponto por ponto.',
   },
 
   // S4 From A to Z
@@ -234,12 +234,12 @@ export const STRINGS: Record<string, Entry> = {
 
   // /convert page
   'meta.convertTitle': {
-    it: 'Restitch — Convertitore',
-    en: 'Restitch — Converter',
-    fr: 'Restitch — Convertisseur',
-    de: 'Restitch — Konverter',
-    es: 'Restitch — Convertidor',
-    pt: 'Restitch — Conversor',
+    it: 'Ricuci — Convertitore',
+    en: 'Ricuci — Converter',
+    fr: 'Ricuci — Convertisseur',
+    de: 'Ricuci — Konverter',
+    es: 'Ricuci — Convertidor',
+    pt: 'Ricuci — Conversor',
   },
   'meta.convertDescription': {
     it:
@@ -394,9 +394,9 @@ export const STRINGS: Record<string, Entry> = {
     es: 'Las mismas conversiones, en tu equipo, sin abrir una página.',
     pt: 'As mesmas conversões, na sua máquina, sem abrir uma página.',
   },
-'dl.windows': { it: 'Restitch per Windows — .exe', en: 'Restitch for Windows — .exe', fr: 'Restitch pour Windows — .exe', de: 'Restitch für Windows — .exe', es: 'Restitch para Windows — .exe', pt: 'Restitch para Windows — .exe' },
-  'dl.macos': { it: 'Restitch per macOS — .dmg', en: 'Restitch for macOS — .dmg', fr: 'Restitch pour macOS — .dmg', de: 'Restitch für macOS — .dmg', es: 'Restitch para macOS — .dmg', pt: 'Restitch para macOS — .dmg' },
-  'dl.linux': { it: 'Restitch per Linux — AppImage', en: 'Restitch for Linux — AppImage', fr: 'Restitch pour Linux — AppImage', de: 'Restitch für Linux — AppImage', es: 'Restitch para Linux — AppImage', pt: 'Restitch para Linux — AppImage' },
+'dl.windows': { it: 'Ricuci per Windows — .exe', en: 'Ricuci for Windows — .exe', fr: 'Ricuci pour Windows — .exe', de: 'Ricuci für Windows — .exe', es: 'Ricuci para Windows — .exe', pt: 'Ricuci para Windows — .exe' },
+  'dl.macos': { it: 'Ricuci per macOS — .dmg', en: 'Ricuci for macOS — .dmg', fr: 'Ricuci pour macOS — .dmg', de: 'Ricuci für macOS — .dmg', es: 'Ricuci para macOS — .dmg', pt: 'Ricuci para macOS — .dmg' },
+  'dl.linux': { it: 'Ricuci per Linux — AppImage', en: 'Ricuci for Linux — AppImage', fr: 'Ricuci pour Linux — AppImage', de: 'Ricuci für Linux — AppImage', es: 'Ricuci para Linux — AppImage', pt: 'Ricuci para Linux — AppImage' },
   'dl.cli': { it: 'embconv CLI — tutte le piattaforme', en: 'embconv CLI — all platforms', fr: 'embconv CLI — toutes les plateformes', de: 'embconv CLI — alle Plattformen', es: 'embconv CLI — todas las plataformas', pt: 'embconv CLI — todas as plataformas' },
   'dl.get': { it: 'Scarica', en: 'Download', fr: 'Télécharger', de: 'Herunterladen', es: 'Descargar', pt: 'Baixar' },
   'dl.releases': { it: 'Releases', en: 'Releases', fr: 'Versions', de: 'Releases', es: 'Versiones', pt: 'Versões' },
@@ -463,24 +463,24 @@ export const STRINGS: Record<string, Entry> = {
   },
   'footer.docsTitle': { it: 'Documentazione', en: 'Documentation', fr: 'Documentation', de: 'Dokumentation', es: 'Documentación', pt: 'Documentação' },
   'footer.docsLink': {
-    it: 'Come funziona Restitch',
-    en: 'How Restitch works',
-    fr: 'Comment fonctionne Restitch',
-    de: 'Wie Restitch funktioniert',
-    es: 'Cómo funciona Restitch',
-    pt: 'Como o Restitch funciona',
+    it: 'Come funziona Ricuci',
+    en: 'How Ricuci works',
+    fr: 'Comment fonctionne Ricuci',
+    de: 'Wie Ricuci funktioniert',
+    es: 'Cómo funciona Ricuci',
+    pt: 'Como o Ricuci funciona',
   },
   'footer.formatsLink': { it: 'Formati supportati', en: 'Supported formats', fr: 'Formats pris en charge', de: 'Unterstützte Formate', es: 'Formatos soportados', pt: 'Formatos suportados' },
   'footer.privacyLink': { it: 'Privacy', en: 'Privacy', fr: 'Confidentialité', de: 'Datenschutz', es: 'Privacidad', pt: 'Privacidade' },
 
   // Docs pages
   'docs.tagline': {
-    it: 'Come funziona Restitch, dentro e fuori.',
-    en: 'How Restitch works, inside and out.',
-    fr: 'Comment fonctionne Restitch, dedans et dehors.',
-    de: 'Wie Restitch funktioniert, innen und außen.',
-    es: 'Cómo funciona Restitch, por dentro y por fuera.',
-    pt: 'Como o Restitch funciona, por dentro e por fora.',
+    it: 'Come funziona Ricuci, dentro e fuori.',
+    en: 'How Ricuci works, inside and out.',
+    fr: 'Comment fonctionne Ricuci, dedans et dehors.',
+    de: 'Wie Ricuci funktioniert, innen und außen.',
+    es: 'Cómo funciona Ricuci, por dentro y por fuera.',
+    pt: 'Como o Ricuci funciona, por dentro e por fora.',
   },
   'docs.backHome': { it: '← Torna alla home', en: '← Back to home', fr: '← Retour à l’accueil', de: '← Zurück zur Startseite', es: '← Volver al inicio', pt: '← Voltar ao início' },
   'docs.backConverter': { it: '← Torna al convertitore', en: '← Back to the converter', fr: '← Retour au convertisseur', de: '← Zurück zum Konverter', es: '← Volver al convertidor', pt: '← Voltar ao conversor' },

@@ -27,11 +27,11 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            asset: apps/desktop/release/Restitch-Windows.exe
+            asset: apps/desktop/release/Ricuci-Windows.exe
           - os: macos-latest
-            asset: apps/desktop/release/Restitch-macOS.dmg
+            asset: apps/desktop/release/Ricuci-macOS.dmg
           - os: ubuntu-latest
-            asset: apps/desktop/release/Restitch-Linux.AppImage
+            asset: apps/desktop/release/Ricuci-Linux.AppImage
     runs-on: ${{ matrix.os }}
     env:
       # No signing certificates in CI: ship unsigned builds.

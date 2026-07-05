@@ -1,5 +1,5 @@
 /* Docs layout — Pico classless as base (typography, code blocks, tables),
-   then overridden so the docs match the Restitch paper/pink identity:
+   then overridden so the docs match the Ricuci paper/pink identity:
    paper background, ink text, pink accents, custom sidebar grid. */
 
 /* Pull in Pico classless + the pink accent preset (no .container classes
