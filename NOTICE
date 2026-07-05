@@ -39,11 +39,30 @@ Bundled assets — REPO MUST STAY PRIVATE
 Project license
 ---------------
 
-The project's own code is licensed under the Restitch Source-Available
-License 1.0 (see LICENSE): free use for any purpose, integration by
-invoking the unmodified CLI/executable, but no modification, no
-derivative works and no redistribution. The MIT notice for the
-pyembroidery-derived portions above is preserved regardless.
+The project's own CODE is licensed under the PolyForm Internal Use
+License 1.0.0 (see LICENSE): anyone may use the software — personally
+or within their own organization — and make private changes and forks,
+but may not distribute copies or software built from it. Publication
+is reserved to the Licensor; the Licensor's official distributions
+(web app, CLI, executables) are free of charge.
+
+Clarifications and additional permissions from the Licensor:
+- Invoking the UNMODIFIED CLI or executable from your own software,
+  scripts or services (including commercial ones) is permitted
+  internal use — as long as the Software is not embedded in or
+  redistributed with your product.
+- "Restitch" and "embconv" identify the Licensor's builds only; do not
+  use these names for modified versions.
+- Designs you convert remain yours (or their respective owners');
+  conversion happens locally and the Licensor claims no rights on your
+  input or output files.
+
+The DOCUMENTATION under docs/ — including the reverse-engineered
+format specifications — is licensed separately under CC BY-NC-ND 4.0
+(see docs/LICENSE).
+
+The MIT notice for the pyembroidery-derived portions above is
+preserved regardless of the project license.
 
 Checklist before ever making this repository public:
 1. Remove Clash Display + Satoshi binaries (switch to the Fontshare API
