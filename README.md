@@ -69,7 +69,7 @@ against real files. Physical stitch-out remains the final acceptance test.
 
 ```
 packages/core      all format logic: readers, writers, IR, EmbCompress (TS, zero deps)
-packages/cli       embconv command-line tool
+packages/cli       the CLI, published to npm as `ricuci` (bins: ricuci, embconv)
 apps/web           Astro site: landing + /convert studio (100% client-side)
 apps/desktop       Electron shell around the converter (the converter only)
 docs/              format specifications (the reverse-engineering work)
@@ -94,8 +94,10 @@ round-trips against real machine files) runs on the maintainer's machine and
 before every release.
 
 Releases are built by GitHub Actions from a version tag
-(`git tag v0.x.y && git push origin v0.x.y`): desktop apps for the three
-platforms plus the four CLI binaries, attached with stable file names.
+(`git tag v0.x.y && git push origin v0.x.y`), all in one run: the `ricuci`
+npm package (published with provenance), the desktop apps for the three
+platforms, and the four standalone CLI binaries — the version is taken from
+the tag and the assets get stable file names.
 
 ## License
 
