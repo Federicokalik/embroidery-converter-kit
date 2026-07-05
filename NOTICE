@@ -17,24 +17,26 @@ open-source projects:
 The ZHS writer is original work, reverse-engineered from Artist Toolkit
 output for interoperability purposes (see docs/ZHS_FORMAT.md).
 
-Bundled assets — REPO MUST STAY PRIVATE
----------------------------------------
+Bundled assets
+--------------
 
-- Fonts "Clash Display" and "Satoshi" (apps/web/public/fonts) are
-  licensed under the Fontshare Free Font EULA (see
-  ClashDisplay-LICENSE.txt; the same EULA covers Satoshi). The EULA
-  permits personal/commercial use and self-hosting on the licensee's
-  own website, but PROHIBITS redistribution, including "uploading them
-  in a public server". A public repository would violate it.
-- Font "JetBrains Mono" is licensed under the SIL Open Font License 1.1
-  (https://github.com/JetBrains/JetBrainsMono/blob/master/OFL.txt) —
-  public redistribution would be fine, but only with the OFL text
-  included alongside.
-- fixtures/ contains embroidery designs used as test golden files:
-  personal designs, community designs shared within the owner's group,
-  and a factory sample shipped with a Zeng Hsing machine
-  (fixtures/zhs-samples/). These are test data for interoperability
-  work, not redistributable content.
+- Fonts: "Space Grotesk", "Plus Jakarta Sans" and "JetBrains Mono", all
+  licensed under the SIL Open Font License 1.1 and self-hosted (no
+  third-party font requests at runtime, no CDN). The woff2 files live in
+  apps/web/src/assets/fonts with their OFL.txt license texts alongside;
+  the OFL permits bundling them in the site build and in the desktop
+  and CLI executables.
+- The three stage designs in apps/web/src/assets/designs
+  (unicorn-6x10.jef, lobster.pes, octopus.dst) are designs the owner is
+  entitled to publish; they ship with the site and desktop builds by the
+  owner's decision. They are the ONLY embroidery designs in the repo.
+- fixtures/ and the design-derived golden files under
+  packages/core/test/golden are NOT in the repository: real embroidery
+  designs (personal designs, community designs shared within the owner's
+  group, and a factory sample shipped with a Zeng Hsing machine) used as
+  private test data for interoperability work — not redistributable
+  content. The test suite self-skips when they are absent; the full
+  suite runs on the owner's machine.
 
 Project license
 ---------------
@@ -64,12 +66,9 @@ format specifications — is licensed separately under CC BY-NC-ND 4.0
 The MIT notice for the pyembroidery-derived portions above is
 preserved regardless of the project license.
 
-Checklist before ever making this repository public:
-1. Remove Clash Display + Satoshi binaries (switch to the Fontshare API
-   or self-host outside the repo) or obtain written permission.
-2. Add the OFL 1.1 text next to the JetBrains Mono files.
-3. Review/replace every file in fixtures/ (especially zhs-samples/)
-   with designs cleared for redistribution.
-4. Note: on public GitHub, the platform ToS lets users view and fork
-   public repositories within GitHub regardless of license; the LICENSE
-   still forbids any use of those copies beyond viewing.
+Note on public hosting: on public GitHub, the platform ToS lets users
+view and fork public repositories within GitHub regardless of license;
+the LICENSE still forbids any use of those copies beyond viewing.
+(The pre-publication checklist that used to live here was completed:
+Fontshare fonts replaced with self-hosted OFL fonts, OFL texts added,
+fixtures/ and design goldens removed from the repo and its history.)

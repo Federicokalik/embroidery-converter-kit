@@ -46,7 +46,10 @@ exploration as free and encouraged.
   porting order, testing strategy.
 - `reference/zhs_vip_reference.py` — **proven** Python VIP→ZHS converter +
   verifier. This is the source of truth to port to TypeScript.
-- `fixtures/` — ground-truth pairs:
+- `fixtures/` — ground-truth pairs (LOCAL ONLY: gitignored, not in the public
+  repo — the designs are not redistributable, see NOTICE; same for the
+  design-derived goldens in `packages/core/test/golden`. The test suite
+  self-skips when they are absent):
   - `001s-A.vip` ↔ `001s-A.zhs`
   - `028-B.vip`  ↔ `028-B.zhs`  (reference regenerates this byte-identical except
     the known `0x83` metadata byte)

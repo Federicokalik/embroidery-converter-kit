@@ -1,0 +1,94 @@
+name: Release desktop + CLI
+
+# Tag a version to build and publish everything:
+#   git tag v0.1.0 && git push origin v0.1.0
+# Artifacts get stable names, so the site's
+# /releases/latest/download/<name> links always serve the newest release.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+
+  desktop:
+    needs: create-release
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            asset: apps/desktop/release/Restitch-Windows.exe
+          - os: macos-latest
+            asset: apps/desktop/release/Restitch-macOS.dmg
+          - os: ubuntu-latest
+            asset: apps/desktop/release/Restitch-Linux.AppImage
+    runs-on: ${{ matrix.os }}
+    env:
+      # No signing certificates in CI: ship unsigned builds.
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Desktop bundles the web build served from the root ('/' base).
+      - run: pnpm --filter web build
+      - run: pnpm --filter desktop sync-renderer
+      - run: pnpm --filter desktop dist
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.asset }}
+
+  cli:
+    needs: create-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      # bun bundles @embroidery/core straight from TS source, but the
+      # workspace symlinks come from pnpm install.
+      - run: pnpm install --frozen-lockfile
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Compile embconv for every platform
+        run: |
+          bun build --compile --minify packages/cli/src/index.ts \
+            --target=bun-windows-x64 \
+            --windows-icon=apps/desktop/build/icon.ico \
+            --outfile out/embconv-windows-x64.exe
+          bun build --compile --minify packages/cli/src/index.ts \
+            --target=bun-linux-x64 --outfile out/embconv-linux-x64
+          bun build --compile --minify packages/cli/src/index.ts \
+            --target=bun-darwin-arm64 --outfile out/embconv-macos-arm64
+          bun build --compile --minify packages/cli/src/index.ts \
+            --target=bun-darwin-x64 --outfile out/embconv-macos-x64
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: out/*

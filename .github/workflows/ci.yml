@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Builds core + cli (tsup) and the web app (astro).
+      - run: pnpm build
+
+      # The private design fixtures are not in the repository: the suite
+      # self-skips those tests and runs the synthetic ones (see NOTICE).
+      # The full 658-test suite runs on the owner's machine.
+      - run: pnpm test
+
+      # Electron shell smoke test: the packaged converter page must load.
+      # --no-sandbox: ubuntu-24.04 runners restrict unprivileged user
+      # namespaces, which breaks Electron's SUID sandbox in CI.
+      - run: sudo apt-get update && sudo apt-get install -y xvfb
+      - run: pnpm --filter desktop sync-renderer
+      - run: xvfb-run -a pnpm --filter desktop smoke --no-sandbox --disable-gpu

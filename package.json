@@ -10,6 +10,6 @@
     "dev": "pnpm --filter web dev"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["sharp"]
+    "onlyBuiltDependencies": ["sharp", "electron", "electron-winstaller"]
   }
 }

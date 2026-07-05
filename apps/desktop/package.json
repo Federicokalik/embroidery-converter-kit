@@ -1,0 +1,55 @@
+{
+  "name": "desktop",
+  "license": "SEE LICENSE IN LICENSE",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Restitch — embroidery file converter (desktop)",
+  "author": "Federico Kalik",
+  "main": "main.js",
+  "scripts": {
+    "sync-renderer": "node scripts/sync-renderer.mjs",
+    "make-icon": "node scripts/make-icon.mjs",
+    "start": "electron .",
+    "smoke": "electron . --smoke-test",
+    "dist": "electron-builder --publish never"
+  },
+  "devDependencies": {
+    "electron": "^38.2.1",
+    "electron-builder": "^26.0.12",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.34.4"
+  },
+  "build": {
+    "appId": "dev.federicokalik.restitch",
+    "productName": "Restitch",
+    "files": ["main.js", "renderer/**", "build/icon.png"],
+    "directories": {
+      "buildResources": "build",
+      "output": "release"
+    },
+    "npmRebuild": false,
+    "win": {
+      "target": ["portable"],
+      "icon": "build/icon.png"
+    },
+    "portable": {
+      "artifactName": "Restitch-Windows.exe"
+    },
+    "mac": {
+      "target": [{ "target": "dmg", "arch": ["universal"] }],
+      "icon": "build/icon.png",
+      "category": "public.app-category.graphics-design"
+    },
+    "dmg": {
+      "artifactName": "Restitch-macOS.dmg"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "build/icon.png",
+      "category": "Graphics"
+    },
+    "appImage": {
+      "artifactName": "Restitch-Linux.AppImage"
+    }
+  }
+}
