@@ -457,6 +457,27 @@ body.stitchout-open #stage {
   transform: none;
 }
 
+.hoop-select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.panel-more {
+  margin: 1.1rem 0 0;
+  font-size: 0.85rem;
+}
+
+.panel-more a {
+  color: var(--pink-deep);
+  text-decoration: none;
+  border-bottom: 1.5px dashed currentColor;
+  padding-bottom: 0.1em;
+}
+
+.panel-more a:hover {
+  color: var(--ink);
+}
+
 /* ---------- /convert page shell ---------- */
 
 .app-main {

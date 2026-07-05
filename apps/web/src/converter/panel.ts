@@ -21,6 +21,12 @@ export interface PanelDeps {
   getTarget(): string;
   convert(parsed: ParsedFile, options: WriterOptions, centerFirst: boolean): Promise<void>;
   onLayoutChange?: (() => void) | undefined;
+  /**
+   * 'full' (/convert): every control, hoop field always visible (with a
+   * "this format stores no hoop" note where it applies). 'lite' (landing):
+   * preview + facts + Convert only, plus a link to the full tool.
+   */
+  variant: 'full' | 'lite';
 }
 
 export interface PanelHandle {
@@ -67,6 +73,10 @@ export function initPanel(deps: PanelDeps): PanelHandle {
   const noteEl = root.querySelector('#panel-note') as HTMLElement;
   const convertBtn = root.querySelector('#convert-btn') as HTMLButtonElement;
   const discardBtn = root.querySelector('#discard-btn') as HTMLButtonElement;
+  const moreEl = root.querySelector('#panel-more') as HTMLElement;
+
+  const lite = deps.variant === 'lite';
+  moreEl.hidden = !lite;
 
   const preview = new StaticPreview();
   let session: Session | null = null;
@@ -147,9 +157,25 @@ export function initPanel(deps: PanelDeps): PanelHandle {
   function renderHoop(s: Session): void {
     const target = deps.getTarget();
     const brand = HOOP_BRAND_BY_FORMAT[target];
-    hoopField.hidden = brand === undefined;
+    if (lite) {
+      hoopField.hidden = true;
+      centerField.hidden = true;
+      return;
+    }
+    // Full variant: the field is always there; formats without a hoop
+    // record say so instead of silently dropping the control.
+    hoopField.hidden = false;
     centerField.hidden = brand === undefined;
-    if (brand === undefined) return;
+    hoopSelect.disabled = brand === undefined;
+    if (brand === undefined) {
+      const opt = document.createElement('option');
+      opt.value = 'auto';
+      opt.textContent = '—';
+      hoopSelect.replaceChildren(opt);
+      hoopFit.textContent = t('panel.hoopNoStore', { fmt: target.toUpperCase() });
+      hoopFit.className = 'panel-fit';
+      return;
+    }
 
     const options: Array<{ value: string; label: string }> = [
       { value: 'auto', label: t('panel.hoopAuto') },
@@ -207,7 +233,7 @@ export function initPanel(deps: PanelDeps): PanelHandle {
   }
 
   function renderTrims(s: Session): void {
-    const show = deps.getTarget() === 'zhs' && s.parsed.hasTrims;
+    const show = !lite && deps.getTarget() === 'zhs' && s.parsed.hasTrims;
     trimsField.hidden = !show;
     if (!show) return;
     for (const radio of trimsRadios) radio.checked = radio.value === s.trims;
@@ -258,10 +284,15 @@ export function initPanel(deps: PanelDeps): PanelHandle {
     const s = session;
     if (s === null || s.converting) return;
     const options: WriterOptions = {};
-    const hoop = resolveHoop(s);
-    if (hoop !== undefined) options.hoop = hoop;
-    else if (s.parsed.pattern.hoop !== undefined) options.hoop = s.parsed.pattern.hoop;
-    if (deps.getTarget() === 'zhs' && s.parsed.hasTrims) options.trims = s.trims;
+    if (lite) {
+      // Same defaults as the bulk flow: declared hoop passes through.
+      if (s.parsed.pattern.hoop !== undefined) options.hoop = s.parsed.pattern.hoop;
+    } else {
+      const hoop = resolveHoop(s);
+      if (hoop !== undefined) options.hoop = hoop;
+      else if (s.parsed.pattern.hoop !== undefined) options.hoop = s.parsed.pattern.hoop;
+      if (deps.getTarget() === 'zhs' && s.parsed.hasTrims) options.trims = s.trims;
+    }
     s.converting = true;
     renderActions(s);
     void deps.convert(s.parsed, options, !centerField.hidden && s.centerInHoop).finally(() => {

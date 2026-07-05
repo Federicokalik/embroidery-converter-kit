@@ -265,17 +265,6 @@ main {
   color: var(--paper);
 }
 
-.nav-link {
-  font: 600 0.85rem var(--font-mono);
-  letter-spacing: 0.04em;
-  color: var(--ink);
-  text-decoration: none;
-}
-
-.nav-link:hover {
-  color: var(--pink-deep);
-}
-
 .nav-cta {
   padding: 0.55rem 1.3rem;
   font-size: 0.92rem;

@@ -35,6 +35,8 @@ export interface ConverterHooks {
   playStitchOut?: (job: StitchOutJob) => Promise<void>;
   /** Landing only: page height changed → ScrollTrigger must re-measure. */
   onLayoutChange?: () => void;
+  /** Panel depth: 'lite' on the landing nudges users to /convert. */
+  panelVariant?: 'full' | 'lite';
 }
 
 const { read: readableFormats, write: writableFormats } = supportedFormats();
@@ -155,6 +157,7 @@ export function initConverter(hooks: ConverterHooks = {}): void {
     getTarget: () => target,
     convert: convertSingle,
     onLayoutChange: hooks.onLayoutChange,
+    variant: hooks.panelVariant ?? 'full',
   });
 
   function renderChips(): void {

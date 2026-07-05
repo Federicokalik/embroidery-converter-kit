@@ -29,7 +29,6 @@ export const STRINGS: Record<string, Entry> = {
   // Navigation
   'nav.cta': { it: 'Converti ora', en: 'Convert now' },
   'nav.langLabel': { it: 'Cambia lingua', en: 'Switch language' },
-  'nav.appLink': { it: 'Convertitore', en: 'Converter' },
 
   // S1 Hero
   'hero.headline': {
@@ -41,6 +40,7 @@ export const STRINGS: Record<string, Entry> = {
     en: 'VIP, PES, DST and more. Converted inside your browser.',
   },
   'hero.cta': { it: 'Converti ora', en: 'Convert now' },
+  'hero.learn': { it: 'Scopri di più', en: 'Learn more' },
 
   // S2 Babel
   'babel.headline': {
@@ -125,6 +125,14 @@ export const STRINGS: Record<string, Entry> = {
   'panel.hoopNone': {
     it: 'Nessun telaio a catalogo contiene il ricamo: scrivo il default della macchina.',
     en: 'No catalog hoop holds this design: writing the machine default.',
+  },
+  'panel.hoopNoStore': {
+    it: 'Il formato {fmt} non salva il telaio nel file.',
+    en: "The {fmt} format doesn't store a hoop in the file.",
+  },
+  'panel.moreLink': {
+    it: 'Telaio, tagli del filo e altre opzioni: aprili nel Convertitore →',
+    en: 'Hoop, thread trims and more options: open them in the Converter →',
   },
   'panel.hoopFits': { it: 'Ci sta nel telaio scelto.', en: 'Fits the chosen hoop.' },
   'panel.hoopRecenter': {
