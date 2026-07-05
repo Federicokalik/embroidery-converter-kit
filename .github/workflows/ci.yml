@@ -1,8 +1,6 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
 
 jobs:
@@ -32,5 +30,8 @@ jobs:
       # --no-sandbox: ubuntu-24.04 runners restrict unprivileged user
       # namespaces, which breaks Electron's SUID sandbox in CI.
       - run: sudo apt-get update && sudo apt-get install -y xvfb
+      # The desktop shell packages the app-shell renderer (dist-desktop), not
+      # the web dist that `pnpm build` produces — build it before syncing.
+      - run: pnpm --filter web build:desktop
       - run: pnpm --filter desktop sync-renderer
       - run: xvfb-run -a pnpm --filter desktop smoke --no-sandbox --disable-gpu
