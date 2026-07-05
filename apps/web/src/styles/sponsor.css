@@ -71,6 +71,7 @@
   filter: drop-shadow(0 0 8px rgb(255 46 136 / 0.15));
 }
 
+
 /* Moving specular highlight: a soft light band that follows the pointer,
    reinforcing the metallic read on top of the SVG foil. */
 .sponsor-sheen {
