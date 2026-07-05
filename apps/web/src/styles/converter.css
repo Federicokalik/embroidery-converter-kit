@@ -801,7 +801,7 @@ body.stitchout-open #stage {
   font-size: 0.85rem;
 }
 
-/* ---------- Downloads (GitHub Releases) ---------- */
+/* ---------- Downloads ---------- */
 
 .downloads h2 {
   margin: 0;
@@ -814,13 +814,36 @@ body.stitchout-open #stage {
   font-size: 0.95rem;
 }
 
+/* Two labelled groups: desktop apps, then the command line. */
+.dl-group {
+  margin-top: 1.75rem;
+}
+
+.dl-group-label {
+  margin: 0 0 0.7rem;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .dl-cards {
   list-style: none;
-  margin: 1rem 0 0;
+  margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 0.75rem;
+}
+
+/* The three desktop apps sit on one row, stacking on narrow screens. */
+.dl-cards-os {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 720px) {
+  .dl-cards-os {
+    grid-template-columns: 1fr;
+  }
 }
 
 .dl-card {
@@ -834,8 +857,8 @@ body.stitchout-open #stage {
   background: var(--paper-2);
   padding: 1rem 1.25rem;
   color: var(--ink);
-  font-size: 0.9rem;
   text-decoration: none;
+  transition: border-color 0.18s ease;
 }
 
 .dl-card:hover {
@@ -847,6 +870,40 @@ body.stitchout-open #stage {
   color: var(--pink);
 }
 
+.dl-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  line-height: 1.2;
+}
+
+.dl-os {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.dl-fmt {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+/* The visitor's OS, flagged by convert-entry.ts. */
+.dl-card.is-recommended {
+  border-color: var(--pink);
+  background: var(--paper);
+}
+
+.dl-card.is-recommended .soon-tag {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.dl-you {
+  margin-left: 0.5rem;
+  color: var(--pink);
+  letter-spacing: 0.04em;
+}
+
 .soon-tag {
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -854,6 +911,77 @@ body.stitchout-open #stage {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   white-space: nowrap;
+}
+
+/* The command line as an actual terminal line: ink surface, pink prompt. */
+.dl-cmd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--ink);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+}
+
+.dl-cmd-text {
+  color: var(--paper);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.dl-cmd-text::before {
+  content: '$ ';
+  color: var(--pink);
+}
+
+.dl-copy {
+  flex-shrink: 0;
+  border: 1px solid rgb(244 244 242 / 0.28);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--paper);
+  padding: 0.28rem 0.75rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.dl-copy:hover {
+  background: var(--pink);
+  color: var(--ink);
+  border-color: var(--pink);
+}
+
+.dl-copy.is-copied {
+  background: var(--ok);
+  color: var(--paper);
+  border-color: var(--ok);
+}
+
+.dl-cli-note {
+  margin: 0.65rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.dl-cli-note a {
+  color: var(--pink);
+  text-decoration: none;
+}
+
+.dl-cli-note a:hover {
+  text-decoration: underline;
+}
+
+.dl-dot {
+  margin: 0 0.45rem;
+  color: var(--line);
 }
 
 /* ---------- Mobile ---------- */

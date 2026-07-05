@@ -71,38 +71,62 @@ const dl = (asset: string): string => `${REPO}/releases/latest/download/${asset}
       <section class="downloads" aria-labelledby="dl-title">
         <h2 id="dl-title" class="display" data-i18n="dl.title">{tt('dl.title')}</h2>
         <p class="dl-sub" data-i18n="dl.sub">{tt('dl.sub')}</p>
-        <ul class="dl-cards">
-          <li>
-            <a class="dl-card" href={dl('Ricuci-Windows.exe')}>
-              <span class="mono" data-i18n="dl.windows">{tt('dl.windows')}</span>
-              <span class="soon-tag mono" data-i18n="dl.get">{tt('dl.get')}</span>
-            </a>
-          </li>
-          <li>
-            <a class="dl-card" href={dl('Ricuci-macOS.dmg')}>
-              <span class="mono" data-i18n="dl.macos">{tt('dl.macos')}</span>
-              <span class="soon-tag mono" data-i18n="dl.get">{tt('dl.get')}</span>
-            </a>
-          </li>
-          <li>
-            <a class="dl-card" href={dl('Ricuci-Linux.AppImage')}>
-              <span class="mono" data-i18n="dl.linux">{tt('dl.linux')}</span>
-              <span class="soon-tag mono" data-i18n="dl.get">{tt('dl.get')}</span>
-            </a>
-          </li>
-          <li>
-            <a class="dl-card" href="https://www.npmjs.com/package/ricuci" rel="noopener">
-              <span class="mono" data-i18n="dl.npx">{tt('dl.npx')}</span>
-              <span class="soon-tag mono">npm</span>
-            </a>
-          </li>
-          <li>
-            <a class="dl-card" href={`${REPO}/releases/latest`} rel="noopener">
-              <span class="mono" data-i18n="dl.cli">{tt('dl.cli')}</span>
-              <span class="soon-tag mono" data-i18n="dl.releases">{tt('dl.releases')}</span>
-            </a>
-          </li>
-        </ul>
+
+        <!-- Desktop apps: the graphical converter, one per OS. -->
+        <div class="dl-group">
+          <p class="dl-group-label mono" data-i18n="dl.desktopLabel">{tt('dl.desktopLabel')}</p>
+          <ul class="dl-cards dl-cards-os">
+            <li>
+              <a class="dl-card" data-os="windows" href={dl('Ricuci-Windows.exe')}>
+                <span class="dl-card-main">
+                  <span class="dl-os" data-i18n="dl.windows">{tt('dl.windows')}</span>
+                  <span class="dl-fmt mono">.exe<span class="dl-you" data-i18n="dl.forYou" hidden>{tt('dl.forYou')}</span></span>
+                </span>
+                <span class="soon-tag mono" data-i18n="dl.get">{tt('dl.get')}</span>
+              </a>
+            </li>
+            <li>
+              <a class="dl-card" data-os="macos" href={dl('Ricuci-macOS.dmg')}>
+                <span class="dl-card-main">
+                  <span class="dl-os" data-i18n="dl.macos">{tt('dl.macos')}</span>
+                  <span class="dl-fmt mono">.dmg<span class="dl-you" data-i18n="dl.forYou" hidden>{tt('dl.forYou')}</span></span>
+                </span>
+                <span class="soon-tag mono" data-i18n="dl.get">{tt('dl.get')}</span>
+              </a>
+            </li>
+            <li>
+              <a class="dl-card" data-os="linux" href={dl('Ricuci-Linux.AppImage')}>
+                <span class="dl-card-main">
+                  <span class="dl-os" data-i18n="dl.linux">{tt('dl.linux')}</span>
+                  <span class="dl-fmt mono">AppImage<span class="dl-you" data-i18n="dl.forYou" hidden>{tt('dl.forYou')}</span></span>
+                </span>
+                <span class="soon-tag mono" data-i18n="dl.get">{tt('dl.get')}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Command line: the same engine for scripts and automation. -->
+        <div class="dl-group">
+          <p class="dl-group-label mono" data-i18n="dl.cliLabel">{tt('dl.cliLabel')}</p>
+          <div class="dl-cli">
+            <div class="dl-cmd">
+              <code class="dl-cmd-text mono">npx ricuci design.vip design.zhs</code>
+              <button
+                type="button"
+                class="dl-copy mono"
+                data-copy="npx ricuci design.vip design.zhs"
+                data-i18n="dl.copy"
+              >{tt('dl.copy')}</button>
+            </div>
+            <p class="dl-cli-note">
+              <span data-i18n="dl.cliReq">{tt('dl.cliReq')}</span>{' '}
+              <a href="https://www.npmjs.com/package/ricuci" rel="noopener" data-i18n="dl.cliNpm">{tt('dl.cliNpm')}</a>
+              <span class="dl-dot" aria-hidden="true">·</span>
+              <a href={`${REPO}/releases/latest`} rel="noopener" data-i18n="dl.cliBin">{tt('dl.cliBin')}</a>
+            </p>
+          </div>
+        </div>
       </section>
     </main>
 
