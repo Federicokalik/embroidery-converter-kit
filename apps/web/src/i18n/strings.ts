@@ -812,4 +812,96 @@ export const STRINGS: Record<string, Entry> = {
     es: 'EXP no guarda colores: los eliges en la máquina.',
     pt: 'EXP não guarda cores: você as escolhe na máquina.',
   },
+
+  // ---- Desktop app shell: rail navigation (all six languages: it stays in
+  // the rail regardless of page locale) ----
+  'app.nav.aria': { it: 'Navigazione app', en: 'App navigation', fr: 'Navigation', de: 'App-Navigation', es: 'Navegación', pt: 'Navegação' },
+  'app.nav.convert': { it: 'Converti', en: 'Convert', fr: 'Convertir', de: 'Konvertieren', es: 'Convertir', pt: 'Converter' },
+  'app.nav.docs': { it: 'Docs', en: 'Docs', fr: 'Docs', de: 'Doku', es: 'Docs', pt: 'Docs' },
+  'app.nav.credits': { it: 'Crediti', en: 'Credits', fr: 'Crédits', de: 'Danksagungen', es: 'Créditos', pt: 'Créditos' },
+  'app.nav.license': { it: 'Licenza', en: 'License', fr: 'Licence', de: 'Lizenz', es: 'Licencia', pt: 'Licença' },
+  'app.nav.about': { it: 'Info', en: 'About', fr: 'À propos', de: 'Über', es: 'Acerca de', pt: 'Sobre' },
+
+  // ---- Desktop app: Credits page (it/en; other locales fall back to en) ----
+  'app.credits.metaTitle': { it: 'Ricuci — Crediti', en: 'Ricuci — Credits' },
+  'app.credits.title': { it: 'Crediti', en: 'Credits' },
+  'app.credits.lede': {
+    it: 'Ricuci sta in piedi grazie a questi progetti open source. Grazie a chi li mantiene.',
+    en: 'Ricuci stands on these open-source projects. Thanks to everyone who maintains them.',
+  },
+  'app.credits.hCode': { it: 'Codice di terze parti', en: 'Third-party code' },
+  'app.credits.hFonts': { it: 'Caratteri', en: 'Fonts' },
+  'app.credits.hRuntime': { it: 'Runtime e librerie', en: 'Runtime & libraries' },
+  'app.credits.zhsNote': {
+    it: 'Lo scrittore ZHS è lavoro originale, decodificato per interoperabilità (vedi la documentazione).',
+    en: 'The ZHS writer is original work, reverse-engineered for interoperability (see the docs).',
+  },
+
+  // ---- Desktop app: License page ----
+  'app.license.metaTitle': { it: 'Ricuci — Licenza', en: 'Ricuci — License' },
+  'app.license.title': { it: 'Licenza', en: 'License' },
+  'app.license.lede': {
+    it: 'Ricuci è software gratuito. Il codice è sotto licenza PolyForm Internal Use 1.0.0.',
+    en: 'Ricuci is free software. The code is under the PolyForm Internal Use License 1.0.0.',
+  },
+  'app.license.summary': {
+    it:
+      'Puoi usarlo — personalmente o nella tua organizzazione — e modificarlo in privato. ' +
+      'Non puoi ridistribuirne copie o software costruito a partire da esso: la pubblicazione ' +
+      'resta al Licenziante, che distribuisce app, CLI ed eseguibili gratuitamente.',
+    en:
+      'You may use it — personally or within your organization — and change it privately. ' +
+      'You may not distribute copies or software built from it: publication is reserved to the ' +
+      'Licensor, who distributes the app, CLI and executables free of charge.',
+  },
+  'app.license.clarHead': { it: 'Chiarimenti dal Licenziante', en: 'Clarifications from the Licensor' },
+  'app.license.clar1': {
+    it:
+      'Invocare la CLI o gli eseguibili non modificati dai tuoi script o servizi (anche ' +
+      'commerciali) è uso interno permesso, purché il Software non sia incorporato o ridistribuito ' +
+      'col tuo prodotto.',
+    en:
+      'Invoking the unmodified CLI or executables from your own scripts or services (including ' +
+      'commercial ones) is permitted internal use, as long as the Software is not embedded in or ' +
+      'redistributed with your product.',
+  },
+  'app.license.clar2': {
+    it: '“Ricuci” ed “embconv” identificano solo le build del Licenziante: non usare questi nomi per versioni modificate.',
+    en: '“Ricuci” and “embconv” identify the Licensor’s builds only: do not use these names for modified versions.',
+  },
+  'app.license.clar3': {
+    it:
+      'I design che converti restano tuoi (o dei rispettivi proprietari): la conversione avviene ' +
+      'in locale e il Licenziante non rivendica alcun diritto sui tuoi file.',
+    en:
+      'Designs you convert remain yours (or their owners’): conversion happens locally and the ' +
+      'Licensor claims no rights over your files.',
+  },
+  'app.license.docsNote': {
+    it: 'La documentazione — incluse le specifiche di formato decodificate — è sotto CC BY-NC-ND 4.0.',
+    en: 'The documentation — including the reverse-engineered format specs — is under CC BY-NC-ND 4.0.',
+  },
+  'app.license.full': { it: 'Leggi il testo integrale della licenza', en: 'Read the full license text' },
+
+  // ---- Desktop app: About page ----
+  'app.about.metaTitle': { it: 'Ricuci — Info', en: 'Ricuci — About' },
+  'app.about.local': {
+    it: 'Tutto avviene sul tuo computer. Nessun dato di ricamo lascia la macchina: niente server, niente caricamenti.',
+    en: 'Everything happens on your computer. No embroidery data leaves the machine: no servers, no uploads.',
+  },
+  'app.about.update': {
+    it:
+      'Una volta per avvio Ricuci controlla se c’è una versione più recente (solo i metadati della ' +
+      'release su GitHub, nessun file). Si disattiva con RICUCI_NO_UPDATE_CHECK=1.',
+    en:
+      'Once per launch Ricuci checks for a newer version (only the GitHub release metadata, no ' +
+      'files). Turn it off with RICUCI_NO_UPDATE_CHECK=1.',
+  },
+  'app.about.versionLabel': { it: 'Versione', en: 'Version' },
+  'app.about.authorLabel': { it: 'Autore', en: 'Author' },
+  'app.about.linksHead': { it: 'Collegamenti', en: 'Links' },
+  'app.about.site': { it: 'Sito web (ricuci.app)', en: 'Website (ricuci.app)' },
+  'app.about.repo': { it: 'Codice su GitHub', en: 'Source on GitHub' },
+  'app.about.releases': { it: 'Tutte le versioni', en: 'All releases' },
+  'app.about.npm': { it: 'Pacchetto npm (ricuci)', en: 'npm package (ricuci)' },
 };

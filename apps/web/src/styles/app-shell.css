@@ -120,6 +120,18 @@ body.app-shell .studio .queue-bar {
   top: 0.75rem;
 }
 
+/* Docs render their own two-column shell as the grid's content column. The web
+   docs bake a fixed-nav offset into .docs-shell; drop it under the rail. */
+body.app-shell .docs-shell {
+  padding-top: clamp(2rem, 5vh, 3.5rem);
+  max-width: min(1100px, 100%);
+  min-height: 0;
+}
+
+body.app-shell .docs-sidebar {
+  top: 1.5rem;
+}
+
 /* ---------- Prose pages (Credits / License / About) ---------- */
 
 .app-page {
@@ -210,6 +222,27 @@ body.app-shell .studio .queue-bar {
   font-size: 0.75rem;
   color: var(--ink-soft);
   letter-spacing: 0.03em;
+}
+
+/* About: version / author key–value grid. */
+.app-about-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1.25rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.app-about-meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  align-self: center;
+}
+
+.app-about-meta dd {
+  margin: 0;
 }
 
 /* ---------- Narrow windows (the app can be resized down to 600px) ---------- */

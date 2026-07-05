@@ -7,10 +7,12 @@ import '../styles/base.css';
 import '../styles/footer.css';
 import '../styles/docs.css';
 import '../styles/sponsor.css';
+import AppRail from '../components/AppRail.astro';
 import DocsNav from '../components/DocsNav.astro';
 import Footer from '../components/Footer.astro';
 import SiteHead from '../components/SiteHead.astro';
 import SponsorBadge from '../components/SponsorBadge.astro';
+import { isDesktop } from '../lib/target';
 import { DOCS_LANGS, localeUrl, pageLogicalPath } from '../i18n/i18n';
 import type { Lang } from '../i18n/i18n';
 
@@ -89,8 +91,12 @@ const logical = `${here}/`;
       availableLangs={DOCS_LANGS}
     />
   </head>
-  <body>
-    <DocsNav lang={lang} />
+  <body class={isDesktop ? 'app-shell' : undefined}>
+    {isDesktop ? (
+      <AppRail lang={lang} section="docs" availableLangs={DOCS_LANGS} />
+    ) : (
+      <DocsNav lang={lang} />
+    )}
 
     <main class="docs-shell">
       <aside class="docs-sidebar" aria-label={L('Indice', 'Index')}>
@@ -115,17 +121,20 @@ const logical = `${here}/`;
       </article>
     </main>
 
-    <Footer lang={lang} />
+    {!isDesktop && <Footer lang={lang} />}
 
-    <SponsorBadge lang={lang} />
+    {!isDesktop && <SponsorBadge lang={lang} />}
 
-    <script>
-      import { applyI18n } from '../i18n/i18n';
-      import { initLangSwitch } from '../i18n/lang-switch';
-      import { initSponsor } from '../sponsor';
-      applyI18n();
-      initLangSwitch();
-      initSponsor();
-    </script>
+    {/* Desktop bootstrap (i18n + lang-switch, no sponsor) is owned by AppRail. */}
+    {!isDesktop && (
+      <script>
+        import { applyI18n } from '../i18n/i18n';
+        import { initLangSwitch } from '../i18n/lang-switch';
+        import { initSponsor } from '../sponsor';
+        applyI18n();
+        initLangSwitch();
+        initSponsor();
+      </script>
+    )}
   </body>
 </html>

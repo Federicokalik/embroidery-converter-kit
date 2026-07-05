@@ -24,6 +24,7 @@
     "productName": "Ricuci",
     "files": [
       "main.js",
+      "preload.js",
       "renderer/**",
       "build/icon.png"
     ],
@@ -51,7 +52,11 @@
         }
       ],
       "icon": "build/icon.png",
-      "category": "public.app-category.graphics-design"
+      "category": "public.app-category.graphics-design",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
     },
     "dmg": {
       "artifactName": "Ricuci-macOS.dmg"

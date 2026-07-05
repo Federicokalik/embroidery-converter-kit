@@ -1,6 +1,9 @@
 ---
 // Non-default locales of the studio (/en/convert/, /fr/convert/, ...).
+// Web build → the full page; desktop build → the app-shell studio.
 import ConvertPage from '../../components/pages/ConvertPage.astro';
+import ConvertStudio from '../../components/pages/ConvertStudio.astro';
+import { isDesktop } from '../../lib/target';
 import { LANGS } from '../../i18n/i18n';
 import type { Lang } from '../../i18n/i18n';
 
@@ -11,4 +14,4 @@ export function getStaticPaths(): Array<{ params: { lang: string } }> {
 const lang = Astro.params.lang as Lang;
 ---
 
-<ConvertPage lang={lang} />
+{isDesktop ? <ConvertStudio lang={lang} /> : <ConvertPage lang={lang} />}

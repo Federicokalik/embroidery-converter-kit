@@ -1,0 +1,74 @@
+---
+// Desktop app · Credits. Attribution sourced from the repo NOTICE file:
+// third-party ports, bundled OFL fonts, and the runtime libraries. Names,
+// licenses and URLs are language-neutral; prose is translated (it/en).
+import DesktopLayout from '../../layouts/DesktopLayout.astro';
+import { DOCS_LANGS, translate } from '../../i18n/i18n';
+import type { Lang } from '../../i18n/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tt = (key: string): string => translate(lang, key);
+---
+
+<DesktopLayout
+  lang={lang}
+  logical="app/credits/"
+  section="credits"
+  title={tt('app.credits.metaTitle')}
+  description={tt('app.credits.lede')}
+  availableLangs={DOCS_LANGS}
+>
+  <article class="app-page">
+    <h1 class="display" data-i18n="app.credits.title">{tt('app.credits.title')}</h1>
+    <p class="app-lede" data-i18n="app.credits.lede">{tt('app.credits.lede')}</p>
+
+    <h2 data-i18n="app.credits.hCode">{tt('app.credits.hCode')}</h2>
+    <ul class="app-credit-list">
+      <li>
+        <strong>pyembroidery</strong>
+        <span class="app-credit-lic">MIT · inkstitch/pyembroidery</span>
+        <p>EmbCompress decompressor, ZHS reader logic and HUS/VIP command conventions, ported to TypeScript.</p>
+        <a href="https://github.com/inkstitch/pyembroidery" rel="noopener">github.com/inkstitch/pyembroidery</a>
+      </li>
+      <li>
+        <strong>libembroidery</strong>
+        <span class="app-credit-lic">zlib · Embroidermodder/libembroidery</span>
+        <p>Format documentation reference for the reverse-engineering work.</p>
+        <a href="https://github.com/Embroidermodder/libembroidery" rel="noopener">github.com/Embroidermodder/libembroidery</a>
+      </li>
+    </ul>
+
+    <h2 data-i18n="app.credits.hFonts">{tt('app.credits.hFonts')}</h2>
+    <ul class="app-credit-list">
+      <li>
+        <strong>Bricolage Grotesque · Instrument Sans · JetBrains Mono</strong>
+        <span class="app-credit-lic">SIL Open Font License 1.1</span>
+        <p>Self-hosted, bundled with the app — no font requests at runtime.</p>
+      </li>
+    </ul>
+
+    <h2 data-i18n="app.credits.hRuntime">{tt('app.credits.hRuntime')}</h2>
+    <ul class="app-credit-list">
+      <li>
+        <strong>Electron &amp; Chromium</strong>
+        <span class="app-credit-lic">MIT · BSD</span>
+        <p>The desktop shell that hosts the converter.</p>
+      </li>
+      <li>
+        <strong>fflate</strong>
+        <span class="app-credit-lic">MIT</span>
+        <p>Deflate/zip for reading and packaging embroidery files.</p>
+      </li>
+      <li>
+        <strong>three.js · GSAP</strong>
+        <span class="app-credit-lic">MIT · GreenSock standard license</span>
+        <p>Preview rendering and motion.</p>
+      </li>
+    </ul>
+
+    <p data-i18n="app.credits.zhsNote">{tt('app.credits.zhsNote')}</p>
+  </article>
+</DesktopLayout>

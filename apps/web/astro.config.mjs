@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { targetPrune } from './integrations/target-prune.mjs';
 
 // Static multilingual site (no islands): Astro is the HTML shell + CSS
 // pipeline; behavior stays in plain TS modules. Every locale is prerendered
@@ -11,7 +12,12 @@ export default defineConfig({
   // and ASTRO_SITE (absolute URLs: canonical, hreflang, og:*, sitemap).
   site: process.env.ASTRO_SITE,
   base: process.env.ASTRO_BASE ?? '/',
-  integrations: process.env.ASTRO_SITE === undefined ? [] : [sitemap()],
+  // targetPrune('web') drops the desktop-only /app pages; sitemap only when
+  // building for a real host (ASTRO_SITE set in the Pages workflow).
+  integrations: [
+    targetPrune('web'),
+    ...(process.env.ASTRO_SITE === undefined ? [] : [sitemap()]),
+  ],
   vite: {
     // The stage designs in src/assets/designs are imported with `?url`
     // and copied into dist at build.

@@ -106,6 +106,13 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
+      preload: path.join(__dirname, 'preload.js'),
+      // The version/platform reach the static About page via window.ricuci;
+      // app.getVersion() stays the single source of truth.
+      additionalArguments: [
+        `--ricuci-version=${app.getVersion()}`,
+        `--ricuci-platform=${process.platform}`,
+      ],
     },
   });
 

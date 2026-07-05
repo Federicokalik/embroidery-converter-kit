@@ -1,0 +1,49 @@
+---
+// Desktop app · License. A plain-language summary of the PolyForm Internal
+// Use 1.0.0 license plus the Licensor's clarifications (from NOTICE). The
+// full legal text lives in the repo LICENSE, linked below.
+import DesktopLayout from '../../layouts/DesktopLayout.astro';
+import { DOCS_LANGS, translate } from '../../i18n/i18n';
+import type { Lang } from '../../i18n/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tt = (key: string): string => translate(lang, key);
+
+const REPO = 'https://github.com/Federicokalik/embroidery-converter-kit';
+---
+
+<DesktopLayout
+  lang={lang}
+  logical="app/license/"
+  section="license"
+  title={tt('app.license.metaTitle')}
+  description={tt('app.license.lede')}
+  availableLangs={DOCS_LANGS}
+>
+  <article class="app-page">
+    <h1 class="display" data-i18n="app.license.title">{tt('app.license.title')}</h1>
+    <p class="app-lede" data-i18n="app.license.lede">{tt('app.license.lede')}</p>
+
+    <p data-i18n="app.license.summary">{tt('app.license.summary')}</p>
+
+    <h2 data-i18n="app.license.clarHead">{tt('app.license.clarHead')}</h2>
+    <ul>
+      <li data-i18n="app.license.clar1">{tt('app.license.clar1')}</li>
+      <li data-i18n="app.license.clar2">{tt('app.license.clar2')}</li>
+      <li data-i18n="app.license.clar3">{tt('app.license.clar3')}</li>
+    </ul>
+
+    <p data-i18n="app.license.docsNote">{tt('app.license.docsNote')}</p>
+
+    <p>
+      <a href={`${REPO}/blob/main/LICENSE`} rel="noopener" data-i18n="app.license.full">
+        {tt('app.license.full')}
+      </a>
+      <span aria-hidden="true"> · </span>
+      <a href={`${REPO}/blob/main/docs/LICENSE`} rel="noopener">CC BY-NC-ND 4.0 (docs)</a>
+    </p>
+  </article>
+</DesktopLayout>

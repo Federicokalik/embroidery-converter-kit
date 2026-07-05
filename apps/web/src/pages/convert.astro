@@ -1,6 +1,10 @@
 ---
-// Italian studio (the default locale lives at the site root).
+// Italian studio (the default locale lives at the site root). The web build
+// ships the full marketing-aware page; the desktop build swaps in the
+// app-shell studio (same converter, no web chrome).
 import ConvertPage from '../components/pages/ConvertPage.astro';
+import ConvertStudio from '../components/pages/ConvertStudio.astro';
+import { isDesktop } from '../lib/target';
 ---
 
-<ConvertPage lang="it" />
+{isDesktop ? <ConvertStudio lang="it" /> : <ConvertPage lang="it" />}

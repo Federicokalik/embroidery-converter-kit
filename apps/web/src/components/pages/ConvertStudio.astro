@@ -1,0 +1,41 @@
+---
+// The converter, desktop build: the same ConverterSection (chips, dropzone,
+// queue, panel — all its DOM ids unchanged) inside the app-shell, minus the
+// web nav, footer, sponsor and the "download the app" section. convert-entry
+// owns the i18n + lang-switch bootstrap, so DesktopLayout opts out via
+// bootstrap={false}. Its web sibling is components/pages/ConvertPage.astro.
+import '../../styles/converter.css';
+import DesktopLayout from '../../layouts/DesktopLayout.astro';
+import ConverterSection from '../ConverterSection.astro';
+import { LANGS, translate } from '../../i18n/i18n';
+import type { Lang } from '../../i18n/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tt = (key: string): string => translate(lang, key);
+---
+
+<DesktopLayout
+  lang={lang}
+  logical="convert/"
+  section="convert"
+  title={tt('meta.convertTitle')}
+  description={tt('meta.convertDescription')}
+  availableLangs={LANGS.map((l) => l.code)}
+  bootstrap={false}
+>
+  <main class="app-main studio">
+    <header class="app-head">
+      <h1 class="display" data-i18n="convert.headline">{tt('convert.headline')}</h1>
+      <p class="mono app-privacy" data-i18n="privacy.line">{tt('privacy.line')}</p>
+    </header>
+
+    <ConverterSection mode="studio" lang={lang} />
+  </main>
+
+  <script>
+    import '../../convert-entry';
+  </script>
+</DesktopLayout>

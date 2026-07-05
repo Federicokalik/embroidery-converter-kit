@@ -1,0 +1,125 @@
+---
+// The desktop app's persistent left rail: wordmark, the five top-level
+// sections, then the language selector and the app version at the bottom.
+// Shared by DesktopLayout (convert + app pages) and DocLayout in desktop
+// mode, so the global navigation stays identical everywhere. Layout lives
+// in styles/app-shell.css (imported here so it travels with the rail);
+// colours/fonts are base.css tokens.
+import '../styles/app-shell.css';
+import { DOCS_LANGS, LANGS, localeUrl, translate } from '../i18n/i18n';
+import type { Lang } from '../i18n/i18n';
+
+type Section = 'convert' | 'docs' | 'credits' | 'license' | 'about';
+
+interface Props {
+  lang: Lang;
+  section: Section;
+  /** Languages the current page exists in; drives the selector options. */
+  availableLangs?: ReadonlyArray<Lang>;
+}
+
+const { lang, section, availableLangs = LANGS.map((l) => l.code) } = Astro.props;
+const tt = (key: string): string => translate(lang, key);
+
+// Docs and the app pages are it/en only; fall back to en for the other locales.
+const docLang: Lang = DOCS_LANGS.includes(lang) ? lang : 'en';
+
+interface Item {
+  key: Section;
+  href: string;
+  label: string;
+  icon: string; // inner SVG markup (stroke paths)
+}
+
+const items: Item[] = [
+  {
+    key: 'convert',
+    href: localeUrl(lang, 'convert/'),
+    label: tt('app.nav.convert'),
+    icon: '<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>',
+  },
+  {
+    key: 'docs',
+    href: localeUrl(docLang, 'docs/'),
+    label: tt('app.nav.docs'),
+    icon: '<path d="M6 3h8l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M13 3v5h5M8 13h7M8 17h5"/>',
+  },
+  {
+    key: 'credits',
+    href: localeUrl(docLang, 'app/credits/'),
+    label: tt('app.nav.credits'),
+    icon: '<path d="M12 20S4 15.5 4 9.8C4 7 6 5 8.4 5c1.6 0 3 0.9 3.6 2.2C12.6 5.9 14 5 15.6 5 18 5 20 7 20 9.8 20 15.5 12 20 12 20z"/>',
+  },
+  {
+    key: 'license',
+    href: localeUrl(docLang, 'app/license/'),
+    label: tt('app.nav.license'),
+    icon: '<path d="M12 3v17M6 7h12M4.5 20h15"/><path d="M6 7l-3 6a3 3 0 0 0 6 0zM18 7l-3 6a3 3 0 0 0 6 0z"/>',
+  },
+  {
+    key: 'about',
+    href: localeUrl(docLang, 'app/about/'),
+    label: tt('app.nav.about'),
+    icon: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  },
+];
+
+const langOptions = LANGS.filter((l) => availableLangs.includes(l.code));
+---
+
+<aside class="app-rail" aria-label="Ricuci">
+  <a class="wordmark" href={items[0]!.href}>
+    Ricuci
+    <svg class="wordmark-stitch" viewBox="0 0 120 8" aria-hidden="true" preserveAspectRatio="none">
+      <path d="M2 5 Q16 1 30 5 T58 5 T86 5 T114 5" pathLength="1"></path>
+    </svg>
+  </a>
+
+  <nav class="app-nav" aria-label={tt('app.nav.aria')}>
+    {items.map((item) => (
+      <a
+        class="app-nav-link"
+        href={item.href}
+        aria-current={item.key === section ? 'page' : undefined}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" set:html={item.icon}></svg>
+        <span data-i18n={`app.nav.${item.key}`}>{item.label}</span>
+      </a>
+    ))}
+  </nav>
+
+  <div class="app-rail-spacer"></div>
+
+  <div class="app-rail-foot">
+    {langOptions.length > 1 && (
+      <select
+        id="lang-select"
+        class="lang-select"
+        aria-label={tt('nav.langLabel')}
+        data-i18n-aria="nav.langLabel"
+      >
+        {langOptions.map((l) => (
+          <option value={l.code} selected={l.code === lang}>{l.flag} {l.label}</option>
+        ))}
+      </select>
+    )}
+    <span class="app-version" id="app-version"></span>
+  </div>
+</aside>
+
+<script>
+  import { applyI18n } from '../i18n/i18n';
+  import { initLangSwitch } from '../i18n/lang-switch';
+
+  // Version comes from the Electron preload (single source: app.getVersion()).
+  const ricuci = (window as unknown as { ricuci?: { version?: string } }).ricuci;
+  const vEl = document.getElementById('app-version');
+  if (vEl) vEl.textContent = ricuci?.version ? `v${ricuci.version}` : '';
+
+  // The converter page runs its own bootstrap (convert-entry) and opts out via
+  // data-app-bootstrap="0", so #lang-select is never wired twice.
+  if (document.body.dataset.appBootstrap !== '0') {
+    applyI18n();
+    initLangSwitch();
+  }
+</script>

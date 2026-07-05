@@ -1,0 +1,57 @@
+---
+// Full-document shell for the desktop app: the persistent AppRail on the
+// left, the page content on the right. Used by the converter (desktop mode)
+// and the Credits/License/About pages. Docs keep their own DocLayout, which
+// renders the same AppRail in desktop mode. No web nav, footer or sponsor;
+// no SEO tags ship because the desktop build never sets ASTRO_SITE.
+import '../styles/base.css';
+// app-shell.css is imported by AppRail (it owns the rail + shell layout), so
+// it ships wherever the rail renders — here and in DocLayout's desktop mode.
+import AppRail from '../components/AppRail.astro';
+import SiteHead from '../components/SiteHead.astro';
+import { DOCS_LANGS, LANGS } from '../i18n/i18n';
+import type { Lang } from '../i18n/i18n';
+
+type Section = 'convert' | 'docs' | 'credits' | 'license' | 'about';
+
+interface Props {
+  lang: Lang;
+  /** Logical, base-/lang-less path: 'convert/', 'app/credits/'. */
+  logical: string;
+  title: string;
+  description: string;
+  section: Section;
+  availableLangs?: ReadonlyArray<Lang>;
+  /** Set false when the page owns its own i18n bootstrap (the converter). */
+  bootstrap?: boolean;
+}
+
+const {
+  lang,
+  logical,
+  title,
+  description,
+  section,
+  availableLangs = LANGS.map((l) => l.code),
+  bootstrap = true,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang} data-theme="light">
+  <head>
+    <SiteHead
+      lang={lang}
+      logical={logical}
+      title={title}
+      description={description}
+      availableLangs={availableLangs}
+    />
+  </head>
+  <body class="app-shell" data-app-bootstrap={bootstrap ? '1' : '0'}>
+    <AppRail lang={lang} section={section} availableLangs={availableLangs} />
+    <div class="app-content">
+      <slot />
+    </div>
+  </body>
+</html>

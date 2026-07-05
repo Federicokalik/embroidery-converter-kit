@@ -34,7 +34,11 @@ jobs:
             asset: apps/desktop/release/Ricuci-Linux.AppImage
     runs-on: ${{ matrix.os }}
     env:
-      # No signing certificates in CI: ship unsigned builds.
+      # Windows and macOS ship unsigned for now (no certs in CI); Linux gets a
+      # GPG signature below. To turn macOS signing on later: add a Developer ID
+      # cert + APPLE_ID/APPLE_APP_SPECIFIC_PASSWORD/APPLE_TEAM_ID secrets and
+      # stop forcing this off on the macOS row (package.json already carries the
+      # hardened-runtime + entitlements config).
       CSC_IDENTITY_AUTO_DISCOVERY: 'false'
     steps:
       - uses: actions/checkout@v4
@@ -54,14 +58,44 @@ jobs:
         working-directory: apps/desktop
         shell: bash
 
-      # Desktop bundles the web build served from the root ('/' base).
-      - run: pnpm --filter web build
+      # Desktop bundles the app-shell renderer (RICUCI_TARGET=desktop): no
+      # marketing landing, no sponsor, no SEO — see astro.config.desktop.mjs.
+      - run: pnpm --filter web build:desktop
       - run: pnpm --filter desktop sync-renderer
       - run: pnpm --filter desktop dist
+
+      # Linux: GPG-sign a SHA256SUMS of the AppImage so users can verify the
+      # download. Skips gracefully until the GPG_PRIVATE_KEY secret is set.
+      - name: Sign the Linux AppImage
+        if: matrix.os == 'ubuntu-latest'
+        working-directory: apps/desktop/release
+        shell: bash
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          if [ -z "$GPG_PRIVATE_KEY" ]; then
+            echo 'GPG_PRIVATE_KEY not set — shipping the AppImage unsigned.'
+            exit 0
+          fi
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          sha256sum Ricuci-Linux.AppImage > SHA256SUMS
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" \
+            --armor --detach-sign --output SHA256SUMS.asc SHA256SUMS
 
       - uses: softprops/action-gh-release@v2
         with:
           files: ${{ matrix.asset }}
+
+      # SHA256SUMS + .asc only exist when the GPG secret is set; missing files
+      # are skipped (fail_on_unmatched_files defaults to false).
+      - name: Attach Linux checksums + signature
+        if: matrix.os == 'ubuntu-latest'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            apps/desktop/release/SHA256SUMS
+            apps/desktop/release/SHA256SUMS.asc
 
   cli:
     needs: create-release

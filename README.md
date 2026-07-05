@@ -18,9 +18,27 @@ and fully documented in [`docs/ZHS_FORMAT.md`](docs/ZHS_FORMAT.md).
 | **Desktop** | [Latest release](https://github.com/Federicokalik/embroidery-converter-kit/releases/latest): `Ricuci-Windows.exe`, `Ricuci-macOS.dmg`, `Ricuci-Linux.AppImage` |
 | **CLI (standalone binary)** | Same releases page, no Node needed: `embconv-windows-x64.exe`, `embconv-macos-arm64`, `embconv-macos-x64`, `embconv-linux-x64` |
 
-The desktop and standalone CLI builds are unsigned: Windows SmartScreen and
-macOS Gatekeeper will warn on first launch (macOS: right-click → Open). The
-npx package is signed by npm with a provenance attestation.
+### Install & verify
+
+The npx package is signed by npm with a provenance attestation. The desktop and
+standalone binaries sign as follows:
+
+- **Linux** — the `Ricuci-Linux.AppImage` is covered by a GPG-signed
+  `SHA256SUMS` on the release. Verify before running:
+
+  ```bash
+  gpg --verify SHA256SUMS.asc SHA256SUMS      # import the maintainer key first
+  sha256sum --check SHA256SUMS                 # confirms the AppImage hash
+  ```
+
+  The maintainer's public key (and its fingerprint) is published alongside the
+  first signed release.
+- **macOS** — the `.dmg` is **not notarized yet** (Apple Developer enrollment
+  pending), so Gatekeeper warns on first launch. Open it once with
+  right-click → **Open**, or clear the quarantine flag:
+  `xattr -dr com.apple.quarantine /Applications/Ricuci.app`.
+- **Windows** — the `.exe` is **unsigned for now**, so SmartScreen shows a
+  warning: click **More info → Run anyway**. Code signing is planned.
 
 ## Formats
 

@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-desktop/
 *.tsbuildinfo
 .DS_Store
 __pycache__/
@@ -7,7 +8,7 @@ __pycache__/
 .astro/
 .serena/
 
-# Desktop build products (renderer/ is synced from apps/web/dist).
+# Desktop build products (renderer/ is synced from apps/web/dist-desktop).
 apps/desktop/renderer/
 apps/desktop/release/
 

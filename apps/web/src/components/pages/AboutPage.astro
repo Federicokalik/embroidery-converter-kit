@@ -1,0 +1,58 @@
+---
+// Desktop app · About. App identity, the local-only privacy promise, the
+// once-per-launch update check, and outbound links. The version and platform
+// come from the Electron preload (window.ricuci); a static dash shows when
+// the page is opened outside the app (e.g. the web preview build).
+import DesktopLayout from '../../layouts/DesktopLayout.astro';
+import { DOCS_LANGS, translate } from '../../i18n/i18n';
+import type { Lang } from '../../i18n/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tt = (key: string): string => translate(lang, key);
+
+const REPO = 'https://github.com/Federicokalik/embroidery-converter-kit';
+---
+
+<DesktopLayout
+  lang={lang}
+  logical="app/about/"
+  section="about"
+  title={tt('app.about.metaTitle')}
+  description={tt('footer.tagline')}
+  availableLangs={DOCS_LANGS}
+>
+  <article class="app-page">
+    <h1 class="display">Ricuci</h1>
+    <p class="app-lede" data-i18n="footer.tagline">{tt('footer.tagline')}</p>
+
+    <dl class="app-about-meta">
+      <dt data-i18n="app.about.versionLabel">{tt('app.about.versionLabel')}</dt>
+      <dd class="mono" id="about-version">—</dd>
+      <dt data-i18n="app.about.authorLabel">{tt('app.about.authorLabel')}</dt>
+      <dd>Federico Kalik</dd>
+    </dl>
+
+    <p data-i18n="app.about.local">{tt('app.about.local')}</p>
+    <p data-i18n="app.about.update">{tt('app.about.update')}</p>
+
+    <h2 data-i18n="app.about.linksHead">{tt('app.about.linksHead')}</h2>
+    <ul>
+      <li><a href="https://ricuci.app" rel="noopener" data-i18n="app.about.site">{tt('app.about.site')}</a></li>
+      <li><a href={REPO} rel="noopener" data-i18n="app.about.repo">{tt('app.about.repo')}</a></li>
+      <li><a href={`${REPO}/releases`} rel="noopener" data-i18n="app.about.releases">{tt('app.about.releases')}</a></li>
+      <li><a href="https://www.npmjs.com/package/ricuci" rel="noopener" data-i18n="app.about.npm">{tt('app.about.npm')}</a></li>
+    </ul>
+  </article>
+</DesktopLayout>
+
+<script>
+  // Fill version/platform from the Electron preload; leave the dash otherwise.
+  const ricuci = (window as unknown as { ricuci?: { version?: string; platform?: string } }).ricuci;
+  const el = document.getElementById('about-version');
+  if (el && ricuci?.version) {
+    el.textContent = ricuci.platform ? `v${ricuci.version} · ${ricuci.platform}` : `v${ricuci.version}`;
+  }
+</script>
