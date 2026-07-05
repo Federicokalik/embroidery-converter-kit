@@ -1,0 +1,63 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
+---
+
+<DocLayout title="Ricuci — EmbCompress" lang="en">
+  <h1>EmbCompress — Husqvarna compression (Greg-Hus)</h1>
+  <p class="docs-lede">
+    The compression used by HUS, VIP and VP3. The classic scheme known as
+    "Greg's HUS compression": two layers — static Huffman + RLE — implemented
+    in <code>packages/core/src/embcompress.ts</code>, a faithful port of
+    <code>pyembroidery/EmbCompress.py</code> (MIT license).
+  </p>
+
+  <h2>API</h2>
+  <pre><code>// Decompression (for reading VIP/HUS/VP3)
+expand(data: Uint8Array, count: number): Uint8Array
+
+// Compression (for writing HUS/VIP/VP3)
+compress(data: Uint8Array): Uint8Array</code></pre>
+  <p>
+    <code>expand()</code> takes a compressed block and the expected record
+    count, and returns the decompressed bytes. <code>compress()</code>
+    produces a stored block (a degenerate literal Huffman table): the key to
+    avoiding edge cases on variable sizes.
+  </p>
+
+  <h2>Block structure</h2>
+  <ul>
+    <li><strong>Header</strong>: number of elements (4 bytes, read MSB-first by decoders).</li>
+    <li><strong>Huffman table</strong>: bit lengths for each symbol.</li>
+    <li><strong>RLE layer</strong>: handles byte repetitions.</li>
+    <li><strong>Payload</strong>: encoded sequences.</li>
+  </ul>
+
+  <h2>Known bug in pyembroidery</h2>
+  <blockquote>
+    <code>pyembroidery.EmbCompress.compress</code> writes the block count
+    little-endian, while every decoder reads it MSB-first. It only works
+    because certain sizes happen to coincide in both byte orders. Our writer
+    emits it in <em>decoder order</em> — verified
+    against pyembroidery's <code>expand</code> for <em>all</em> sizes, not
+    just the lucky ones.
+  </blockquote>
+
+  <h2>Tests</h2>
+  <p>
+    <code>packages/core/test/embcompress.test.ts</code> covers:
+  </p>
+  <ul>
+    <li><code>compress → expand</code> round-trips on real HUS/VIP/VP3 fixtures.</li>
+    <li>Byte-for-byte comparison with pyembroidery's output for the same inputs.</li>
+    <li>Edge cases: 1 record, 65535 records (gate), null bytes, ctrl deltas.</li>
+  </ul>
+  <p>
+    See also <a href={withBase('en/docs/testing')}>Tests &amp; fixtures</a>.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/ir')}>← IR</a>
+    <a href={withBase('en/docs/testing')}>Tests →</a>
+  </p>
+</DocLayout>

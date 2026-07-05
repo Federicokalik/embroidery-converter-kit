@@ -1,0 +1,141 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
+---
+
+<DocLayout title="Ricuci — Formats" lang="en">
+  <h1>All formats</h1>
+  <p class="docs-lede">
+    Ricuci reads 13 formats and writes 10. The table shows what it can do
+    with each one; rows link to the detail pages for the main formats.
+  </p>
+
+  <h2>Reading and writing</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Format</th>
+        <th>Brand</th>
+        <th>Reads</th>
+        <th>Writes</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href={withBase('en/docs/formats/vip')}>VIP</a></td>
+        <td>Husqvarna / PFAFF</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>HUS body compressed with EmbCompress, no XOR.</td>
+      </tr>
+      <tr>
+        <td><a href={withBase('en/docs/formats/zhs')}>ZHS</a></td>
+        <td>Husqvarna (newer)</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Reverse-engineered writer. The first open writer in the world.</td>
+      </tr>
+      <tr>
+        <td>HUS</td>
+        <td>Husqvarna (old)</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>EmbCompress, without the VIP wrapper.</td>
+      </tr>
+      <tr>
+        <td>XXX</td>
+        <td>Melco / Barudan</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Verified byte-for-byte against pyembroidery.</td>
+      </tr>
+      <tr>
+        <td><a href={withBase('en/docs/formats/pes')}>PES / PEC</a></td>
+        <td>Brother</td>
+        <td>✓</td>
+        <td>✓ (PES+PEC)</td>
+        <td>Colors matched to the nearest Brother threads.</td>
+      </tr>
+      <tr>
+        <td><a href={withBase('en/docs/formats/dst')}>DST</a></td>
+        <td>Tajima</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Header + 3 bytes per stitch + tail. Painless.</td>
+      </tr>
+      <tr>
+        <td><a href={withBase('en/docs/formats/jef')}>JEF</a></td>
+        <td>Janome</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Colors matched to the nearest Janome threads.</td>
+      </tr>
+      <tr>
+        <td><a href={withBase('en/docs/formats/vp3')}>VP3</a></td>
+        <td>PFAFF / Husqvarna</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>Thread metadata, structured multicolor.</td>
+      </tr>
+      <tr>
+        <td><a href={withBase('en/docs/formats/exp')}>EXP</a></td>
+        <td>Melco</td>
+        <td>✓</td>
+        <td>✓</td>
+        <td>2 signature bytes per stitch. No colors, no hoop.</td>
+      </tr>
+      <tr>
+        <td>SEW</td>
+        <td>Janome (old, SewPro)</td>
+        <td>✓</td>
+        <td>—</td>
+        <td>Read-only. Old DA format.</td>
+      </tr>
+      <tr>
+        <td>SHV</td>
+        <td>Husqvarna (old)</td>
+        <td>✓</td>
+        <td>—</td>
+        <td>Read-only. Pre-VIP variant.</td>
+      </tr>
+      <tr>
+        <td>PCS</td>
+        <td>Pfaff (old)</td>
+        <td>✓</td>
+        <td>—</td>
+        <td>Read-only. PCD-style format.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="warnings">Structured warnings</h2>
+  <p>
+    When a writer hits a command the target format cannot express, it
+    falls back to a strategy and adds a structured <em>warning</em> to the
+    conversion result. The UI shows the warnings in the results list.
+    The known warnings:
+  </p>
+  <ul>
+    <li><code>FILLER_THREAD</code> — the source file has no colors; the missing ones are marked black.</li>
+    <li><code>DELTA_63_SHIFTED</code> — a stitch was too long; shortened by 0.1 mm.</li>
+    <li><code>COLOR_QUANTIZED</code> — the format only knows its own threads; colors were matched to the nearest ones.</li>
+    <li><code>HOOP_FIT_EXCEEDED</code> — the design is larger than the chosen hoop.</li>
+    <li><code>HOOP_UNSUPPORTED</code> — the format does not know the requested hoop; the stock one was kept.</li>
+    <li><code>TRIM_DROPPED</code> — the format cannot trim the thread; the <code>TRIM</code>s were removed.</li>
+  </ul>
+
+  <h2>Future porting</h2>
+  <p>
+    Formats that might land: SEW/SHV/PCS writing (old, marginal formats),
+    CND (Melco CNDCondor), 10o (Bernina), EMD (Elna), PHB / GNC. The
+    SEW/SHV/PCS reader already exists; the writer is open work. Adding a
+    format = adding a file in <code>readers/</code> or <code>writers/</code>
+    plus one line in <code>registry.ts</code>. That's all.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/architecture')}>← Architecture</a>
+    <a href={withBase('en/docs/formats/vip')}>VIP →</a>
+  </p>
+</DocLayout>

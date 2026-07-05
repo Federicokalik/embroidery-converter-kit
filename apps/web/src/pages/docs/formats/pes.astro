@@ -24,15 +24,15 @@ import { withBase } from '../../../core/base';
     <code>packages/core/src/readers/pes.ts</code> e <code>pec.ts</code>
     riconoscono il formato via magic bytes
     (<code>isPec()</code>, <code>isPes()</code> in
-    <code>registry.ts:detectFormat</code>). Header PES impersona peppers di
-    versioni multiple; il reader gestisce PES v1–v10+ con un path robusto.
+    <code>registry.ts:detectFormat</code>). L'header PES esiste in molte
+    versioni diverse; il reader gestisce PES v1–v10+ con un unico path robusto.
   </p>
 
   <h2>Scrittura</h2>
   <p>
     <code>src/writers/pes.ts</code> + <code>pec.ts</code> producono un PES
-    autoportante con il suo PEC embdded. Colori: avvicinati al chart Brother.
-    Nota standard mostrata nello UI:
+    autoportante con il suo PEC incorporato. Colori: avvicinati al chart Brother.
+    Nota standard mostrata nella UI:
   </p>
   <blockquote>
     PES: i colori vengono avvicinati alle matassine Brother.

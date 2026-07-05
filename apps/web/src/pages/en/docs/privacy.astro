@@ -1,0 +1,62 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
+---
+
+<DocLayout title="Ricuci — Privacy" lang="en">
+  <h1>Privacy — everything in your browser</h1>
+  <p class="docs-lede">
+    Ricuci has no backend. No servers. No analytics. The files you drop
+    into the tool never leave your computer. Everything happens inside
+    the browser tab you opened. When you close the page, the files are
+    nowhere anymore.
+  </p>
+
+  <h2>What it does</h2>
+  <ul>
+    <li>Reads the file <em>locally</em> with <code>FileReader</code>/<code>file.arrayBuffer()</code>.</li>
+    <li>Parses the bytes in memory with the TS core.</li>
+    <li>Produces the output bytes in memory.</li>
+    <li>Offers a direct download (<code>Blob</code> + <code>objectURL</code>): the written bytes are yours.</li>
+  </ul>
+
+  <h2>What it does NOT do</h2>
+  <ul>
+    <li>It does not send the file to any server.</li>
+    <li>It does not send telemetry, analytics, crash reports, error stacks.</li>
+    <li>It does not store your files in <code>localStorage</code>/<code>IndexedDB</code>: only the chosen language.</li>
+    <li>It does not load third-party scripts at runtime: the web app is static, driven by an ES2022 <code>script type="module"</code>. No runtime CDNs.</li>
+    <li>It does not call external APIs. No fetch, no WebSockets.</li>
+  </ul>
+
+  <h2>How to verify it yourself</h2>
+  <ol>
+    <li>Open DevTools → Network.</li>
+    <li>Drop in an embroidery file.</li>
+    <li>Convert.</li>
+    <li>See for yourself: zero outbound requests after the initial page load.</li>
+  </ol>
+
+  <h2>Why this is possible</h2>
+  <p>
+    All the logic — readers, writers, <code>EmbCompress</code>, IR — lives
+    in <code>packages/core</code>, written in <em>strict</em> TypeScript
+    with zero DOM or Node dependencies. The bundle takes up a few tens of
+    kilobytes in memory and runs in a few milliseconds even for designs
+    with thousands of stitches. There is no reason to send your files
+    anywhere: the browser is enough.
+  </p>
+
+  <h2>Sponsorship</h2>
+  <p>
+    There is no commercial entity or direct advertising in the tool. There
+    is a small <em>"Sponsored by Calicchia.Design"</em> badge in the footer
+    pointing to the maintainer's site (Federico). No tracking, no
+    third-party cookies. You click, you see the site, you decide.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/testing')}>← Tests</a>
+    <a href={withBase('en/convert')}>Convert now →</a>
+  </p>
+</DocLayout>

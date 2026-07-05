@@ -1,0 +1,58 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+const title = 'Ricuci — Docs';
+import { withBase } from '../../../core/base';
+---
+
+<DocLayout title={title} lang="en">
+  <h1>Ricuci, inside and out.</h1>
+  <p class="docs-lede">
+    Ricuci converts embroidery files (VIP, ZHS, PES, DST, JEF, VP3, EXP and more)
+    right in your browser. No server, no upload: your files never
+    leave your computer. These pages explain how it works, inside
+    and out.
+  </p>
+
+  <h2>Where to start</h2>
+  <ul>
+    <li><a href={withBase('en/docs/how-it-works')}>How it works</a> — the flow of a conversion, from the first instruction to the last.</li>
+    <li><a href={withBase('en/docs/architecture')}>Architecture</a> — how the monorepo is organized (core + web + cli) and why.</li>
+    <li><a href={withBase('en/docs/formats')}>All formats</a> — which formats it reads and writes, and what it knows (or doesn't) about each one.</li>
+    <li><a href={withBase('en/docs/privacy')}>Privacy</a> — why everything can happen in the browser without a single server.</li>
+  </ul>
+
+  <h2>Who this is for</h2>
+  <p>
+    For anyone with a home or semi-industrial embroidery machine who wants to
+    move a design from one format to another without installing anything. And
+    for the curious who want to understand what happens behind the scenes. The
+    format names come from real brands (Husqvarna, Brother, Janome, Tajima,
+    Barudan, PFAFF…) but Ricuci is neutral: it reads what you give it and
+    produces what you ask for.
+  </p>
+
+  <h2>What's around here</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Page</th>
+        <th>What you'll find</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>/docs/how-it-works</code></td><td>From file drop to download: reading, IR, writing.</td></tr>
+      <tr><td><code>/docs/architecture</code></td><td>Monorepo, IR, porting order, testing.</td></tr>
+      <tr><td><code>/docs/formats</code></td><td>A table of what gets read and written.</td></tr>
+      <tr><td><code>/docs/formats/[fmt]</code></td><td>One page for each supported format.</td></tr>
+      <tr><td><code>/docs/ir</code></td><td>The Intermediate Representation, the heart of the converter.</td></tr>
+      <tr><td><code>/docs/embcompress</code></td><td>Husqvarna's compressor (VIP, HUS).</td></tr>
+      <tr><td><code>/docs/testing</code></td><td>Fixtures, byte-for-byte round-trips, pyembroidery as the oracle.</td></tr>
+      <tr><td><code>/docs/privacy</code></td><td>Why nothing leaves your computer.</td></tr>
+    </tbody>
+  </table>
+
+  <p class="docs-prevnext">
+    <span></span>
+    <a href={withBase('en/docs/how-it-works')}>How it works →</a>
+  </p>
+</DocLayout>

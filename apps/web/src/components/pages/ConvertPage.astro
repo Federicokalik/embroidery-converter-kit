@@ -1,0 +1,109 @@
+---
+// The studio, prerendered in one language (see pages/convert.astro for it,
+// pages/[lang]/convert.astro for the others). Converter only: no
+// scrolltelling, no Three.js, no preloader. Only base + converter styles
+// ship; the entry is lean too.
+import '../../styles/base.css';
+import '../../styles/converter.css';
+import '../../styles/footer.css';
+import ConverterSection from '../ConverterSection.astro';
+import Footer from '../Footer.astro';
+import SiteHead from '../SiteHead.astro';
+import { DOCS_LANGS, LANGS, localeUrl, translate } from '../../i18n/i18n';
+import type { Lang } from '../../i18n/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tt = (key: string): string => translate(lang, key);
+
+const homeHref = localeUrl(lang, '');
+const docsHref = localeUrl(DOCS_LANGS.includes(lang) ? lang : 'en', 'docs/');
+
+// Desktop and CLI builds are attached to each GitHub Release with stable
+// asset names, so /releases/latest/download/<name> always serves the newest.
+const REPO = 'https://github.com/Federicokalik/embroidery-converter-kit';
+const dl = (asset: string): string => `${REPO}/releases/latest/download/${asset}`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <SiteHead
+      lang={lang}
+      logical="convert/"
+      title={tt('meta.convertTitle')}
+      description={tt('meta.convertDescription')}
+    />
+  </head>
+  <body data-i18n-title="meta.convertTitle" data-i18n-description="meta.convertDescription">
+    <nav class="nav" aria-label="Ricuci">
+      <a class="wordmark" href={homeHref}>
+        Ricuci
+        <svg class="wordmark-stitch" viewBox="0 0 120 8" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M2 5 Q16 1 30 5 T58 5 T86 5 T114 5" pathLength="1"></path>
+        </svg>
+      </a>
+      <div class="nav-right">
+        <a class="nav-docs" href={docsHref} data-i18n="nav.docs">{tt('nav.docs')}</a>
+        <select
+          id="lang-select"
+          class="lang-select"
+          aria-label={tt('nav.langLabel')}
+          data-i18n-aria="nav.langLabel"
+        >
+          {LANGS.map((l) => (
+            <option value={l.code} selected={l.code === lang}>{l.flag} {l.label}</option>
+          ))}
+        </select>
+      </div>
+    </nav>
+
+    <main class="app-main studio">
+      <header class="app-head">
+        <h1 class="display" data-i18n="convert.headline">{tt('convert.headline')}</h1>
+        <p class="mono app-privacy" data-i18n="privacy.line">{tt('privacy.line')}</p>
+      </header>
+
+      <ConverterSection mode="studio" lang={lang} />
+
+      <section class="downloads" aria-labelledby="dl-title">
+        <h2 id="dl-title" class="display" data-i18n="dl.title">{tt('dl.title')}</h2>
+        <p class="dl-sub" data-i18n="dl.sub">{tt('dl.sub')}</p>
+        <ul class="dl-cards">
+          <li>
+            <a class="dl-card" href={dl('Ricuci-Windows.exe')}>
+              <span class="mono" data-i18n="dl.windows">{tt('dl.windows')}</span>
+              <span class="soon-tag mono" data-i18n="dl.get">{tt('dl.get')}</span>
+            </a>
+          </li>
+          <li>
+            <a class="dl-card" href={dl('Ricuci-macOS.dmg')}>
+              <span class="mono" data-i18n="dl.macos">{tt('dl.macos')}</span>
+              <span class="soon-tag mono" data-i18n="dl.get">{tt('dl.get')}</span>
+            </a>
+          </li>
+          <li>
+            <a class="dl-card" href={dl('Ricuci-Linux.AppImage')}>
+              <span class="mono" data-i18n="dl.linux">{tt('dl.linux')}</span>
+              <span class="soon-tag mono" data-i18n="dl.get">{tt('dl.get')}</span>
+            </a>
+          </li>
+          <li>
+            <a class="dl-card" href={`${REPO}/releases/latest`} rel="noopener">
+              <span class="mono" data-i18n="dl.cli">{tt('dl.cli')}</span>
+              <span class="soon-tag mono" data-i18n="dl.releases">{tt('dl.releases')}</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <Footer lang={lang} />
+
+    <script>
+      import '../../convert-entry';
+    </script>
+  </body>
+</html>

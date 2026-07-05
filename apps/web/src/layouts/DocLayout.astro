@@ -1,20 +1,30 @@
 ---
-// Shared layout for every /docs/* page. Left sidebar with a hand-written
+// Shared layout for every docs page. Left sidebar with a hand-written
 // index, main column with <slot />, <Footer /> at the bottom. The docs
-// entry lives under /docs so the "Docs" link in the main nav points here.
+// exist in it (at /docs/) and en (at /en/docs/): pass lang and the page's
+// logical path so links, hreflang and the sidebar resolve per language.
 import '../styles/base.css';
 import '../styles/footer.css';
 import '../styles/docs.css';
 import DocsNav from '../components/DocsNav.astro';
 import Footer from '../components/Footer.astro';
-import { siteBase, withBase } from '../core/base';
-// Same Vite-piped font URLs as the other pages (hashed, base-aware).
-import displayFontUrl from '../assets/fonts/BricolageGrotesque-SemiBold.woff2?url';
-import sansFontUrl from '../assets/fonts/InstrumentSans-Regular.woff2?url';
-import monoFontUrl from '../assets/fonts/JetBrainsMono-Regular.woff2?url';
+import SiteHead from '../components/SiteHead.astro';
+import { DOCS_LANGS, localeUrl, pageLogicalPath } from '../i18n/i18n';
+import type { Lang } from '../i18n/i18n';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: Lang;
+}
+const { lang = 'it' } = Astro.props;
+const title = Astro.props.title ?? 'Ricuci — Docs';
+const description =
+  Astro.props.description ??
+  (lang === 'it' ? 'Come funziona Ricuci, dentro e fuori.' : 'How Ricuci works, inside and out.');
 
 interface NavItem {
-  href: string;
+  path: string; // logical, lang-less: 'docs/ir'
   label: string;
 }
 interface NavGroup {
@@ -22,82 +32,72 @@ interface NavGroup {
   items: NavItem[];
 }
 
+const L = (it: string, en: string): string => (lang === 'it' ? it : en);
+
 const groups: NavGroup[] = [
   {
     title: 'Start',
     items: [
-      { href: '/docs', label: 'Panoramica' },
-      { href: '/docs/how-it-works', label: 'Come funziona' },
-      { href: '/docs/architecture', label: 'Architettura' },
+      { path: 'docs', label: L('Panoramica', 'Overview') },
+      { path: 'docs/how-it-works', label: L('Come funziona', 'How it works') },
+      { path: 'docs/architecture', label: L('Architettura', 'Architecture') },
     ],
   },
   {
-    title: 'Formats',
+    title: L('Formati', 'Formats'),
     items: [
-      { href: '/docs/formats', label: 'Tutti i formati' },
-      { href: '/docs/formats/vip', label: 'VIP' },
-      { href: '/docs/formats/zhs', label: 'ZHS' },
-      { href: '/docs/formats/pes', label: 'PES / PEC' },
-      { href: '/docs/formats/dst', label: 'DST' },
-      { href: '/docs/formats/jef', label: 'JEF' },
-      { href: '/docs/formats/vp3', label: 'VP3' },
-      { href: '/docs/formats/exp', label: 'EXP' },
+      { path: 'docs/formats', label: L('Tutti i formati', 'All formats') },
+      { path: 'docs/formats/vip', label: 'VIP' },
+      { path: 'docs/formats/zhs', label: 'ZHS' },
+      { path: 'docs/formats/pes', label: 'PES / PEC' },
+      { path: 'docs/formats/dst', label: 'DST' },
+      { path: 'docs/formats/jef', label: 'JEF' },
+      { path: 'docs/formats/vp3', label: 'VP3' },
+      { path: 'docs/formats/exp', label: 'EXP' },
     ],
   },
   {
     title: 'Internals',
     items: [
-      { href: '/docs/ir', label: 'Intermediate Representation' },
-      { href: '/docs/embcompress', label: 'EmbCompress' },
-      { href: '/docs/testing', label: 'Test & fixture' },
-      { href: '/docs/privacy', label: 'Privacy' },
+      { path: 'docs/ir', label: 'Intermediate Representation' },
+      { path: 'docs/embcompress', label: 'EmbCompress' },
+      { path: 'docs/testing', label: L('Test & fixture', 'Tests & fixtures') },
+      { path: 'docs/privacy', label: 'Privacy' },
     ],
   },
 ];
 
-// Mark the active item via aria-current when the current path equals the
-// item href (or starts with it, for index pages). Compare base-relative:
-// Astro.url.pathname includes the site base on Pages builds.
-const here = `/${Astro.url.pathname.slice(siteBase.length)}`;
-const isActive = (href: string): boolean => {
-  if (href === '/docs') return here === '/docs/';
-  return href !== '/docs' && (here === href + '/' || here === href);
-};
+// Active item: compare logical paths (base- and lang-independent).
+const here = pageLogicalPath(Astro.url.pathname).replace(/\/$/, '');
+const isActive = (path: string): boolean => here === path;
+const logical = `${here}/`;
 ---
 
 <!doctype html>
 {/* data-theme="light": the site identity is light-only; without this Pico
     follows prefers-color-scheme and flips the docs to its dark palette. */}
-<html lang="it" data-theme="light">
+<html lang={lang} data-theme="light">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{Astro.props.title ?? 'Ricuci — Docs'}</title>
-    <meta
-      name="description"
-      content={Astro.props.description ?? 'Come funziona Ricuci, dentro e fuori.'}
-    />
-    <link rel="preload" href={displayFontUrl} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={sansFontUrl} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={monoFontUrl} as="font" type="font/woff2" crossorigin />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff2e88' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M3 17 Q7 13 12 15 T21 11'/%3E%3Cpath d='M17 4 l3 3 M20 4 l-3 3'/%3E%3C/svg%3E"
+    <SiteHead
+      lang={lang}
+      logical={logical}
+      title={title}
+      description={description}
+      availableLangs={DOCS_LANGS}
     />
   </head>
-  <body data-i18n-title="meta.title" data-i18n-description="meta.description">
-    <DocsNav />
+  <body>
+    <DocsNav lang={lang} />
 
     <main class="docs-shell">
-      <aside class="docs-sidebar" aria-label="Indice">
+      <aside class="docs-sidebar" aria-label={L('Indice', 'Index')}>
         {groups.map((group) => (
           <nav>
             <h2>{group.title}</h2>
             <ul>
               {group.items.map((item) => (
                 <li>
-                  <a href={withBase(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
+                  <a href={localeUrl(lang, `${item.path}/`)} aria-current={isActive(item.path) ? 'page' : undefined}>
                     {item.label}
                   </a>
                 </li>
@@ -112,7 +112,7 @@ const isActive = (href: string): boolean => {
       </article>
     </main>
 
-    <Footer />
+    <Footer lang={lang} />
 
     <script>
       import { applyI18n } from '../i18n/i18n';

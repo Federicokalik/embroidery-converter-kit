@@ -1,0 +1,78 @@
+---
+// Shared <head> block: title/description in the page language, canonical +
+// hreflang alternates (only the languages the page actually exists in),
+// Open Graph/Twitter meta, favicon and the font preloads. Absolute URLs
+// (canonical, hreflang, og:*) are emitted only when `site` is configured
+// (ASTRO_SITE in CI) — dev builds skip them rather than lie.
+import { LANGS, localeUrl } from '../i18n/i18n';
+import type { Lang } from '../i18n/i18n';
+import { siteBase } from '../core/base';
+import displayFontUrl from '../assets/fonts/BricolageGrotesque-SemiBold.woff2?url';
+import sansFontUrl from '../assets/fonts/InstrumentSans-Regular.woff2?url';
+import monoFontUrl from '../assets/fonts/JetBrainsMono-Regular.woff2?url';
+
+interface Props {
+  lang: Lang;
+  /** Logical path: base-less, lang-less ('', 'convert/', 'docs/ir/'). */
+  logical: string;
+  title: string;
+  description: string;
+  /** Languages this page exists in (docs: it/en only). */
+  availableLangs?: ReadonlyArray<Lang>;
+}
+
+const {
+  lang,
+  logical,
+  title,
+  description,
+  availableLangs = LANGS.map((l) => l.code),
+} = Astro.props;
+
+const site = Astro.site?.href;
+const abs = (path: string): string => new URL(path, site).href;
+
+const OG_LOCALES: Record<Lang, string> = {
+  it: 'it_IT',
+  en: 'en_US',
+  fr: 'fr_FR',
+  de: 'de_DE',
+  es: 'es_ES',
+  pt: 'pt_PT',
+};
+
+const FAVICON =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff2e88' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M3 17 Q7 13 12 15 T21 11'/%3E%3Cpath d='M17 4 l3 3 M20 4 l-3 3'/%3E%3C/svg%3E";
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="icon" type="image/svg+xml" href={FAVICON} />
+<link rel="preload" href={displayFontUrl} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={sansFontUrl} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={monoFontUrl} as="font" type="font/woff2" crossorigin />
+{site && (
+  <>
+    <link rel="canonical" href={abs(localeUrl(lang, logical))} />
+    {availableLangs.map((l) => (
+      <link rel="alternate" hreflang={l} href={abs(localeUrl(l, logical))} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={abs(localeUrl('it', logical))} />
+    <link rel="sitemap" href={abs(`${siteBase}sitemap-index.xml`)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ricuci" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={abs(localeUrl(lang, logical))} />
+    <meta property="og:image" content={abs(`${siteBase}og.png`)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={OG_LOCALES[lang]} />
+    {availableLangs
+      .filter((l) => l !== lang)
+      .map((l) => <meta property="og:locale:alternate" content={OG_LOCALES[l]} />)}
+    <meta name="twitter:card" content="summary_large_image" />
+  </>
+)}

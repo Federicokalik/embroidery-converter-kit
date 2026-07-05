@@ -32,10 +32,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Project sites are served under /<repo>/.
+      # Project sites are served under /<repo>/; ASTRO_SITE turns on the
+      # absolute-URL SEO output (canonical, hreflang, og:*, sitemap).
       - run: pnpm --filter web build
         env:
           ASTRO_BASE: /${{ github.event.repository.name }}/
+          ASTRO_SITE: https://${{ github.repository_owner }}.github.io
 
       - uses: actions/configure-pages@v5
 

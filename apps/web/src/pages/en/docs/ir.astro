@@ -1,0 +1,113 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
+---
+
+<DocLayout title="Ricuci — Intermediate Representation" lang="en">
+  <h1>Intermediate Representation (IR)</h1>
+  <p class="docs-lede">
+    The <code>Pattern</code> is the neutral type every reader produces and
+    every writer consumes. <strong>Absolute</strong> coordinates in 0.1 mm
+    units, standard orientation (y grows upward; VIP stores y negated,
+    readers normalize it). Every quirk of the source format is boiled
+    away.
+  </p>
+
+  <h2>Type (TS)</h2>
+  <pre><code>{String.raw`type Command =
+  | 'STITCH' | 'JUMP' | 'TRIM'
+  | 'COLOR_CHANGE' | 'STOP' | 'END';
+
+interface Stitch {
+  x: number;        // absolute, 0.1 mm
+  y: number;        // absolute, 0.1 mm
+  command: Command;
+}
+
+interface Thread {
+  rgb: number;             // 24-bit 0xRRGGBB
+  description?: string;
+  catalog?: string;
+  chart?: string;          // e.g. "Brother", "Janome"
+}
+
+interface Extents {
+  minX: number; minY: number; maxX: number; maxY: number;
+}
+
+interface Hoop {
+  width: number;            // 0.1 mm
+  height: number;
+  name?: string;            // e.g. "130x180" or a PES hoop-name
+}
+
+interface Pattern {
+  stitches: Stitch[];
+  threads: Thread[];
+  extents: Extents;
+  hoop?: Hoop;              // present only if the format carries it
+}`}</code></pre>
+
+  <h2>Commands</h2>
+  <table>
+    <thead><tr><th>Command</th><th>Machine meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>STITCH</code></td><td>The needle goes down and sews a stitch.</td></tr>
+      <tr><td><code>JUMP</code></td><td>Move without sewing (for jumps between areas).</td></tr>
+      <tr><td><code>TRIM</code></td><td>Cut the thread.</td></tr>
+      <tr><td><code>COLOR_CHANGE</code></td><td>Stop for a machine color change.</td></tr>
+      <tr><td><code>STOP</code></td><td>Stop for operator intervention.</td></tr>
+      <tr><td><code>END</code></td><td>End of the design.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Every reader <strong>must</strong> emit an <code>END</code> as its last
+    record; every writer <strong>must</strong> terminate the file with its
+    own END and (for formats that require it) the final checksum.
+  </p>
+
+  <h2>Extents and Hoop</h2>
+  <p>
+    <code>extents</code> is computed by <code>computeExtents(stitches)</code>,
+    ignoring the ENDs. <code>hoop</code> is present only if the source format
+    stores it (PES, JEF, PCS carry it; VIP/ZHS only extents).
+    The writer decides what to do with the hoop when the destination format
+    doesn't support it: usually <code>warn.HOOP_UNSUPPORTED</code>.
+  </p>
+
+  <h2>Structured warnings</h2>
+  <p>
+    The writer reports unavoidable deviations with a <code>ConversionWarning</code>:
+  </p>
+  <pre><code>{String.raw`interface ConversionWarning {
+  code:
+    | 'DELTA_63_SHIFTED' | 'METADATA_0X83_ZEROED'
+    | 'FILLER_THREAD' | 'COLOR_QUANTIZED'
+    | 'HOOP_FIT_EXCEEDED' | 'HOOP_UNSUPPORTED'
+    | 'TRIM_DROPPED';
+  message: string;          // human-readable, EN, from the engine
+}`}</code></pre>
+  <p>
+    The web app maps each <code>code</code> to its i18n key
+    (<code>warn.DELTA_63_SHIFTED</code>, etc.) and shows it in the results
+    list. The IT/EN/FR/DE/ES/PT store lives in
+    <code>apps/web/src/i18n/strings.ts</code>.
+  </p>
+
+  <h2>UnsupportedDesignError</h2>
+  <p>
+    If a design contains something the destination format
+    <em>simply cannot express</em> (not even with a workaround), the writer
+    throws <code>UnsupportedDesignError</code> with a
+    <code>reason: UnsupportedReason</code>. The UI maps each reason to its
+    i18n key (<code>err.EMPTY</code>, <code>err.MULTI_COLOR</code>,
+    <code>err.TRIM</code>, <code>err.JUMP</code>, <code>err.STOP</code>,
+    <code>err.DELTA_RANGE</code>, <code>err.TOO_MANY_RECORDS</code>,
+    <code>err.TOO_LARGE</code>).
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/formats/exp')}>← EXP</a>
+    <a href={withBase('en/docs/embcompress')}>EmbCompress →</a>
+  </p>
+</DocLayout>

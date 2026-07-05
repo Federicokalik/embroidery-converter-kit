@@ -1,0 +1,79 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
+---
+
+<DocLayout title="Ricuci — Architecture" lang="en">
+  <h1>Monorepo architecture</h1>
+  <p class="docs-lede">
+    One engine, three front-ends. The logic lives in <code>packages/core</code>,
+    pure TypeScript, zero DOM or Node dependencies. On top of that core sit
+    the web app (browser), the CLI (Node) and, in the future, a desktop app
+    (Electron wrapping the web build).
+  </p>
+
+  <h2>Structure</h2>
+  <pre><code>embroidery-converter/
+├── packages/
+│   ├── core/              ← ALL the logic. TS strict, ZERO DOM/Node deps.
+│   │   ├── src/
+│   │   │   ├── ir.ts                  Intermediate Representation
+│   │   │   ├── embcompress.ts        Greg-Hus expand()/compress()
+│   │   │   ├── readers/
+│   │   │   │   ├── vip.ts            (HUS body in VIP wrapper)
+│   │   │   │   ├── zhs.ts
+│   │   │   │   ├── pes.ts  dst.ts  jef.ts  vp3.ts  exp.ts  ...
+│   │   │   ├── writers/
+│   │   │   │   ├── zhs.ts            ← the gem: no open writer has ever touched ZHS
+│   │   │   │   ├── dst.ts  pes.ts  jef.ts  vp3.ts  exp.ts  hus.ts  vip.ts  xxx.ts  ...
+│   │   │   ├── registry.ts           extension → reader/writer
+│   │   │   └── index.ts              convert(bytes, from, to) → bytes + warnings
+│   │   └── test/                      Vitest, round-trip vs ../../fixtures
+│   └── cli/               ← Node CLI, uses core
+│       └── src/index.ts   embconv in.vip out.zhs | batch folder
+├── apps/
+│   ├── web/               ← Astro. Drag-drop,Web Worker?, JSZip download.
+│   │   └── src/           100% client-side.
+│   └── desktop/           ← (future) Electron. Loads apps/web/build and adds native batch on top.
+└── fixtures/              VIP/ZHS pairs and other ground truth</code></pre>
+
+  <h2>Shared IR</h2>
+  <p>
+    The <code>Pattern</code> is modeled on pyembroidery's
+    <code>EmbPattern</code>, but in strict TypeScript. See the <a href={withBase('en/docs/ir')}>IR
+    page</a> for the exact type. It is the contract between every reader and every writer.
+  </p>
+
+  <h2>Stack</h2>
+  <ul>
+    <li><strong>pnpm workspaces</strong>, strict TypeScript everywhere.</li>
+    <li><strong>Astro 6</strong> for <code>apps/web</code>: a scrollytelling landing plus the <code>/convert</code> and <code>/docs</code> pages.</li>
+    <li><strong>tsup</strong> to build <code>core</code> and <code>cli</code>.</li>
+    <li><strong>Vitest</strong> for tests, with fixtures taken from <code>/fixtures</code>.</li>
+    <li>No backend. The web app is static, deployable to Netlify / Cloudflare Pages / any host.</li>
+  </ul>
+
+  <h2>Porting order (what got ported first)</h2>
+  <ol>
+    <li>EmbCompress <code>expand()</code> + VIP reader + ZHS writer + IR.
+      → VIP→ZHS in TS, with round-trip tests against <code>fixtures/</code>.</li>
+    <li>Readers: ZHS, PES, DST, VP3. (XXX, JEF, EXP came later.)</li>
+    <li>Writers: DST, PES (easy, well documented). Then JEF, VP3, HUS, VIP, XXX.</li>
+    <li>Web app: drag-drop + single download + Studio (queue + panel).</li>
+    <li>Batch CLI. (Desktop is future work.)</li>
+    <li>Multi-color / trim ZHS writing — <strong>only after</strong> obtaining sample <code>.zhs</code> files with trims (see <a href={withBase('en/docs/formats/zhs')}>ZHS</a>).</li>
+  </ol>
+
+  <h2>Why a monorepo</h2>
+  <p>
+    Because the logic gets written exactly once. Add a format to the
+    <code>core</code> and, the same day, the web app, CLI and desktop know how
+    to use it. Updating the core means updating everything. It is the laziest,
+    most efficient pattern for a solo maintainer.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/how-it-works')}>← How it works</a>
+    <a href={withBase('en/docs/formats')}>All formats →</a>
+  </p>
+</DocLayout>

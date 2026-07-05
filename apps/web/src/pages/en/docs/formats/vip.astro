@@ -1,0 +1,111 @@
+---
+import DocLayout from '../../../../layouts/DocLayout.astro';
+import { withBase } from '../../../../core/base';
+---
+
+<DocLayout title="Ricuci — VIP format" lang="en">
+  <h1>VIP — Husqvarna / PFAFF</h1>
+  <p class="docs-lede">
+    pyembroidery does <strong>not</strong> have a VIP reader, but VIP is
+    essentially a <strong>HUS body with a different header</strong>: the
+    command/x/y streams use the same Greg-Hus compression
+    (<code>EmbCompress</code>) as HUS/VP3, <strong>without XOR</strong>
+    on the data part (verified by decompressing the blocks and comparing
+    the path stitch-for-stitch against the reference files).
+  </p>
+
+  <h2>Header</h2>
+  <table>
+    <thead>
+      <tr><th>Offset</th><th>Type</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0x00</td><td>uint32</td><td>magic <code>0x0190FC5D</code></td></tr>
+      <tr><td>0x04</td><td>int32</td><td>numberOfStitches (includes the final END record)</td></tr>
+      <tr><td>0x08</td><td>int32</td><td>numberOfColors</td></tr>
+      <tr><td>0x0C</td><td>int16</td><td>posX (max X)</td></tr>
+      <tr><td>0x0E</td><td>int16</td><td>posY (max Y)</td></tr>
+      <tr><td>0x10</td><td>int16</td><td>negX (min X)</td></tr>
+      <tr><td>0x12</td><td>int16</td><td>negY (min Y)</td></tr>
+      <tr><td>0x14</td><td>int32</td><td>attributeOffset — start of the command block (compressed)</td></tr>
+      <tr><td>0x18</td><td>int32</td><td>xOffset — start of the delta-X block (compressed)</td></tr>
+      <tr><td>0x1C</td><td>int32</td><td>yOffset — start of the delta-Y block (compressed)</td></tr>
+      <tr><td>0x20</td><td>8 byte</td><td>string / reserved (zero in the fixtures)</td></tr>
+      <tr><td>0x2A</td><td>int32</td><td>colorLength = <code>0x2E + 8·numberOfColors</code> (formula in the fixtures)</td></tr>
+      <tr><td>0x2E</td><td>4·n byte</td><td><strong>encrypted color block</strong> (see below)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Color block</h2>
+  <p>
+    Each color is 4 bytes <code>(r, g, b, 0)</code>, XOR-chained with a
+    keystream derived from libembroidery's <code>vipDecodingTable</code>
+    (vendored in <code>reference/vendor/</code>, generated with
+    <code>scripts/gen_vip_table.py</code>).
+  </p>
+  <pre><code>decoded[i] = encoded[i] ^ TABLE[i] ^ encoded[i-1]   (encoded[-1] = 0)
+encoded[i] = decoded[i] ^ TABLE[i] ^ encoded[i-1]</code></pre>
+  <p>
+    Known plaintext in all fixtures: <code>1a 15 eb 84</code> → <code>#348D1A</code>.
+    The multicolor layout formulas (<code>colorLength</code>,
+    <code>attributeOffset</code> as a function of <code>n</code>) are only
+    verified for <code>n = 1</code> and extrapolated — this is flagged in
+    the writer.
+  </p>
+
+  <h2>Compressed streams</h2>
+  <pre><code>command_block = file[attributeOffset : xOffset]
+x_block       = file[xOffset        : yOffset]
+y_block       = file[yOffset        : EOF]
+
+commands = EmbCompress.expand(command_block, numberOfStitches)  // 1 byte/stitch
+xs       = EmbCompress.expand(x_block,       numberOfStitches)  // signed8 delta
+ys       = EmbCompress.expand(y_block,       numberOfStitches)  // signed8 delta</code></pre>
+
+  <h2>Commands (same as HUS)</h2>
+  <table>
+    <thead><tr><th>byte</th><th>meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x80</code></td><td>STITCH</td></tr>
+      <tr><td><code>0x81</code></td><td>JUMP</td></tr>
+      <tr><td><code>0x84</code></td><td>COLOR CHANGE</td></tr>
+      <tr><td><code>0x88</code></td><td>TRIM</td></tr>
+      <tr><td><code>0x90</code></td><td>END</td></tr>
+    </tbody>
+  </table>
+  <p>
+    For the project's 52 monogram letters, all commands are
+    <code>0x80</code> terminated by a single <code>0x90</code>;
+    <code>numberOfColors == 1</code> in every file.
+  </p>
+
+  <h2>Writing (TS core)</h2>
+  <p>
+    <code>packages/core/src/writers/vip.ts</code> and
+    <code>hus.ts</code> share <code>hus-vip-body.ts</code>. The streams
+    use a <strong>stored</strong> EmbCompress block (degenerate literal
+    Huffman table, ≤ 65535 records — gated). Status:
+    <strong>software-verified</strong> (round-trip + read-back via
+    pyembroidery <code>scripts/verify_hus_vip.py</code>); acceptance on a
+    real machine / Artist Toolkit still pending.
+  </p>
+  <blockquote>
+    pyembroidery writes the EmbCompress block count little-endian while
+    every decoder reads it MSB-first — it works by pure lucky size. Our
+    writer writes it in decoder order, verified for every size.
+  </blockquote>
+
+  <h2>Compression: EmbCompress</h2>
+  <p>
+    The classic "Greg's HUS compression". The proven Python source is
+    <code>pyembroidery/EmbCompress.py</code> (MIT license). To
+    <strong>read</strong> VIP/HUS/VP3 you only need <code>expand()</code>; to
+    write you also need <code>compress()</code>. See the
+    <a href={withBase('en/docs/embcompress')}>EmbCompress</a> page.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/formats')}>← All formats</a>
+    <a href={withBase('en/docs/formats/zhs')}>ZHS →</a>
+  </p>
+</DocLayout>

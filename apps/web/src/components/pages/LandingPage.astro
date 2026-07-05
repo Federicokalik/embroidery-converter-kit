@@ -1,0 +1,229 @@
+---
+// The landing, prerendered in one language (see pages/index.astro for it,
+// pages/[lang]/index.astro for the others). CSS imported here so Astro
+// serves it from <head> in dev and build alike: first paint is always the
+// styled preloader, no FOUC. Static copy comes from the dictionary at
+// build time; data-i18n attributes stay for the runtime engine.
+import '../../styles/base.css';
+import '../../styles/scenes.css';
+import '../../styles/converter.css';
+import '../../styles/preloader.css';
+import '../../styles/footer.css';
+import ConverterSection from '../ConverterSection.astro';
+import SiteHead from '../SiteHead.astro';
+import { DOCS_LANGS, LANGS, localeUrl, translate } from '../../i18n/i18n';
+import type { Lang } from '../../i18n/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const tt = (key: string): string => translate(lang, key);
+
+const convertHref = localeUrl(lang, 'convert/');
+// The docs exist in it/en only; other locales read them in English.
+const docsHref = localeUrl(DOCS_LANGS.includes(lang) ? lang : 'en', 'docs/');
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <SiteHead
+      lang={lang}
+      logical=""
+      title={tt('meta.title')}
+      description={tt('meta.description')}
+    />
+  </head>
+  <body>
+    <!-- Persistent stitch stage: the pink thread lives here (2D or WebGL). -->
+    <div id="stage" aria-hidden="true"></div>
+
+    <nav class="nav" aria-label="Ricuci">
+      <a class="wordmark" href="#hero">
+        Ricuci
+        <svg class="wordmark-stitch" viewBox="0 0 120 8" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M2 5 Q16 1 30 5 T58 5 T86 5 T114 5" pathLength="1"></path>
+        </svg>
+      </a>
+      <div class="nav-right">
+        <a class="nav-docs" href={docsHref} data-i18n="nav.docs">{tt('nav.docs')}</a>
+        <select
+          id="lang-select"
+          class="lang-select"
+          aria-label={tt('nav.langLabel')}
+          data-i18n-aria="nav.langLabel"
+        >
+          {LANGS.map((l) => (
+            <option value={l.code} selected={l.code === lang}>{l.flag} {l.label}</option>
+          ))}
+        </select>
+        <a class="btn btn-primary nav-cta" href={convertHref} data-i18n="nav.cta">{tt('nav.cta')}</a>
+      </div>
+    </nav>
+
+    <main>
+      <!-- S1: the showpiece stitches itself on the stage, right column. -->
+      <header class="scene scene-hero" id="hero">
+        <div class="scene-inner">
+          <div class="hero-copy">
+            <h1 class="display" data-i18n="hero.headline">{tt('hero.headline')}</h1>
+            <p class="hero-tech mono" data-i18n="hero.tech">{tt('hero.tech')}</p>
+            <div class="hero-ctas">
+              <a class="btn btn-primary" href={convertHref} data-i18n="hero.cta">{tt('hero.cta')}</a>
+              <a class="btn btn-ghost" href="#babel" data-i18n="hero.learn">{tt('hero.learn')}</a>
+            </div>
+          </div>
+          <div class="hero-stagehold" data-stagehold="hero" aria-hidden="true"></div>
+        </div>
+      </header>
+
+      <!-- S2: camera dollies across three stations on the stage. -->
+      <section class="scene scene-babel" id="babel">
+        <div class="scene-inner">
+          <h2 class="display" data-i18n="babel.headline">{tt('babel.headline')}</h2>
+          <!-- Stations match the real designs on stage (see fixtures.ts). -->
+          <ul class="babel-stations">
+            <li>
+              <span class="ext mono">.pes</span>
+              <span class="brand">Brother</span>
+            </li>
+            <li>
+              <span class="ext mono">.jef</span>
+              <span class="brand">Janome</span>
+            </li>
+            <li>
+              <span class="ext mono">.dst</span>
+              <span class="brand">Tajima</span>
+            </li>
+          </ul>
+          <div class="babel-stagehold" data-stagehold="babel" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- S3: the design re-stitches while its real coordinates stream by. -->
+      <section class="scene scene-translation" id="translation">
+        <div class="scene-inner">
+          <h2 class="display" data-i18n="translation.headline">{tt('translation.headline')}</h2>
+          <div class="coord-stream mono" id="coord-stream" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- S4: horizontal typographic wall of every supported format. -->
+      <section class="scene scene-atoz" id="atoz">
+        <div class="scene-inner">
+          <h2 class="display" data-i18n="atoz.headline">{tt('atoz.headline')}</h2>
+          <p class="atoz-sub mono" id="atoz-sub"></p>
+        </div>
+        <div class="format-wall-wrap">
+          <ul id="format-wall" class="format-wall display"></ul>
+        </div>
+      </section>
+
+      <!-- S5: macro dive between the thread crossings. -->
+      <section class="scene scene-precision" id="precision">
+        <div class="scene-inner">
+          <h2 class="display" data-i18n="precision.headline">{tt('precision.headline')}</h2>
+          <div class="precision-compare mono">
+            <span class="label" data-i18n="precision.before">{tt('precision.before')}</span>
+            <span class="label" data-i18n="precision.after">{tt('precision.after')}</span>
+            <span>21,-7</span><span>21,-7</span>
+            <span>26,-11</span><span>26,-11</span>
+            <span>16,-2</span><span>16,-2</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="privacy-strip">
+        <p class="mono" data-i18n="privacy.line">{tt('privacy.line')}</p>
+      </div>
+
+      <!-- S6: the destination. converter.ts owns these IDs. -->
+      <section class="scene scene-finale" id="converter">
+        <div class="scene-inner">
+          <h2 class="display" data-i18n="finale.headline">{tt('finale.headline')}</h2>
+          <ConverterSection mode="instant" lang={lang} />
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="scene-inner">
+          <span class="wordmark-footer">Ricuci</span>
+          <p class="footer-tagline" data-i18n="footer.tagline">{tt('footer.tagline')}</p>
+
+          <nav class="footer-links" aria-label="Footer">
+            <a href={docsHref} data-i18n="footer.docsLink">{tt('footer.docsLink')}</a>
+            <a href={`${docsHref}formats/`} data-i18n="footer.formatsLink">{tt('footer.formatsLink')}</a>
+            <a href={`${docsHref}privacy/`} data-i18n="footer.privacyLink">{tt('footer.privacyLink')}</a>
+          </nav>
+
+          <a
+            class="footer-sponsor"
+            href="https://calicchia.design"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="footer-sponsor-label mono" data-i18n="footer.sponsorBy">{tt('footer.sponsorBy')}</span>
+            <span class="footer-sponsor-badge">
+              <span class="footer-sponsor-text">Calicchia.Design</span>
+              <svg
+                class="footer-sponsor-arrow"
+                viewBox="0 0 12 12"
+                aria-hidden="true"
+                fill="none"
+              >
+                <path d="M3 9 L9 3 M9 3 H4 M9 3 V8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+          </a>
+
+          <p class="footer-credit mono" data-i18n="footer.credit">{tt('footer.credit')}</p>
+          <!-- The page-long pink thread ends here, in a small knot. -->
+          <svg class="footer-knot" viewBox="0 0 44 32" aria-hidden="true">
+            <path d="M2 16 C 10 4 20 4 24 14 C 27 22 18 26 15 19 C 12 12 24 8 32 12 C 40 16 42 22 42 28"></path>
+          </svg>
+        </div>
+      </footer>
+      <!-- Kept a single inline copy for the landing (pink thread ends here).
+           /convert and the docs pages reuse <Footer /> instead. -->
+    </main>
+
+    <!-- Stitch-out overlay: the machine sews the user's real design. -->
+    <div id="stitchout" class="stitchout" hidden>
+      <div class="stitchout-panel" role="dialog" aria-modal="true" aria-labelledby="stitchout-status">
+        <div class="stitchout-stage">
+          <div id="stitchout-canvas" class="stitchout-canvas"></div>
+          <svg class="stitchout-head" viewBox="0 0 240 150" aria-hidden="true" fill="none">
+            <path class="so-arm" d="M14 10 H166 C186 10 196 22 196 42 V64 C196 80 186 88 170 88 H142"></path>
+            <g id="so-needle">
+              <path class="so-bar" d="M120 88 V112"></path>
+              <path class="so-tip" d="M120 112 V134"></path>
+              <path class="so-thread" d="M120 10 V112"></path>
+            </g>
+            <path class="so-foot" d="M104 138 h32 M112 138 v-10 h16"></path>
+          </svg>
+        </div>
+        <p id="stitchout-status" class="stitchout-status mono"></p>
+        <div class="stitchout-actions">
+          <button id="stitchout-skip" type="button" class="btn btn-ghost" data-i18n="stitch.skip">{tt('stitch.skip')}</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preloader: the wordmark stitches in while fonts + fixtures load. -->
+    <div id="preloader" class="preloader">
+      <div class="preloader-inner">
+        <span class="preloader-word display" aria-hidden="true">Ricuci</span>
+        <svg class="preloader-stitch" viewBox="0 0 240 10" preserveAspectRatio="none" aria-hidden="true">
+          <path id="preloader-path" d="M2 6 Q22 1 42 6 T82 6 T122 6 T162 6 T202 6 T238 6"></path>
+        </svg>
+        <span id="preloader-pct" class="preloader-pct mono" aria-hidden="true">000</span>
+      </div>
+    </div>
+    <noscript><style is:inline>.preloader { display: none; }</style></noscript>
+
+    <script>
+      import '../../main';
+    </script>
+  </body>
+</html>

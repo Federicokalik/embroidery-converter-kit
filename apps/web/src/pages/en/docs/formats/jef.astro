@@ -1,0 +1,36 @@
+---
+import DocLayout from '../../../../layouts/DocLayout.astro';
+import { withBase } from '../../../../core/base';
+---
+
+<DocLayout title="Ricuci — JEF" lang="en">
+  <h1>JEF — Janome</h1>
+  <p class="docs-lede">
+    The Janome / Elna / Kenmore format. Binary header with an offset table
+    pointing to the coordinate blocks; colors via the Janome thread chart.
+  </p>
+
+  <h2>What it supports</h2>
+  <ul>
+    <li><strong>Trims</strong>: supported as a command in the stream.</li>
+    <li><strong>Colors</strong>: written as threads; the writer snaps them to the Janome chart (<code>warn.COLOR_QUANTIZED</code>).</li>
+    <li><strong>Hoop</strong>: JEF knows a few standard hoops (hoop code in the header).</li>
+    <li><strong>Coordinates</strong>: signed 0.1 mm deltas, long-form/multiples.</li>
+  </ul>
+
+  <h2>UI notes</h2>
+  <blockquote>
+    JEF: colors are matched to the nearest Janome threads.
+  </blockquote>
+
+  <h2>Recognizing</h2>
+  <p>
+    No reliable magic bytes; <code>registry.ts</code> resolves JEF by
+    extension.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/formats/dst')}>← DST</a>
+    <a href={withBase('en/docs/formats/vp3')}>VP3 →</a>
+  </p>
+</DocLayout>

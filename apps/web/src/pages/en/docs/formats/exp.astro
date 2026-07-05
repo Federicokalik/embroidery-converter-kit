@@ -1,0 +1,39 @@
+---
+import DocLayout from '../../../../layouts/DocLayout.astro';
+import { withBase } from '../../../../core/base';
+---
+
+<DocLayout title="Ricuci — EXP" lang="en">
+  <h1>EXP — Melco</h1>
+  <p class="docs-lede">
+    EXP is the "minimal standard" Melco format: a stream of 2 signed bytes
+    per stitch (dx, dy), with <code>0x80</code> as the special-command
+    marker. No colors, no hoop, no magic bytes.
+  </p>
+
+  <h2>What it supports and what it does NOT</h2>
+  <ul>
+    <li><strong>Colors</strong>: <em>absent</em>. You pick them on the machine.</li>
+    <li><strong>Hoop</strong>: <em>absent</em>. Same story.</li>
+    <li><strong>Trims</strong>: no direct command; the writer drops TRIMs with a <code>TRIM_DROPPED</code> warning.</li>
+    <li><strong>Color change</strong>: special marker.</li>
+  </ul>
+
+  <h2>UI notes</h2>
+  <blockquote>
+    EXP does not store colors: you pick them on the machine.
+  </blockquote>
+
+  <h2>Detection</h2>
+  <p>
+    No <em>reliable</em> magic bytes (EXP simply has no magic at all),
+    so <code>registry.ts</code> resolves it by extension. Reading is
+    permissive: when a file is unreadable, the other formats get a
+    fallback by extension.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/formats/vp3')}>← VP3</a>
+    <a href={withBase('en/docs/ir')}>Intermediate Representation →</a>
+  </p>
+</DocLayout>

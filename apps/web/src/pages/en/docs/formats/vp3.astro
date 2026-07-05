@@ -1,0 +1,34 @@
+---
+import DocLayout from '../../../../layouts/DocLayout.astro';
+import { withBase } from '../../../../core/base';
+---
+
+<DocLayout title="Ricuci — VP3" lang="en">
+  <h1>VP3 — PFAFF / Husqvarna Viking</h1>
+  <p class="docs-lede">
+    VP3 is the "new" PFAFF/Husqvarna format. It supports structured
+    multi-color designs, thread metadata (chart, description, catalog), and
+    multiple hoops. It is an HUS body compressed with EmbCompress, wrapped
+    in a tree of format sections.
+  </p>
+
+  <h2>What it supports</h2>
+  <ul>
+    <li><strong>Trims</strong>: supported.</li>
+    <li><strong>Colors</strong>: thread objects with extended (manufacturer-style) metadata.</li>
+    <li><strong>Hoop</strong>: stored in the format.</li>
+    <li><strong>Compression</strong>: EmbCompress (<a href={withBase('en/docs/embcompress')}>see</a>).</li>
+  </ul>
+
+  <h2>Reference tooling</h2>
+  <p>
+    Cross-verified against the pyembroidery reader (MIT). The writer is
+    <strong>software-verified</strong>; acceptance on a real machine is
+    still pending, as for HUS / VIP.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/formats/jef')}>← JEF</a>
+    <a href={withBase('en/docs/formats/exp')}>EXP →</a>
+  </p>
+</DocLayout>

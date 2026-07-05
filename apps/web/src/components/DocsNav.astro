@@ -1,27 +1,36 @@
 ---
-// Top navigation shared by every docs page. Same shape as the landing /
-// converter nav (wordmark + Docs entry hidden on docs pages themselves +
-// language selector), so the i18n dropdown still works here.
-import { LANGS } from '../i18n/i18n';
-import { siteBase, withBase } from '../core/base';
+// Top navigation shared by every docs page: wordmark home link, "convert
+// now" and the language selector limited to the languages the docs exist
+// in (it/en) — picking one navigates to the same page in that language.
+import { DOCS_LANGS, LANGS, localeUrl, translate } from '../i18n/i18n';
+import type { Lang } from '../i18n/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'it' } = Astro.props;
+const tt = (key: string): string => translate(lang, key);
+const docsLangs = LANGS.filter((l) => DOCS_LANGS.includes(l.code));
 ---
 
 <nav class="nav" aria-label="Ricuci">
-  <a class="wordmark" href={siteBase}>
+  <a class="wordmark" href={localeUrl(lang, '')}>
     Ricuci
     <svg class="wordmark-stitch" viewBox="0 0 120 8" aria-hidden="true" preserveAspectRatio="none">
       <path d="M2 5 Q16 1 30 5 T58 5 T86 5 T114 5" pathLength="1"></path>
     </svg>
   </a>
   <div class="nav-right">
-    <a class="nav-docs" href={withBase('convert/')} data-i18n="nav.cta">Converti ora</a>
+    <a class="nav-docs" href={localeUrl(lang, 'convert/')} data-i18n="nav.cta">{tt('nav.cta')}</a>
     <select
       id="lang-select"
       class="lang-select"
-      aria-label="Language"
+      aria-label={tt('nav.langLabel')}
       data-i18n-aria="nav.langLabel"
     >
-      {LANGS.map((l) => <option value={l.code}>{l.flag} {l.label}</option>)}
+      {docsLangs.map((l) => (
+        <option value={l.code} selected={l.code === lang}>{l.flag} {l.label}</option>
+      ))}
     </select>
   </div>
 </nav>

@@ -25,10 +25,10 @@ import { withBase } from '../../core/base';
   </p>
   <p>
     Alcuni lettori sono semplici (DST è testo con coordinate; EXP è un flusso
-    di byte firmati). Altri hanno un'impalcatura più complessa: VIP è un HUS
-    compresso con EmbCompress e wraps in un header Husqvarna; PES ha un
-    CCS-style header con colori Bedeutet-Pec; VP3 ha tabelle di thread con
-    metadata del produttore.
+    di byte firmati). Altri hanno un'impalcatura più complessa: VIP è un body
+    HUS compresso con EmbCompress dentro un header Husqvarna; PES incorpora
+    un blocco PEC con la sua palette colori; VP3 ha tabelle di fili con
+    metadati del produttore.
   </p>
 
   <h2>2. Intermediate Representation</h2>

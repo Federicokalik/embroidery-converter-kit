@@ -1,0 +1,15 @@
+---
+// Non-default locales of the landing, one prerendered page each (/en/,
+// /fr/, ...). Italian stays at the root (see pages/index.astro).
+import LandingPage from '../../components/pages/LandingPage.astro';
+import { LANGS } from '../../i18n/i18n';
+import type { Lang } from '../../i18n/i18n';
+
+export function getStaticPaths(): Array<{ params: { lang: string } }> {
+  return LANGS.filter((l) => l.code !== 'it').map((l) => ({ params: { lang: l.code } }));
+}
+
+const lang = Astro.params.lang as Lang;
+---
+
+<LandingPage lang={lang} />

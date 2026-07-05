@@ -5,40 +5,43 @@
 // - studio (/convert): machine preset + chips + extra formats + dropzone,
 //   then the queue and the detail panel. converter.ts/panel.ts/queue.ts
 //   own every id in here.
+// Static copy is rendered in the page language at build time; the
+// data-i18n attributes stay for the runtime engine (idempotent at boot).
+import { localeUrl, translate } from '../i18n/i18n';
+import type { Lang } from '../i18n/i18n';
+
 interface Props {
   mode: 'instant' | 'studio';
+  lang?: Lang;
 }
-const { mode } = Astro.props;
+const { mode, lang = 'it' } = Astro.props;
 const studio = mode === 'studio';
+const tt = (key: string): string => translate(lang, key);
 
-// Base-aware link (BASE_URL is '/<repo>/' on GitHub Pages).
-const base = import.meta.env.BASE_URL.endsWith('/')
-  ? import.meta.env.BASE_URL
-  : `${import.meta.env.BASE_URL}/`;
-const convertHref = `${base}convert/`;
+const convertHref = localeUrl(lang, 'convert/');
 ---
 
 <div class="conv-body">
   <div class="conv-side">
     {studio && (
       <div class="toolbar-field">
-        <label class="panel-label mono" for="preset-select" data-i18n="tool.presetLabel">La tua macchina</label>
+        <label class="panel-label mono" for="preset-select" data-i18n="tool.presetLabel">{tt('tool.presetLabel')}</label>
         <select id="preset-select" class="hoop-select preset-select"></select>
       </div>
     )}
     <div class="target-field">
-      <p class="target-label mono" data-i18n="conv.targetLabel">Cuci in formato</p>
+      <p class="target-label mono" data-i18n="conv.targetLabel">{tt('conv.targetLabel')}</p>
       <ul id="format-chips" class="chips"></ul>
     </div>
     {studio && (
       <fieldset id="extra-field" class="toolbar-field extra-field">
-        <legend class="panel-label mono" data-i18n="tool.extraLabel">Esporta anche in</legend>
+        <legend class="panel-label mono" data-i18n="tool.extraLabel">{tt('tool.extraLabel')}</legend>
         <ul id="extra-formats" class="extra-formats"></ul>
       </fieldset>
     )}
     <p id="accept-hint" class="hint mono"></p>
     {!studio && (
-      <a class="btn btn-ghost conv-full-link" href={convertHref} data-i18n="conv.fullLink">Apri il Convertitore completo →</a>
+      <a class="btn btn-ghost conv-full-link" href={convertHref} data-i18n="conv.fullLink">{tt('conv.fullLink')}</a>
     )}
   </div>
   <div
@@ -46,13 +49,14 @@ const convertHref = `${base}convert/`;
     class="dropzone"
     tabindex="0"
     role="button"
+    aria-label={tt('conv.dropAria')}
     data-i18n-aria="conv.dropAria"
   >
     <svg class="stitch-border" aria-hidden="true" preserveAspectRatio="none">
       <rect x="6" y="6" rx="14" pathLength="100"></rect>
     </svg>
-    <p class="drop-title" data-i18n="conv.dropTitle">Trascina qui i tuoi file di ricamo</p>
-    <p class="drop-sub" data-i18n="conv.dropSub">oppure clicca per sceglierli</p>
+    <p class="drop-title" data-i18n="conv.dropTitle">{tt('conv.dropTitle')}</p>
+    <p class="drop-sub" data-i18n="conv.dropSub">{tt('conv.dropSub')}</p>
     <input id="file-input" type="file" multiple hidden />
   </div>
 </div>
@@ -75,31 +79,31 @@ const convertHref = `${base}convert/`;
       <dl id="preview-info" class="preview-info"></dl>
 
       <div id="thread-field" class="panel-field" hidden>
-        <p class="panel-label mono" data-i18n="panel.threadsLabel">Fili</p>
+        <p class="panel-label mono" data-i18n="panel.threadsLabel">{tt('panel.threadsLabel')}</p>
         <ul id="thread-list" class="thread-list"></ul>
       </div>
 
       <div id="hoop-field" class="panel-field" hidden>
-        <label class="mono panel-label" for="hoop-select" data-i18n="panel.hoopLabel">Telaio di destinazione</label>
+        <label class="mono panel-label" for="hoop-select" data-i18n="panel.hoopLabel">{tt('panel.hoopLabel')}</label>
         <select id="hoop-select" class="hoop-select"></select>
         <p id="hoop-fit" class="panel-fit"></p>
       </div>
 
       <fieldset id="trims-field" class="panel-field trims-field" hidden>
-        <legend class="mono panel-label" data-i18n="panel.trimsLabel">Tagli del filo</legend>
+        <legend class="mono panel-label" data-i18n="panel.trimsLabel">{tt('panel.trimsLabel')}</legend>
         <label class="trims-option">
           <input type="radio" name="trims" value="drop" checked />
           <span class="trims-copy">
-            <strong data-i18n="panel.trimsDrop">Fili volanti</strong>
-            <small data-i18n="panel.trimsDropHint">La macchina non si ferma: i fili tra i blocchi li spunti a fine lavoro.</small>
+            <strong data-i18n="panel.trimsDrop">{tt('panel.trimsDrop')}</strong>
+            <small data-i18n="panel.trimsDropHint">{tt('panel.trimsDropHint')}</small>
             <small id="trims-drop-stops" class="mono trims-stops"></small>
           </span>
         </label>
         <label class="trims-option">
           <input type="radio" name="trims" value="pause" />
           <span class="trims-copy">
-            <strong data-i18n="panel.trimsPause">Pausa a ogni taglio</strong>
-            <small data-i18n="panel.trimsPauseHint">La macchina si ferma a ogni taglio, così spunti il filo subito.</small>
+            <strong data-i18n="panel.trimsPause">{tt('panel.trimsPause')}</strong>
+            <small data-i18n="panel.trimsPauseHint">{tt('panel.trimsPauseHint')}</small>
             <small id="trims-pause-stops" class="mono trims-stops"></small>
           </span>
         </label>
@@ -107,13 +111,13 @@ const convertHref = `${base}convert/`;
 
       <label id="center-field" class="panel-check" hidden>
         <input id="center-check" type="checkbox" />
-        <span data-i18n="panel.center">Centra nel telaio</span>
+        <span data-i18n="panel.center">{tt('panel.center')}</span>
       </label>
 
       <p id="panel-note" class="panel-note" hidden></p>
       <div class="panel-actions">
         <button id="convert-btn" type="button" class="btn btn-primary">Converti</button>
-        <button id="discard-btn" type="button" class="btn btn-ghost" data-i18n="panel.remove">Rimuovi dalla coda</button>
+        <button id="discard-btn" type="button" class="btn btn-ghost" data-i18n="panel.remove">{tt('panel.remove')}</button>
       </div>
     </div>
   </section>

@@ -1,13 +1,16 @@
 /**
- * Multilingual engine with DOM binding.
+ * Multilingual engine, static-first.
  *
  * Languages: it, en, fr, de, es, pt. `it`/`en` are the source pair; the
  * others fall back to `en` when a key is missing for that locale.
  *
- * Static markup opts in via `data-i18n="key"` (textContent) and
- * `data-i18n-aria="key"` (aria-label). Dynamic code calls t() at render
- * time and re-renders on onLangChange(). Strings live in strings.ts.
+ * Every page is PRERENDERED in its own language (it at the root, the other
+ * locales under /<lang>/): .astro frontmatter calls translate(lang, key) at
+ * build time, so crawlers see fully translated HTML. At runtime the page
+ * language comes from <html lang> and never changes in place — the selector
+ * NAVIGATES to the sibling URL. t() serves the dynamic converter strings.
  */
+import { siteBase } from '../core/base';
 import { STRINGS } from './strings';
 
 export type Lang = 'it' | 'en' | 'fr' | 'de' | 'es' | 'pt';
@@ -24,6 +27,31 @@ export const LANGS: ReadonlyArray<{ code: Lang; label: string; flag: string }> =
 const FALLBACK: Lang = 'en';
 
 const STORAGE_KEY = 'ricuci-lang';
+
+/** The docs content exists in these languages only (see pages/en/docs). */
+export const DOCS_LANGS: ReadonlyArray<Lang> = ['it', 'en'];
+
+export function isLang(value: string): value is Lang {
+  return LANGS.some((l) => l.code === value);
+}
+
+/**
+ * URL of a logical page path in a given language. Logical paths are
+ * base-less and lang-less: '', 'convert/', 'docs/formats/zhs/'.
+ * Italian lives at the root; every other locale under /<lang>/.
+ */
+export function localeUrl(target: Lang, logical: string): string {
+  const path = logical.replace(/^\//, '');
+  return `${siteBase}${target === 'it' ? '' : `${target}/`}${path}`;
+}
+
+/** location.pathname → logical path (strips the site base and lang prefix). */
+export function pageLogicalPath(pathname: string): string {
+  let path = pathname.startsWith(siteBase) ? pathname.slice(siteBase.length) : pathname.replace(/^\//, '');
+  const first = path.split('/', 1)[0] ?? '';
+  if (isLang(first)) path = path.slice(first.length + 1);
+  return path;
+}
 
 function normalizeBrowserLang(tag: string): Lang | null {
   const low = tag.toLowerCase();
@@ -52,7 +80,14 @@ function detectLang(): Lang {
   return FALLBACK;
 }
 
-let lang: Lang = typeof document !== 'undefined' ? detectLang() : FALLBACK;
+/** The page language is server-rendered truth; detection is the fallback
+ *  for anything unexpected (the selector navigates, it never mutates). */
+function pageLang(): Lang {
+  const attr = document.documentElement.lang;
+  return isLang(attr) ? attr : detectLang();
+}
+
+let lang: Lang = typeof document !== 'undefined' ? pageLang() : FALLBACK;
 const listeners: Array<(l: Lang) => void> = [];
 const willChangeListeners: Array<(l: Lang) => void> = [];
 
@@ -66,14 +101,23 @@ function resolveEntry(key: string, target: Lang): string | undefined {
   return entry[target] ?? entry[FALLBACK] ?? entry['it'];
 }
 
-export function t(key: string, params?: Record<string, string | number>): string {
-  let text = resolveEntry(key, lang) ?? key;
+/** Pure lookup for build-time rendering in .astro frontmatter. */
+export function translate(
+  target: Lang,
+  key: string,
+  params?: Record<string, string | number>,
+): string {
+  let text = resolveEntry(key, target) ?? key;
   if (params !== undefined) {
     for (const [name, value] of Object.entries(params)) {
       text = text.replaceAll(`{${name}}`, String(value));
     }
   }
   return text;
+}
+
+export function t(key: string, params?: Record<string, string | number>): string {
+  return translate(lang, key, params);
 }
 
 /** Fill every [data-i18n] / [data-i18n-aria] element under `root`. */
@@ -85,15 +129,20 @@ export function applyI18n(root: ParentNode = document): void {
   for (const el of root.querySelectorAll<HTMLElement>('[data-i18n-aria]')) {
     el.setAttribute('aria-label', t(el.dataset['i18nAria']!));
   }
-  // Reflect the active language on <html> and the lang-switch selector.
-  document.documentElement.lang = lang;
+  // Reflect the active language on the lang-switch selector.
   const sel = document.querySelector<HTMLSelectElement>('#lang-select');
   if (sel && sel.value !== lang) sel.value = lang;
-  // Pages other than the landing set their own keys on <body>.
-  document.title = t(document.body?.dataset['i18nTitle'] ?? 'meta.title');
-  document
-    .querySelector('meta[name="description"]')
-    ?.setAttribute('content', t(document.body?.dataset['i18nDescription'] ?? 'meta.description'));
+  // Title/description are prerendered per language; only pages that opt in
+  // via <body data-i18n-title> get them re-applied (never a silent default:
+  // that used to clobber per-page docs titles with the generic one).
+  const titleKey = document.body?.dataset['i18nTitle'];
+  if (titleKey !== undefined) document.title = t(titleKey);
+  const descriptionKey = document.body?.dataset['i18nDescription'];
+  if (descriptionKey !== undefined) {
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute('content', t(descriptionKey));
+  }
 }
 
 export function onLangChange(cb: (l: Lang) => void): void {

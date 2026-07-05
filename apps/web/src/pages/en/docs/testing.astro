@@ -1,0 +1,91 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
+---
+
+<DocLayout title="Ricuci — Tests & fixtures" lang="en">
+  <h1>Testing & fixtures</h1>
+  <p class="docs-lede">
+    Physical machines actually stitch the files this tool produces.
+    Every reader and writer is therefore covered by round-trip tests
+    against real fixtures, with <strong>pyembroidery</strong> as an
+    independent external oracle. Building the core without green tests
+    is not an option.
+  </p>
+
+  <h2>What's in <code>fixtures/</code></h2>
+  <table>
+    <thead><tr><th>File</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td><code>001s-A.vip</code> / <code>001s-A.zhs</code></td><td>Ground-truth VIP↔ZHS pair (single color).</td></tr>
+      <tr><td><code>028-B.vip</code> / <code>028-B.zhs</code></td><td>The gem: byte-identical round-trip except <code>0x83</code>.</td></tr>
+      <tr><td><code>052-Z.vip</code></td><td>Third VIP with no ZHS twin — good for "open & verify".</td></tr>
+      <tr><td><code>zhs-samples/SHE2215A_003.zhs</code></td><td>Multicolor factory sample (6 colors / 10 blocks / 9302 stitches + <code>.pes</code> twin).</td></tr>
+      <tr><td><code>lobster.pes</code> / <code>octopus.dst</code> / <code>octopus.pes</code> / <code>unicorn-6x10.jef</code></td><td>Fixtures for the other formats' tests.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    <strong>Safety:</strong> these are benign binary files (stitch geometry
+    + thread colors). No executables, no macros, nothing sensitive.
+    Open them, hex-dump them, decompress them, run code against every one:
+    it is normal, expected, required work.
+  </p>
+
+  <h2>Golden Path</h2>
+  <p>
+    Every reader has a golden path generated with Python scripts
+    (<code>packages/core/scripts/gen_format_golden.py</code>,
+    <code>gen_hus_golden.py</code>, <code>gen_readonly_golden.py</code>,
+    <code>gen_vip_table.py</code>) using pyembroidery as the oracle. The
+    resulting JSON files live in <code>packages/core/test/golden/</code> and
+    represent the Pattern exactly as pyembroidery reads it from the real
+    fixture. The TS tests:
+  </p>
+  <ol>
+    <li>read the fixture,</li>
+    <li>run <code>read(bytes)</code> with our reader,</li>
+    <li>compare against the golden.</li>
+  </ol>
+  <p>Equal stitch-for-stitch, equal threads. If pyembroidery changes, we regenerate.</p>
+
+  <h2>Byte round-trip</h2>
+  <p>
+    For writers where the format is fully known (ZHS, XXX):
+  </p>
+  <pre><code>expect(write(read(sample), settings)).toEqual(sample)
+//  ZHS: except the known word at 0x83, explicit assert on that diff</code></pre>
+  <p>
+    For the others (HUS, VIP, VP3, PEC, PES, DST, JEF, EXP) where
+    pyembroidery can read them back: <em>read-back</em>. We write with our
+    writer, read the result back with pyembroidery, and compare the
+    resulting path against the original fixture's path — equal up to
+    zero-length duplicates and 0.1 mm rounding.
+  </p>
+
+  <h2>Suite</h2>
+  <ul>
+    <li><code>embcompress.test.ts</code> — compression/decompression.</li>
+    <li><code>encoder.test.ts</code> / <code>zhs-codec.test.ts</code> — byte packing and bit interleaving.</li>
+    <li><code>vip-reader.test.ts</code> / <code>hus.test.ts</code> / <code>hus-vip-writer.test.ts</code> — VIP/HUS.</li>
+    <li><code>zhs-writer.test.ts</code> / <code>zhs-multicolor.test.ts</code> / <code>zhs-codec.test.ts</code> — ZHS.</li>
+    <li><code>pec-pes.test.ts</code> / <code>dst.test.ts</code> / <code>exp.test.ts</code> / <code>jef.test.ts</code> / <code>vp3.test.ts</code> / <code>xxx.test.ts</code> / <code>sew-shv-pcs.test.ts</code> — formats.</li>
+    <li><code>convert.test.ts</code> — end-to-end <code>convert()</code>.</li>
+    <li><code>hoop.test.ts</code> / <code>matrix.test.ts</code> — hoop and transforms.</li>
+    <li><code>multicolor-gate.test.ts</code> — gate for features not yet verified.</li>
+  </ul>
+
+  <h2>Verifying everything from scratch</h2>
+  <pre><code>pip install pyembroidery --break-system-packages
+python3 reference/zhs_vip_reference.py verify fixtures/028-B.vip fixtures/028-B.zhs
+# expect: functional path match: True
+#         byte-identical: False | diffs at ['0x83'] | len 764 vs 764</code></pre>
+  <p>
+    The TS core replicates the same checks with Vitest, with exactly the
+    same result.
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/embcompress')}>← EmbCompress</a>
+    <a href={withBase('en/docs/privacy')}>Privacy →</a>
+  </p>
+</DocLayout>

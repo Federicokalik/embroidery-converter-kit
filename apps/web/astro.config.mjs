@@ -1,11 +1,17 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
-// Static single-page site (no islands, no integrations): Astro is the HTML
-// shell + CSS-in-head pipeline; all behavior stays in the plain TS modules.
+// Static multilingual site (no islands): Astro is the HTML shell + CSS
+// pipeline; behavior stays in plain TS modules. Every locale is prerendered
+// (it at the root, /en/ /fr/ ... via pages/[lang]); hreflang alternates are
+// emitted per page by SiteHead.astro, so the sitemap stays flat.
 export default defineConfig({
   // GitHub Pages serves the project site under /<repo>/; dev, previews and
-  // the desktop bundle stay at the root. The Pages workflow sets ASTRO_BASE.
+  // the desktop bundle stay at the root. The Pages workflow sets ASTRO_BASE
+  // and ASTRO_SITE (absolute URLs: canonical, hreflang, og:*, sitemap).
+  site: process.env.ASTRO_SITE,
   base: process.env.ASTRO_BASE ?? '/',
+  integrations: process.env.ASTRO_SITE === undefined ? [] : [sitemap()],
   vite: {
     // The stage designs in src/assets/designs are imported with `?url`
     // and copied into dist at build.

@@ -1,0 +1,95 @@
+---
+import DocLayout from '../../../layouts/DocLayout.astro';
+import { withBase } from '../../../core/base';
+---
+
+<DocLayout title="Ricuci — How it works" lang="en">
+  <h1>How a conversion works</h1>
+  <p class="docs-lede">
+    A conversion is three steps: <strong>reading</strong> the source file,
+    <strong>translating</strong> it into a neutral Intermediate Representation,
+    <strong>writing</strong> it in the destination format.
+    All in the browser, all synchronous.
+  </p>
+
+  <h2>1. Reading (reader)</h2>
+  <p>
+    Every format has its own <em>reader</em> — a function
+    <code>read(bytes: Uint8Array): Pattern</code> in <code>packages/core</code>.
+    The reader decodes the file's bytes, handles the format's quirks
+    (compression, XOR, byte order, offset tables) and returns a
+    <a href={withBase('en/docs/ir')}>Pattern</a> with absolute stitches in 0.1 mm
+    units, threads with RGB and catalog info, and commands (<code>STITCH</code>,
+    <code>JUMP</code>, <code>TRIM</code>, <code>COLOR_CHANGE</code>,
+    <code>STOP</code>, <code>END</code>).
+  </p>
+  <p>
+    Some readers are simple (DST is text with coordinates; EXP is a stream
+    of signed bytes). Others have more scaffolding: VIP is a HUS body
+    compressed with EmbCompress inside a Husqvarna header; PES embeds a PEC
+    block with its color palette; VP3 carries thread tables with
+    manufacturer metadata.
+  </p>
+
+  <h2>2. Intermediate Representation</h2>
+  <p>
+    The <em>Pattern</em> is the heart of the converter: every writer consumes
+    it, every reader produces it. It is neutral, so any two formats can talk
+    to each other without knowing anything about one another. See the
+    <a href={withBase('en/docs/ir')}>IR</a> page for the details of the type.
+  </p>
+
+  <h3>Commands</h3>
+  <ul>
+    <li><code>STITCH</code> — a normal stitch; the needle goes down and sews.</li>
+    <li><code>JUMP</code> — move the needle without sewing (for jumps between areas of the design).</li>
+    <li><code>TRIM</code> — cut the thread. Not every format knows how.</li>
+    <li><code>COLOR_CHANGE</code> — the machine's color change.</li>
+    <li><code>STOP</code> — a pause: the operator changes thread or adjusts the fabric.</li>
+    <li><code>END</code> — end of the design; the last command every writer must always emit.</li>
+  </ul>
+
+  <h2>3. Writing (writer)</h2>
+  <p>
+    Every format has a writer <code>write(pattern: Pattern,
+    settings): Uint8Array</code>. The writer takes the absolute coordinates,
+    converts them to the format's delta encoding (1/10 mm in ZHS, 0.1 mm with
+    scaling in DST, and so on), and encodes the special commands with the
+    bytes of its own dialect.
+  </p>
+  <p>
+    If the destination format cannot express one of the Pattern's commands
+    (for instance, ZHS cannot write <code>STOP</code> as an arbitrary pause,
+    and some older formats have no concept of <code>TRIM</code>), the writer
+    applies the fallback strategy documented for that format and attaches a
+    structured <a href={withBase('en/docs/formats#warnings')}>warning</a> to the
+    response. The UI shows the warnings in the results list.
+  </p>
+
+  <h2>4. The <code>convert()</code> function</h2>
+  <pre><code>{String.raw`import { convert } from '@embroidery/core';
+
+// en: source bytes, fromFmt, toFmt → destination bytes
+const out = await convert({
+  bytes: vipBytes,
+  from: 'vip',
+  to:  'zhs',
+  settings: { hoop: 'auto', trims: 'drop' },
+});
+// out.bytes    : Uint8Array
+// out.warnings : Warning[]  (empty when everything went smoothly)
+// out.note?    : string     (caveat for the destination format)`}</code></pre>
+
+  <h2>What it does NOT do</h2>
+  <ul>
+    <li>It doesn't digitize. It doesn't generate stitches from an SVG or a vector drawing — it reads one embroidery file and writes another.</li>
+    <li>It doesn't touch your file's colors. If a format only knows its own thread palette, it snaps them to the nearest matches and reports <code>warn.COLOR_QUANTIZED</code>.</li>
+    <li>It doesn't reshape the geometry: it moves or centers the design in the hoop only if you ask it to.</li>
+    <li>It sends nothing over the network. See <a href={withBase('en/docs/privacy')}>Privacy</a>.</li>
+  </ul>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs')}>← Overview</a>
+    <a href={withBase('en/docs/architecture')}>Architecture →</a>
+  </p>
+</DocLayout>

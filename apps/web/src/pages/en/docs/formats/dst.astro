@@ -1,0 +1,43 @@
+---
+import DocLayout from '../../../../layouts/DocLayout.astro';
+import { withBase } from '../../../../core/base';
+---
+
+<DocLayout title="Ricuci — DST" lang="en">
+  <h1>DST — Tajima</h1>
+  <p class="docs-lede">
+    DST is the Tajima industrial format: text header + 3 bytes per stitch
+    + tail. Painless to read and write. Not the most feature-rich format
+    (no extrinsic hoop, no colors), but the most widespread on industrial
+    machines.
+  </p>
+
+  <h2>Structure</h2>
+  <ol>
+    <li><strong>512-byte header</strong>: LA:, ST:, CO:, +X, -X, +Y, -Y, AX, AY, MX, MY, PR, ...
+
+    ASCII text with labels, <code>0x1a</code> as terminator.</li>
+    <li><strong>Stream of 3-byte records</strong>: <code>[b1, b2, ctrl]</code> (note the ctrl at the end), binary encoding with scattered bits for x, y and the Stitch/Jump/Color/End flags.</li>
+    <li><strong>Tail</strong>: END record.</li>
+  </ol>
+
+  <h2>What it supports</h2>
+  <ul>
+    <li><strong>Trims</strong>: no direct command; the stream uses JUMPs for trim purposes (synthesis algorithm).</li>
+    <li><strong>Colors</strong>: <code>COLOR_CHANGE</code> in the stream.</li>
+    <li><strong>Hoop</strong>: not stored.</li>
+    <li><strong>Coordinates</strong>: deltas in 0.1 mm with scaling.</li>
+  </ul>
+
+  <h2>Limits</h2>
+  <p>
+    DST cannot express the hoop position: you set that on the machine.
+    Verified byte-for-byte against pyembroidery as the golden
+    reference (<code>scripts/gen_format_golden.py</code>).
+  </p>
+
+  <p class="docs-prevnext">
+    <a href={withBase('en/docs/formats/pes')}>← PES</a>
+    <a href={withBase('en/docs/formats/jef')}>JEF →</a>
+  </p>
+</DocLayout>
