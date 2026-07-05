@@ -478,6 +478,7 @@ body.stitchout-open #stage {
 .studio .conv-body {
   grid-template-columns: 1fr;
   gap: 1.25rem;
+  min-width: 0;
 }
 
 .studio .conv-side {
@@ -489,6 +490,7 @@ body.stitchout-open #stage {
   flex-wrap: wrap;
   gap: 1.4rem 2.75rem;
   align-items: flex-start;
+  min-width: 0;
 }
 
 .studio .toolbar-field,
@@ -781,6 +783,11 @@ body.stitchout-open #stage {
   margin-inline: auto;
   padding-block: calc(var(--nav-h) + clamp(2rem, 6vh, 4rem)) 5rem;
   display: grid;
+  /* Cap the column at the element width so a wide child (the studio panel,
+     the terminal box) can't blow the grid out past the viewport on mobile.
+     Without this, grid items keep their min-content width (min-width: auto)
+     and push the whole page wider than the phone screen. */
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(2rem, 5vh, 3.5rem);
 }
 
@@ -1005,5 +1012,25 @@ body.stitchout-open #stage {
 
   .queue-meta {
     flex-basis: 100%;
+  }
+}
+
+/* Phones: stack the studio toolbar (preset / target formats / extra formats)
+   into a clean single column instead of a cramped wrapping row, and let the
+   preset dropdown fill the width. */
+@media (max-width: 560px) {
+  .studio .conv-side {
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: 1.1rem 1.15rem;
+  }
+
+  .studio .conv-side > * {
+    width: 100%;
+  }
+
+  .studio .preset-select {
+    min-width: 0;
+    width: 100%;
   }
 }
