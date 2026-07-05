@@ -88,7 +88,8 @@ jobs:
           files: ${{ matrix.asset }}
 
       # SHA256SUMS + .asc only exist when the GPG secret is set; missing files
-      # are skipped (fail_on_unmatched_files defaults to false).
+      # are skipped (fail_on_unmatched_files defaults to false). The public key
+      # rides along so users can verify without hunting for it.
       - name: Attach Linux checksums + signature
         if: matrix.os == 'ubuntu-latest'
         uses: softprops/action-gh-release@v2
@@ -96,6 +97,7 @@ jobs:
           files: |
             apps/desktop/release/SHA256SUMS
             apps/desktop/release/SHA256SUMS.asc
+            signing/ricuci-release.pub.asc
 
   cli:
     needs: create-release

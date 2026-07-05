@@ -24,15 +24,16 @@ The npx package is signed by npm with a provenance attestation. The desktop and
 standalone binaries sign as follows:
 
 - **Linux** — the `Ricuci-Linux.AppImage` is covered by a GPG-signed
-  `SHA256SUMS` on the release. Verify before running:
+  `SHA256SUMS` on the release. The signing key is
+  [`signing/ricuci-release.pub.asc`](signing/ricuci-release.pub.asc),
+  fingerprint `1879 F2FC B206 D091 C0C0  74A0 4764 6554 3FDF 28B6`. Verify
+  before running:
 
   ```bash
-  gpg --verify SHA256SUMS.asc SHA256SUMS      # import the maintainer key first
-  sha256sum --check SHA256SUMS                 # confirms the AppImage hash
+  gpg --import signing/ricuci-release.pub.asc   # once; the .asc is on each release too
+  gpg --verify SHA256SUMS.asc SHA256SUMS        # confirms the checksums are ours
+  sha256sum --check SHA256SUMS                   # confirms the AppImage hash
   ```
-
-  The maintainer's public key (and its fingerprint) is published alongside the
-  first signed release.
 - **macOS** — the `.dmg` is **not notarized yet** (Apple Developer enrollment
   pending), so Gatekeeper warns on first launch. Open it once with
   right-click → **Open**, or clear the quarantine flag:
