@@ -462,19 +462,247 @@ body.stitchout-open #stage {
   cursor: not-allowed;
 }
 
-.panel-more {
-  margin: 1.1rem 0 0;
-  font-size: 0.85rem;
+/* ---------- Studio toolbar (preset + extra formats) ---------- */
+
+.toolbar-field {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 1.1rem;
+  border: 0;
+  padding: 0;
+  min-width: 0;
 }
 
-.panel-more a {
+.extra-field {
+  margin: 1.1rem 0 0;
+}
+
+.extra-formats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.extra-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font: 600 0.78rem var(--font-mono);
+  cursor: pointer;
+  background: var(--paper);
+}
+
+.extra-option input {
+  accent-color: var(--pink);
+}
+
+.extra-option:has(input:checked) {
+  border-style: dashed;
+  border-color: var(--ink);
+  background: var(--paper-2);
+}
+
+/* ---------- Studio queue ---------- */
+
+.queue-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.queue-count {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+#convert-all-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.queue {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.queue-row {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-surface);
+  padding: 0.6rem 0.9rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.queue-row.selected {
+  border-style: dashed;
+  border-color: var(--ink);
+}
+
+.queue-main {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  min-width: 0;
+}
+
+.queue-main:disabled {
+  cursor: default;
+}
+
+.queue-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--line);
+  flex: none;
+}
+
+.queue-row.done .queue-dot {
+  background: var(--ok);
+}
+
+.queue-row.failed .queue-dot {
+  background: var(--err);
+}
+
+.queue-name {
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.queue-meta {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.queue-status {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.queue-remove {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.3rem 0.45rem;
+}
+
+.queue-remove:hover {
+  color: var(--err);
+}
+
+.queue-notes {
+  grid-column: 1 / -1;
+  margin: 0.5rem 0 0 1.7rem;
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.queue-notes[hidden] {
+  display: none;
+}
+
+.queue-notes p {
+  margin: 0;
+}
+
+.queue-notes p.warning {
+  color: var(--warn);
+}
+
+.queue-notes p.error {
+  color: var(--err);
+}
+
+/* ---------- Thread card ---------- */
+
+.thread-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.thread-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+  background: var(--paper);
+}
+
+.thread-swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  flex: none;
+}
+
+.thread-hex {
+  color: var(--ink-soft);
+}
+
+.thread-desc {
+  color: var(--ink);
+}
+
+.thread-more {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  align-self: center;
+}
+
+/* ---------- Instant nudge row (landing multi-drop) ---------- */
+
+.results li.notice {
+  border-left-color: var(--pink);
+}
+
+.results li.notice a {
   color: var(--pink-deep);
   text-decoration: none;
   border-bottom: 1.5px dashed currentColor;
   padding-bottom: 0.1em;
 }
 
-.panel-more a:hover {
+.results li.notice a:hover {
   color: var(--ink);
 }
 
@@ -568,5 +796,13 @@ body.stitchout-open #stage {
 
   .preview-panel {
     grid-template-columns: 1fr;
+  }
+
+  .queue-main {
+    flex-wrap: wrap;
+  }
+
+  .queue-meta {
+    flex-basis: 100%;
   }
 }

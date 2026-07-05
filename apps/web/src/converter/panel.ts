@@ -1,64 +1,53 @@
 /**
- * Single-file panel: after one file is dropped, the design is parsed and
- * shown here — static preview in real thread colors, design facts, hoop
- * selector (formats that persist one), ZHS trims choice — and conversion
- * only happens on the explicit Convert button. Bulk drops never open it.
+ * Detail panel of the studio queue: shows the SELECTED queue item — static
+ * preview in real thread colors, design facts and stats, thread swatches,
+ * per-item hoop/trims/centering options (persisted on the item) and the
+ * explicit Convert button. Only /convert renders this markup; the landing
+ * has no panel at all.
  */
-import { checkFit, computeExtents, selectSmallestHoop, HOOP_CATALOG } from '@embroidery/core';
-import type { Extents, Hoop, HoopFit, WriterOptions } from '@embroidery/core';
+import { checkFit } from '@embroidery/core';
+import type { Hoop, HoopFit } from '@embroidery/core';
 import { t, currentLang } from '../i18n/i18n';
-import {
-  describePattern,
-  FORMAT_BRANDS,
-  HOOP_BRAND_BY_FORMAT,
-  machineStops,
-  mm,
-} from './shared';
-import type { ParsedFile } from './shared';
+import { visibleThreadColor } from '../stitch/runs';
+import { FORMAT_BRANDS, formatSewTime, hexOf, mm, resolveHoop } from './shared';
+import type { QueueItem } from './shared';
 import { StaticPreview } from './preview';
+
+/** Swatches shown before collapsing into a "+N" tail. */
+const MAX_THREADS = 16;
 
 export interface PanelDeps {
   getTarget(): string;
-  convert(parsed: ParsedFile, options: WriterOptions, centerFirst: boolean): Promise<void>;
+  /** Effective output formats for this item (primary + extras − source). */
+  formatsFor(item: QueueItem): string[];
+  /** Preset-aware hoop catalog; undefined = format persists no hoop. */
+  hoopCatalogFor(format: string): Hoop[] | undefined;
+  convertItem(item: QueueItem): Promise<void>;
+  removeItem(item: QueueItem): void;
+  /** An option changed: the converter invalidates this item's outcomes. */
+  onOptionsChange(item: QueueItem): void;
   onLayoutChange?: (() => void) | undefined;
-  /**
-   * 'full' (/convert): every control, hoop field always visible (with a
-   * "this format stores no hoop" note where it applies). 'lite' (landing):
-   * preview + facts + Convert only, plus a link to the full tool.
-   */
-  variant: 'full' | 'lite';
 }
 
 export interface PanelHandle {
-  open(parsed: ParsedFile): void;
-  close(): void;
-  /** Target chip changed while a file is loaded. */
-  onTargetChange(): void;
-  /** Language changed: re-render every dynamic string. */
-  refresh(): void;
-}
-
-type HoopChoice = 'auto' | 'declared' | number;
-
-interface Session {
-  parsed: ParsedFile;
-  extents: Extents;
-  stops: { drop: number; pause: number };
-  hoopChoice: HoopChoice;
-  trims: 'drop' | 'pause';
-  centerInHoop: boolean;
-  converting: boolean;
+  show(item: QueueItem): void;
+  clear(): void;
+  /** Target/extras/preset/status/language changed: repaint everything. */
+  rerender(): void;
+  current(): QueueItem | null;
 }
 
 export function initPanel(deps: PanelDeps): PanelHandle {
   const root = document.getElementById('preview-panel') as HTMLElement | null;
-  // The markup is shared by both pages; bail gracefully if it's absent.
+  // Markup exists only on the studio page; be inert elsewhere.
   if (root === null) {
-    return { open: () => {}, close: () => {}, onTargetChange: () => {}, refresh: () => {} };
+    return { show: () => {}, clear: () => {}, rerender: () => {}, current: () => null };
   }
   const canvasBox = root.querySelector('#preview-canvas') as HTMLElement;
   const nameEl = root.querySelector('#preview-name') as HTMLElement;
   const infoEl = root.querySelector('#preview-info') as HTMLElement;
+  const threadField = root.querySelector('#thread-field') as HTMLElement;
+  const threadList = root.querySelector('#thread-list') as HTMLElement;
   const hoopField = root.querySelector('#hoop-field') as HTMLElement;
   const hoopSelect = root.querySelector('#hoop-select') as HTMLSelectElement;
   const hoopFit = root.querySelector('#hoop-fit') as HTMLElement;
@@ -72,37 +61,25 @@ export function initPanel(deps: PanelDeps): PanelHandle {
   const centerCheck = root.querySelector('#center-check') as HTMLInputElement;
   const noteEl = root.querySelector('#panel-note') as HTMLElement;
   const convertBtn = root.querySelector('#convert-btn') as HTMLButtonElement;
-  const discardBtn = root.querySelector('#discard-btn') as HTMLButtonElement;
-  const moreEl = root.querySelector('#panel-more') as HTMLElement;
-
-  const lite = deps.variant === 'lite';
-  moreEl.hidden = !lite;
+  const removeBtn = root.querySelector('#discard-btn') as HTMLButtonElement;
 
   const preview = new StaticPreview();
-  let session: Session | null = null;
+  let item: QueueItem | null = null;
+  let converting = false;
 
-  function defaultHoopChoice(s: Session): 'auto' | 'declared' {
-    return s.parsed.pattern.hoop !== undefined ? 'declared' : 'auto';
-  }
-
-  /** The hoop the current choice resolves to (undefined = writer default). */
-  function resolveHoop(s: Session): Hoop | undefined {
-    const brand = HOOP_BRAND_BY_FORMAT[deps.getTarget()];
-    if (brand === undefined) return undefined;
-    if (s.hoopChoice === 'declared') return s.parsed.pattern.hoop;
-    if (typeof s.hoopChoice === 'number') return HOOP_CATALOG[brand][s.hoopChoice];
-    return selectSmallestHoop(s.extents, HOOP_CATALOG[brand]);
+  function defaultHoopChoice(it: QueueItem): 'auto' | 'declared' {
+    return it.parsed?.pattern.hoop !== undefined ? 'declared' : 'auto';
   }
 
   /**
-   * Fit of the design in the resolved hoop. With "center in hoop" on, the
+   * Fit of the design in the given hoop. With "center in hoop" on, the
    * write recenters first, so only the size matters — never the placement.
    */
-  function fitFor(s: Session, hoop: Hoop): HoopFit {
-    if (!s.centerInHoop) return checkFit(s.extents, hoop);
-    // The write recenters first: only the size can overflow.
-    const w = s.extents.maxX - s.extents.minX;
-    const h = s.extents.maxY - s.extents.minY;
+  function fitFor(it: QueueItem, hoop: Hoop): HoopFit | null {
+    if (it.extents === null) return null;
+    if (!it.options.centerInHoop) return checkFit(it.extents, hoop);
+    const w = it.extents.maxX - it.extents.minX;
+    const h = it.extents.maxY - it.extents.minY;
     return {
       fits: w <= hoop.width && h <= hoop.height,
       overflowX: Math.max(0, w - hoop.width),
@@ -111,8 +88,8 @@ export function initPanel(deps: PanelDeps): PanelHandle {
     };
   }
 
-  function renderInfo(s: Session): void {
-    const { parsed } = s;
+  function renderInfo(it: QueueItem): void {
+    const parsed = it.parsed!;
     nameEl.textContent = parsed.fileName;
     canvasBox.setAttribute('aria-label', t('panel.previewAria', { name: parsed.fileName }));
     const locale = currentLang() === 'it' ? 'it-IT' : 'en-US';
@@ -120,18 +97,32 @@ export function initPanel(deps: PanelDeps): PanelHandle {
     const source =
       brand === undefined ? `.${parsed.sourceFormat}` : `.${parsed.sourceFormat} — ${brand}`;
     const colors = new Set(parsed.stitchData.runs.map((r) => r.threadIndex)).size;
+    const ext = it.extents!;
     const rows: Array<[string, string]> = [
       [t('panel.source'), source],
       [t('panel.stitches'), parsed.stitchData.stitchCount.toLocaleString(locale)],
       [t('panel.colors'), String(Math.max(colors, 1))],
       [
         t('panel.size'),
-        t('panel.sizeValue', {
-          w: mm(s.extents.maxX - s.extents.minX),
-          h: mm(s.extents.maxY - s.extents.minY),
-        }),
+        t('panel.sizeValue', { w: mm(ext.maxX - ext.minX), h: mm(ext.maxY - ext.minY) }),
       ],
     ];
+    if (parsed.pattern.hoop !== undefined) {
+      rows.push([
+        t('panel.sourceHoop'),
+        t('panel.sizeValue', {
+          w: mm(parsed.pattern.hoop.width),
+          h: mm(parsed.pattern.hoop.height),
+        }),
+      ]);
+    }
+    // Command stats + honest sew-time estimate.
+    rows.push(
+      [t('panel.statJumps'), it.stats.jumps.toLocaleString(locale)],
+      [t('panel.statTrims'), it.stats.trims.toLocaleString(locale)],
+      [t('panel.statStops'), it.stats.stops.toLocaleString(locale)],
+      [t('panel.sewTime'), formatSewTime(parsed.stitchData.stitchCount)],
+    );
     infoEl.replaceChildren(
       ...rows.flatMap(([label, value]) => {
         const dt = document.createElement('dt');
@@ -141,33 +132,49 @@ export function initPanel(deps: PanelDeps): PanelHandle {
         return [dt, dd];
       }),
     );
-    // Declared hoop of the SOURCE file (if any), as in the results list.
-    if (parsed.pattern.hoop !== undefined) {
-      const dt = document.createElement('dt');
-      dt.textContent = t('panel.sourceHoop');
-      const dd = document.createElement('dd');
-      dd.textContent = t('panel.sizeValue', {
-        w: mm(parsed.pattern.hoop.width),
-        h: mm(parsed.pattern.hoop.height),
-      });
-      infoEl.append(dt, dd);
+  }
+
+  function renderThreads(it: QueueItem): void {
+    const threads = it.parsed!.pattern.threads;
+    threadField.hidden = threads.length === 0;
+    if (threads.length === 0) return;
+    const shown = threads.slice(0, MAX_THREADS);
+    threadList.replaceChildren(
+      ...shown.map((thread) => {
+        const li = document.createElement('li');
+        li.className = 'thread-item';
+        const swatch = document.createElement('span');
+        swatch.className = 'thread-swatch';
+        swatch.style.background = hexOf(visibleThreadColor(thread.rgb));
+        const hex = document.createElement('span');
+        hex.className = 'thread-hex mono';
+        hex.textContent = hexOf(thread.rgb);
+        li.append(swatch, hex);
+        const desc = thread.description ?? thread.catalog;
+        if (desc !== undefined) {
+          const label = document.createElement('span');
+          label.className = 'thread-desc';
+          label.textContent = desc;
+          li.append(label);
+        }
+        return li;
+      }),
+    );
+    if (threads.length > MAX_THREADS) {
+      const more = document.createElement('li');
+      more.className = 'thread-more mono';
+      more.textContent = t('panel.threadsMore', { n: threads.length - MAX_THREADS });
+      threadList.append(more);
     }
   }
 
-  function renderHoop(s: Session): void {
+  function renderHoop(it: QueueItem): void {
     const target = deps.getTarget();
-    const brand = HOOP_BRAND_BY_FORMAT[target];
-    if (lite) {
-      hoopField.hidden = true;
-      centerField.hidden = true;
-      return;
-    }
-    // Full variant: the field is always there; formats without a hoop
-    // record say so instead of silently dropping the control.
+    const catalog = deps.hoopCatalogFor(target);
     hoopField.hidden = false;
-    centerField.hidden = brand === undefined;
-    hoopSelect.disabled = brand === undefined;
-    if (brand === undefined) {
+    centerField.hidden = catalog === undefined;
+    hoopSelect.disabled = catalog === undefined;
+    if (catalog === undefined) {
       const opt = document.createElement('option');
       opt.value = 'auto';
       opt.textContent = '—';
@@ -180,14 +187,14 @@ export function initPanel(deps: PanelDeps): PanelHandle {
     const options: Array<{ value: string; label: string }> = [
       { value: 'auto', label: t('panel.hoopAuto') },
     ];
-    const declared = s.parsed.pattern.hoop;
+    const declared = it.parsed!.pattern.hoop;
     if (declared !== undefined) {
       options.push({
         value: 'declared',
         label: t('panel.hoopDeclaredOpt', { w: mm(declared.width), h: mm(declared.height) }),
       });
     }
-    HOOP_CATALOG[brand].forEach((hoop, i) => {
+    catalog.forEach((hoop, i) => {
       const name = hoop.name !== undefined ? ` ${hoop.name}` : '';
       options.push({ value: String(i), label: `${mm(hoop.width)}×${mm(hoop.height)} mm${name}` });
     });
@@ -200,21 +207,24 @@ export function initPanel(deps: PanelDeps): PanelHandle {
       }),
     );
     const current =
-      typeof s.hoopChoice === 'number' ? String(s.hoopChoice) : s.hoopChoice;
+      typeof it.options.hoopChoice === 'number'
+        ? String(it.options.hoopChoice)
+        : it.options.hoopChoice;
     hoopSelect.value = current;
     if (hoopSelect.value !== current) {
-      // Choice no longer valid for this target (e.g. brand changed).
-      s.hoopChoice = defaultHoopChoice(s);
-      hoopSelect.value = s.hoopChoice;
+      // Choice no longer valid for this target (e.g. preset narrowed it).
+      it.options.hoopChoice = defaultHoopChoice(it);
+      hoopSelect.value = it.options.hoopChoice;
     }
 
-    const resolved = resolveHoop(s);
+    const resolved = resolveHoop(it, target, target, catalog);
     if (resolved === undefined) {
       hoopFit.textContent = t('panel.hoopNone');
       hoopFit.className = 'panel-fit warning';
       return;
     }
-    const fit = fitFor(s, resolved);
+    const fit = fitFor(it, resolved);
+    if (fit === null) return;
     const dims = { w: mm(resolved.width), h: mm(resolved.height) };
     if (!fit.fits) {
       hoopFit.textContent = t('panel.hoopOverflow', {
@@ -232,117 +242,99 @@ export function initPanel(deps: PanelDeps): PanelHandle {
     }
   }
 
-  function renderTrims(s: Session): void {
-    const show = !lite && deps.getTarget() === 'zhs' && s.parsed.hasTrims;
+  function renderTrims(it: QueueItem): void {
+    const show = deps.getTarget() === 'zhs' && it.parsed!.hasTrims;
     trimsField.hidden = !show;
     if (!show) return;
-    for (const radio of trimsRadios) radio.checked = radio.value === s.trims;
-    dropStops.textContent = t('panel.trimsStops', { n: s.stops.drop });
-    pauseStops.textContent = t('panel.trimsStops', { n: s.stops.pause });
+    for (const radio of trimsRadios) radio.checked = radio.value === it.options.trims;
+    dropStops.textContent = t('panel.trimsStops', { n: it.stops.drop });
+    pauseStops.textContent = t('panel.trimsStops', { n: it.stops.pause });
   }
 
-  function renderActions(s: Session): void {
+  function renderActions(it: QueueItem): void {
     const target = deps.getTarget();
-    const same = target === s.parsed.sourceFormat;
-    convertBtn.textContent = t('panel.convert', { fmt: target.toUpperCase() });
-    convertBtn.disabled = same || s.converting;
-    noteEl.hidden = !same;
-    if (same) noteEl.textContent = t('panel.sameFormat', { fmt: target.toUpperCase() });
-  }
-
-  function renderControls(): void {
-    if (session === null) return;
-    renderHoop(session);
-    renderTrims(session);
-    renderActions(session);
+    const formats = deps.formatsFor(it);
+    const sameAsPrimary = target === it.parsed!.sourceFormat;
+    convertBtn.textContent =
+      formats.length > 1
+        ? t('panel.convertMulti', { n: formats.length })
+        : t('panel.convert', { fmt: (formats[0] ?? target).toUpperCase() });
+    convertBtn.disabled = formats.length === 0 || converting;
+    noteEl.hidden = !sameAsPrimary;
+    if (sameAsPrimary) {
+      noteEl.textContent =
+        formats.length > 0
+          ? t('panel.sameFormatExtras', { fmt: target.toUpperCase() })
+          : t('panel.sameFormat', { fmt: target.toUpperCase() });
+    }
   }
 
   function renderAll(): void {
-    if (session === null) return;
-    renderInfo(session);
-    renderControls();
+    if (item === null) return;
+    renderInfo(item);
+    renderThreads(item);
+    renderHoop(item);
+    renderTrims(item);
+    renderActions(item);
   }
 
   hoopSelect.addEventListener('change', () => {
-    if (session === null) return;
+    if (item === null) return;
     const v = hoopSelect.value;
-    session.hoopChoice = v === 'auto' || v === 'declared' ? v : Number(v);
-    renderHoop(session);
+    item.options.hoopChoice = v === 'auto' || v === 'declared' ? v : Number(v);
+    deps.onOptionsChange(item);
+    renderHoop(item);
   });
   for (const radio of trimsRadios) {
     radio.addEventListener('change', () => {
-      if (session === null || !radio.checked) return;
-      session.trims = radio.value === 'pause' ? 'pause' : 'drop';
+      if (item === null || !radio.checked) return;
+      item.options.trims = radio.value === 'pause' ? 'pause' : 'drop';
+      deps.onOptionsChange(item);
     });
   }
   centerCheck.addEventListener('change', () => {
-    if (session === null) return;
-    session.centerInHoop = centerCheck.checked;
-    renderHoop(session);
+    if (item === null) return;
+    item.options.centerInHoop = centerCheck.checked;
+    deps.onOptionsChange(item);
+    renderHoop(item);
   });
   convertBtn.addEventListener('click', () => {
-    const s = session;
-    if (s === null || s.converting) return;
-    const options: WriterOptions = {};
-    if (lite) {
-      // Same defaults as the bulk flow: declared hoop passes through.
-      if (s.parsed.pattern.hoop !== undefined) options.hoop = s.parsed.pattern.hoop;
-    } else {
-      const hoop = resolveHoop(s);
-      if (hoop !== undefined) options.hoop = hoop;
-      else if (s.parsed.pattern.hoop !== undefined) options.hoop = s.parsed.pattern.hoop;
-      if (deps.getTarget() === 'zhs' && s.parsed.hasTrims) options.trims = s.trims;
-    }
-    s.converting = true;
-    renderActions(s);
-    void deps.convert(s.parsed, options, !centerField.hidden && s.centerInHoop).finally(() => {
-      // Panel stays open: flip the chip and convert again without re-dropping.
-      if (session === s) {
-        s.converting = false;
-        renderActions(s);
-      }
+    const it = item;
+    if (it === null || converting) return;
+    converting = true;
+    renderActions(it);
+    void deps.convertItem(it).finally(() => {
+      converting = false;
+      if (item !== null) renderActions(item);
     });
   });
-  discardBtn.addEventListener('click', () => handle.close());
+  removeBtn.addEventListener('click', () => {
+    if (item !== null) deps.removeItem(item);
+  });
 
   const handle: PanelHandle = {
-    open(parsed: ParsedFile): void {
-      handle.close();
-      const s: Session = {
-        parsed,
-        extents: computeExtents(parsed.pattern.stitches),
-        stops: machineStops(parsed.pattern.stitches),
-        hoopChoice: 'auto',
-        trims: 'drop',
-        centerInHoop: false,
-        converting: false,
-      };
-      s.hoopChoice = defaultHoopChoice(s);
-      session = s;
-      centerCheck.checked = false;
-      root.hidden = false;
+    show(next: QueueItem): void {
+      if (next.parsed === null) return;
+      item = next;
+      centerCheck.checked = next.options.centerInHoop;
+      root!.hidden = false;
       renderAll();
       // Mount only after the panel is visible so the container has a size.
-      preview.mount(canvasBox, parsed.stitchData);
+      preview.mount(canvasBox, next.parsed.stitchData);
       deps.onLayoutChange?.();
     },
-    close(): void {
-      if (session === null) return;
-      session = null;
+    clear(): void {
+      if (item === null) return;
+      item = null;
       preview.dispose();
-      root.hidden = true;
+      root!.hidden = true;
       deps.onLayoutChange?.();
     },
-    onTargetChange(): void {
-      if (session === null) return;
-      // A brand switch invalidates a catalog pick; keep auto/declared.
-      if (typeof session.hoopChoice === 'number') {
-        session.hoopChoice = defaultHoopChoice(session);
-      }
-      renderControls();
-    },
-    refresh(): void {
+    rerender(): void {
       renderAll();
+    },
+    current(): QueueItem | null {
+      return item;
     },
   };
   return handle;

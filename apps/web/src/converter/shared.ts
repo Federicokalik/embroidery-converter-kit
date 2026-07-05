@@ -3,8 +3,15 @@
  * panel and the stitch-out handoff. Pure helpers and types only — no DOM
  * ids, no gsap — so the /convert page ships none of the landing machinery.
  */
-import { checkFit, computeExtents } from '@embroidery/core';
-import type { ConversionWarning, HoopBrand, Pattern, Stitch } from '@embroidery/core';
+import { checkFit, computeExtents, selectSmallestHoop } from '@embroidery/core';
+import type {
+  ConversionWarning,
+  Extents,
+  Hoop,
+  HoopBrand,
+  Pattern,
+  Stitch,
+} from '@embroidery/core';
 import { t, currentLang } from '../i18n/i18n';
 import type { StitchData } from '../stitch/runs';
 
@@ -59,12 +66,134 @@ export interface ParsedFile {
 export interface StitchOutJob {
   data: StitchData;
   fileName: string;
-  extraCount: number;
+}
+
+// ---------- Studio queue (the /convert page) ----------
+
+export type HoopChoice = 'auto' | 'declared' | number; // number = primary catalog index
+
+export interface ItemOptions {
+  hoopChoice: HoopChoice;
+  trims: 'drop' | 'pause';
+  centerInHoop: boolean;
+}
+
+export type ItemStatus = 'ready' | 'done' | 'failed';
+
+/** One written output (item × format). Bytes are downloaded, never stored. */
+export interface FormatOutcome {
+  format: string;
+  outputName: string;
+  size: number | null;
+  warnings: ConversionWarning[];
+  error: string | null;
+  /** The user picked a trims mode explicitly: TRIM_DROPPED is noise. */
+  trimsChosen: boolean;
+}
+
+export interface QueueItem {
+  id: number;
+  fileName: string;
+  /** null = parse failed (row shows parseError and is not selectable). */
+  parsed: ParsedFile | null;
+  parseError: string | null;
+  extents: Extents | null;
+  stops: { drop: number; pause: number };
+  stats: { jumps: number; trims: number; stops: number };
+  options: ItemOptions;
+  status: ItemStatus;
+  /** Formats skipped on the last convert (source === format). */
+  skipped: string[];
+  /** Last convert only; cleared whenever settings change. */
+  outcomes: FormatOutcome[];
 }
 
 export function extensionOf(name: string): string | null {
   const dot = name.lastIndexOf('.');
   return dot >= 0 && dot < name.length - 1 ? name.slice(dot + 1).toLowerCase() : null;
+}
+
+export function outputNameFor(inputName: string, format: string): string {
+  return `${inputName.replace(/\.[^.]*$/, '')}.${format}`;
+}
+
+/** Raw command counts for the stats rows (color changes = the Colors row). */
+export function patternStats(stitches: Stitch[]): {
+  jumps: number;
+  trims: number;
+  stops: number;
+} {
+  let jumps = 0;
+  let trims = 0;
+  let stops = 0;
+  for (const s of stitches) {
+    if (s.command === 'JUMP') jumps += 1;
+    else if (s.command === 'TRIM') trims += 1;
+    else if (s.command === 'STOP') stops += 1;
+  }
+  return { jumps, trims, stops };
+}
+
+/** Localized rough sew time at the declared ~600 stitches/min. */
+export function formatSewTime(stitchCount: number): string {
+  const minutes = Math.max(1, Math.round(stitchCount / 600));
+  if (minutes < 60) return t('panel.sewTimeMin', { min: minutes });
+  return t('panel.sewTimeHours', { h: Math.floor(minutes / 60), min: minutes % 60 });
+}
+
+/**
+ * Hoop for one output format of a queue item. Per-format rule: 'declared'
+ * passes the source hoop everywhere; a numeric catalog pick applies only
+ * to the primary target (it indexes the primary's catalog); everything
+ * else auto-selects on the format's own catalog. Formats that store no
+ * hoop (catalog undefined) get the declared hoop as an inert passthrough.
+ */
+export function resolveHoop(
+  item: QueueItem,
+  format: string,
+  primary: string,
+  catalog: Hoop[] | undefined,
+): Hoop | undefined {
+  const declared = item.parsed?.pattern.hoop;
+  if (catalog === undefined) return declared;
+  const choice = item.options.hoopChoice;
+  if (choice === 'declared') return declared;
+  if (typeof choice === 'number' && format === primary) return catalog[choice];
+  if (item.extents === null) return undefined;
+  return selectSmallestHoop(item.extents, catalog);
+}
+
+/** Everything a fresh queue item derives from its parsed pattern. */
+export function computeItemDefaults(parsed: ParsedFile): Omit<QueueItem, 'id' | 'fileName'> {
+  return {
+    parsed,
+    parseError: null,
+    extents: computeExtents(parsed.pattern.stitches),
+    stops: machineStops(parsed.pattern.stitches),
+    stats: patternStats(parsed.pattern.stitches),
+    options: {
+      hoopChoice: parsed.pattern.hoop !== undefined ? 'declared' : 'auto',
+      trims: 'drop',
+      centerInHoop: false,
+    },
+    status: 'ready',
+    skipped: [],
+    outcomes: [],
+  };
+}
+
+export function hexOf(rgb: number): string {
+  return `#${(rgb & 0xffffff).toString(16).padStart(6, '0')}`;
+}
+
+/** ZIP entries must be unique: "name.ext" → "name (2).ext" on collision. */
+export function uniqueEntryName(taken: Set<string>, name: string): string {
+  let candidate = name;
+  for (let n = 2; taken.has(candidate); n++) {
+    candidate = name.replace(/(\.[^.]*)?$/, (ext) => ` (${n})${ext}`);
+  }
+  taken.add(candidate);
+  return candidate;
 }
 
 /** 0.1mm units → localized mm string ("77" / "77,5"). */

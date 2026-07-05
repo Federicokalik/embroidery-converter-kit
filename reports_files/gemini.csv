@@ -1,0 +1,91 @@
+brand,model,aliases,year,format_primary,formats_other,max_field_w_mm,max_field_h_mm,hoop_name,hoop_w_mm,hoop_h_mm,hoop_code,trimmer,source_url,confidence,notes
+Brother,PR600,"Brother Entrepreneur 6-Needle",2004,pes,"pec,dst",200,300,"Jumbo / Extra Large",200,300,,yes,https://www.embird.net/manual/0300formats.htm,high,"Single-head multi-needle, standard in prosumer catalogs. Requires PES Type 5.5."
+Brother,PR600,"Brother Entrepreneur 6-Needle",2004,pes,"pec,dst",200,300,"Large",130,180,,yes,https://www.embird.net/manual/0300formats.htm,high,
+Brother,PR600,"Brother Entrepreneur 6-Needle",2004,pes,"pec,dst",200,300,"Medium",100,100,,yes,https://www.embird.net/manual/0300formats.htm,high,
+Brother,PR600,"Brother Entrepreneur 6-Needle",2004,pes,"pec,dst",200,300,"Small",60,40,,yes,https://www.embird.net/manual/0300formats.htm,high,
+Brother,PE150,"Brother PE100, PE200",1998,pes,"pec",100,100,"Standard",100,100,,no,https://www.embird.net/manual/0300formats.htm,high,"Legacy models require older PES versions (v1-v6) to prevent file read errors."
+Brother,PE180D,,2000,pes,"pec",108,108,"Standard",108,108,,no,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,"Stitch limit per design is approx 120,000."
+Brother,Innov-is 2500D,,2006,pes,"pec,dst",160,260,"Large",160,260,,yes,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,
+Brother,Innov-is 2500D,,2006,pes,"pec,dst",160,260,"Medium",130,180,,yes,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,
+Brother,Innov-is 2500D,,2006,pes,"pec,dst",160,260,"Small",100,100,,yes,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,
+Brother,Innov-is 4000D,"Brother Quattro",2008,pes,"pec,dst",180,300,"Extra Large",180,300,,yes,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,"Dual USB ports, reads PES Type 6.0/8.0."
+Brother,Innov-is 4000D,"Brother Quattro",2008,pes,"pec,dst",180,300,"Large",160,260,,yes,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,
+Brother,Innov-is 4000D,"Brother Quattro",2008,pes,"pec,dst",180,300,"Medium",130,180,,yes,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,
+Brother,Innov-is 4000D,"Brother Quattro",2008,pes,"pec,dst",180,300,"Small",100,100,,yes,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,
+Brother,Entrepreneur PR680W,,2021,pes,"pec,dst",200,300,"Extra Large",200,300,,yes,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,
+Brother,Innov-is NV880E,,2021,pes,"dst",160,260,"Large",160,260,,yes,https://maggieframestore.com/blogs/maggieframe-news/brother-embroidery-file-types-explained-compatibility-conversion-optimization,high,
+Baby Lock,Altair 2,"BLTA2",2023,pes,"phc,phx,dst",240,355,"Extra Large",240,355,,yes,https://babylock.com/embroidery-comparison-charts,high,"Marketing material uses 9.5x14 inches; absolute field is 240x355mm."
+Baby Lock,Altair 2,"BLTA2",2023,pes,"phc,phx,dst",240,355,"Square",240,240,,yes,https://babylock.com/embroidery-comparison-charts,high,"Nominal 9.5x9.5 inches."
+Baby Lock,Altair 2,"BLTA2",2023,pes,"phc,phx,dst",240,355,"Medium",130,180,,yes,https://babylock.com/embroidery-comparison-charts,high,"Nominal 5x7 inches."
+Baby Lock,Altair 2,"BLTA2",2023,pes,"phc,phx,dst",240,355,"Small",100,100,,yes,https://babylock.com/embroidery-comparison-charts,high,"Nominal 4x4 inches."
+Baby Lock,Radiance,"BLRA",2024,pes,"phc,phx,dst",295,463,"Massive",295,463,,yes,https://babylock.com/embroidery-comparison-charts,high,"Nominal 11-5/8 x 18-1/4 inches."
+Baby Lock,Bloom,"BLMBM",2020,pes,"phc,dst",130,180,"Medium",130,180,,yes,https://babylock.com/embroidery-comparison-charts,high,"Nominal 5x7 inches."
+Baby Lock,Bloom,"BLMBM",2020,pes,"phc,dst",130,180,"Multi-Position",130,300,,yes,https://babylock.com/embroidery-comparison-charts,high,"Requires file splitting or multi-position placement in software."
+Baby Lock,Aerial,"BLAE",2020,pes,"phc,dst",200,300,"Large",200,300,,yes,https://babylock.com/embroidery-comparison-charts,high,"Nominal 8x12 inches."
+Baby Lock,Vesta,"BLVE",2021,pes,"phc,dst",160,260,"Medium Large",160,260,,yes,https://babylock.com/embroidery-comparison-charts,high,"Nominal 6.25 x 10.25 inches."
+Janome,Memory Craft 550E,"Elna Expressive 830L",2019,jef,"jef+,jpx,dst",200,360,"RE36b",200,360,,yes,https://www.thesewingstudio.co.uk/products/janome-memory-craft-550e-le-embroidery-only-machine,high,"Requires table support to avoid torque errors on Y axis."
+Janome,Memory Craft 550E,"Elna Expressive 830L",2019,jef,"jef+,jpx,dst",200,360,"SQ20b",200,200,,yes,https://www.thesewingstudio.co.uk/products/janome-memory-craft-550e-le-embroidery-only-machine,high,
+Janome,Memory Craft 550E,"Elna Expressive 830L",2019,jef,"jef+,jpx,dst",200,360,"RE20b",140,200,,yes,https://www.thesewingstudio.co.uk/products/janome-memory-craft-550e-le-embroidery-only-machine,high,
+Janome,Memory Craft 550E,"Elna Expressive 830L",2019,jef,"jef+,jpx,dst",200,360,"SQ14b",140,140,,yes,https://www.thesewingstudio.co.uk/products/janome-memory-craft-550e-le-embroidery-only-machine,high,
+Janome,Memory Craft 500E,,2015,jef,"jef+,jpx,dst",200,280,"RE28b",200,280,,yes,https://www.janomesewingcentre.com.au/shop/sewing-machines/mc550e/,high,
+Janome,Memory Craft 500E,,2015,jef,"jef+,jpx,dst",200,280,"SQ20b",200,200,,yes,https://www.janomesewingcentre.com.au/shop/sewing-machines/mc550e/,high,
+Janome,Memory Craft 500E,,2015,jef,"jef+,jpx,dst",200,280,"RE20b",140,200,,yes,https://www.janomesewingcentre.com.au/shop/sewing-machines/mc550e/,high,
+Janome,Memory Craft 500E,,2015,jef,"jef+,jpx,dst",200,280,"SQ14b",140,140,,yes,https://www.janomesewingcentre.com.au/shop/sewing-machines/mc550e/,high,
+Janome,Memory Craft 400E,,2015,jef,"jef+,jpx,dst",200,200,"SQ20b",200,200,4,yes,https://www.premierstitching.com/janome-memory-craft-400e-embroidery-machine/,high,"Hoop Code 4 correlates to 200x200 extent bounds."
+Janome,Memory Craft 400E,,2015,jef,"jef+,jpx,dst",200,200,"RE20b",140,200,2,yes,https://www.premierstitching.com/janome-memory-craft-400e-embroidery-machine/,high,"Hoop Code 2 correlates to 140x200 extent bounds."
+Janome,Memory Craft 400E,,2015,jef,"jef+,jpx,dst",200,200,"SQ14b",140,140,,yes,https://www.premierstitching.com/janome-memory-craft-400e-embroidery-machine/,high,
+Janome,Memory Craft 400E,,2015,jef,"jef+,jpx,dst",200,200,"RE10b",40,100,,yes,https://www.premierstitching.com/janome-memory-craft-400e-embroidery-machine/,high,"Optional free arm hoop."
+Janome,Memory Craft 9900,"Memory Craft 9850",2013,jef,"jef+,alf",140,200,"B Large",140,200,2,yes,https://support.janomesewingcentre.com.au/support/solutions/articles/51000143990-guide-to-embroidery-formats-and-hoop-sizes,high,
+Janome,Memory Craft 10000,"Kenmore 19010",2001,jef,"sew",140,200,"A Standard",126,110,0,no,https://community.kde.org/Projects/Liberty/File_Formats/Janome_Embroidery_Format,high,"Requires older direct PC connection or ATA card."
+Janome,Memory Craft 10000,"Kenmore 19010",2001,jef,"sew",140,200,"C Free Arm",50,50,1,no,https://community.kde.org/Projects/Liberty/File_Formats/Janome_Embroidery_Format,high,
+Janome,Memory Craft 10000,"Kenmore 19010",2001,jef,"sew",140,200,"B Large",140,200,2,no,https://community.kde.org/Projects/Liberty/File_Formats/Janome_Embroidery_Format,high,
+Janome,Memory Craft 11000,,2005,jef,"jef+",200,200,"Square Hoop",200,200,4,yes,https://support.janomesewingcentre.com.au/support/solutions/articles/51000143990-guide-to-embroidery-formats-and-hoop-sizes,high,
+Janome,Memory Craft 15000,,2013,jef,"jef+,jpx",200,300,"GR Hoop",200,300,,yes,https://support.janomesewingcentre.com.au/support/solutions/articles/51000143990-guide-to-embroidery-formats-and-hoop-sizes,high,"Max stitches increased to 200,000."
+Janome,MB-4,"MB-4S",2007,jef,"jef+,dst",240,200,"M1",240,200,,yes,https://www.hooptalent.com/blogs/news/ultimate-embroidery-hoop-size-chart-master-conversions-perfect-fit,high,"Single-head 4-needle prosumer machine."
+Janome,MB-4,"MB-4S",2007,jef,"jef+,dst",240,200,"M2",126,110,,yes,https://www.hooptalent.com/blogs/news/ultimate-embroidery-hoop-size-chart-master-conversions-perfect-fit,high,
+Janome,MB-4,"MB-4S",2007,jef,"jef+,dst",240,200,"M3",50,50,,yes,https://www.hooptalent.com/blogs/news/ultimate-embroidery-hoop-size-chart-master-conversions-perfect-fit,high,
+Husqvarna Viking,Designer Epic 2,,2019,vp3,"vp4,vip,hus,dst",360,350,"Majestic Hoop",360,350,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,
+Husqvarna Viking,Designer Epic 2,,2019,vp3,"vp4,vip,hus,dst",360,350,"Imperial Hoop",360,260,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,
+Husqvarna Viking,Designer Epic 2,,2019,vp3,"vp4,vip,hus,dst",360,350,"Crown Hoop",260,200,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,
+Husqvarna Viking,Designer Epic 2,,2019,vp3,"vp4,vip,hus,dst",360,350,"Splendid Square",120,120,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,
+Husqvarna Viking,Designer SE,,2004,vip,"hus,vp3,shv,dst",240,150,"Mega Hoop",240,150,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,"Originally relied on SHV format via floppy disk/USB."
+Husqvarna Viking,Designer SE,,2004,vip,"hus,vp3,shv,dst",240,150,"Texture Hoop",150,150,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,"Often branded as Do All Quilters Hoop."
+Husqvarna Viking,Designer SE,,2004,vip,"hus,vp3,shv,dst",240,150,"5x7 Design Hoop",130,180,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,
+Husqvarna Viking,Designer SE,,2004,vip,"hus,vp3,shv,dst",240,150,"Standard Spring",100,100,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,
+Husqvarna Viking,Designer SE,,2004,vip,"hus,vp3,shv,dst",240,150,"Mini Spring",40,40,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,
+Husqvarna Viking,Designer Topaz 50,,2013,vp3,"vip,hus,dst",360,200,"Royal Hoop",360,200,,yes,https://www.hooptalent.com/blogs/news/husqvarna-viking-embroidery-hoops-expert-guide-to-compatibility-techniques,high,
+Husqvarna Viking,Designer Topaz 50,,2013,vp3,"vip,hus,dst",360,200,"Splendid Square",120,120,,yes,https://www.hooptalent.com/blogs/news/husqvarna-viking-embroidery-hoops-expert-guide-to-compatibility-techniques,high,
+Husqvarna Viking,Designer Diamond Royale,,2013,vp3,"vip,hus,dst",200,360,"Designer Royal",200,360,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,
+Husqvarna Viking,Designer Ruby Royale,,2014,vp3,"vip,hus,dst",360,200,"Royal Hoop",360,200,,yes,https://royal-present.com/2017/10/05/husqvarna-hoop-sizes-formats-embroidery/,high,
+Pfaff,Creative Icon 2,,2022,vp3,"vp4,vip,pcs,dst",360,350,"Grand Dream Hoop",360,350,,yes,https://www.hooptalent.com/blogs/news/pfaff-embroidery-hoop-sizes-complete-compatibility-guide-expert-tips,high,"Identical hoop ecosystem to modern Viking."
+Pfaff,Creative Icon 2,,2022,vp3,"vp4,vip,pcs,dst",360,350,"Supreme Hoop",360,260,,yes,https://www.hooptalent.com/blogs/news/pfaff-embroidery-hoop-sizes-complete-compatibility-guide-expert-tips,high,
+Pfaff,Creative Icon 2,,2022,vp3,"vp4,vip,pcs,dst",360,350,"Deluxe Hoop",360,200,,yes,https://www.hooptalent.com/blogs/news/pfaff-embroidery-hoop-sizes-complete-compatibility-guide-expert-tips,high,
+Pfaff,Creative Icon 2,,2022,vp3,"vp4,vip,pcs,dst",360,350,"Grand Quilters Hoop",260,260,,yes,https://www.hooptalent.com/blogs/news/pfaff-embroidery-hoop-sizes-complete-compatibility-guide-expert-tips,high,
+Pfaff,Creative 4.5,,2014,vp3,"vip,pcs,dst",360,350,"Grand Dream Hoop",360,350,,yes,https://www.hooptalent.com/blogs/news/pfaff-embroidery-hoop-sizes-complete-compatibility-guide-expert-tips,high,"Only compatible if sold with the 'large embroidery unit'."
+Pfaff,Creative 4.5,,2014,vp3,"vip,pcs,dst",360,350,"Elite Hoop",260,200,,yes,https://www.hooptalent.com/blogs/news/pfaff-embroidery-hoop-sizes-complete-compatibility-guide-expert-tips,high,
+Pfaff,Creative 4.5,,2014,vp3,"vip,pcs,dst",360,350,"Grand Metal Hoop",240,150,,yes,https://www.hooptalent.com/blogs/news/pfaff-embroidery-hoop-sizes-complete-compatibility-guide-expert-tips,high,
+Pfaff,Creative 2140,"Pfaff 2144",2002,pcs,"vip",140,225,"Creative 2140 Hoop",140,225,,no,https://www.embird.net/manual/0300formats.htm,high,"Native absolute positioned format (PCS)."
+Pfaff,Creative 2140,"Pfaff 2144",2002,pcs,"vip",140,225,"Square Hoop",120,120,,no,https://www.embird.net/manual/0300formats.htm,high,
+Pfaff,Creative 2140,"Pfaff 2144",2002,pcs,"vip",140,225,"Petite Hoop",50,80,,no,https://www.embird.net/manual/0300formats.htm,high,
+Bernina,790 PLUS,,2017,exp,"art,dst",400,260,"Jumbo Hoop",400,260,,yes,https://www.maggieframes.com/blogs/embroidery-blogs/bernina-jumbo-hoop-complete-guide-techniques-compatibility-project-optimization,high,"Reads EXP files accompanied by .inf and .bmp for color data."
+Bernina,790 PLUS,,2017,exp,"art,dst",400,260,"Maxi Hoop",210,400,,yes,https://www.maggieframes.com/blogs/embroidery-blogs/bernina-jumbo-hoop-complete-guide-techniques-compatibility-project-optimization,high,
+Bernina,790 PLUS,,2017,exp,"art,dst",400,260,"Midi Hoop",265,165,,yes,https://www.maggieframes.com/blogs/embroidery-blogs/bernina-jumbo-hoop-complete-guide-techniques-compatibility-project-optimization,high,
+Bernina,790 PLUS,,2017,exp,"art,dst",400,260,"Large Oval Hoop",145,255,,yes,https://www.maggieframes.com/blogs/embroidery-blogs/bernina-jumbo-hoop-complete-guide-techniques-compatibility-project-optimization,high,
+Bernina,790 PLUS,,2017,exp,"art,dst",400,260,"Medium Hoop",100,130,,yes,https://www.maggieframes.com/blogs/embroidery-blogs/bernina-jumbo-hoop-complete-guide-techniques-compatibility-project-optimization,high,
+Bernina,790 PLUS,,2017,exp,"art,dst",400,260,"Small Hoop",72,50,,yes,https://www.maggieframes.com/blogs/embroidery-blogs/bernina-jumbo-hoop-complete-guide-techniques-compatibility-project-optimization,high,
+Bernina,880 PLUS,,2015,exp,"art,dst",210,400,"Jumbo Hoop",210,400,,yes,https://www.maggieframes.com/blogs/embroidery-blogs/bernina-jumbo-hoop-complete-guide-techniques-compatibility-project-optimization,high,"Mechanical constraints limit the 400x260 hoop to 210x400 output on the 880."
+Bernina,990,,2024,exp,"art,dst",410,305,"Giant Hoop",410,305,,yes,https://www.bernina.com/en-US/Accessories-US/Embroidery-Accessories/Embroidery-Hoops-and-Adapters,high,
+Zeng Hsing,EverSewn Sparrow X2,,2021,zhs,"pes,dst,jef,xxx,hus,exp,vp3",120,180,"Large Hoop",120,180,,yes,https://www.eversewn.com/blog/2022/3/22/guide-to-using-the-eversewn-sparrow-x2-app,high,"Operated primarily via EZDesign/EverSewn Pro app over Wi-Fi."
+Zeng Hsing,EverSewn Sparrow X2,,2021,zhs,"pes,dst,jef,xxx,hus,exp,vp3",120,180,"Small Hoop",50,70,,yes,https://www.eversewn.com/blog/2022/3/22/guide-to-using-the-eversewn-sparrow-x2-app,high,
+Zeng Hsing,EverSewn Hero,,2017,zhs,"pes,dst,exp",110,170,"Large Hoop",110,170,,no,https://www.hooptalent.com/blogs/news/eversewn-hero-embroidery-machine-mastery-from-setup-to-professional-techniques,high,
+Zeng Hsing,EverSewn Hero,,2017,zhs,"pes,dst,exp",110,170,"Medium Hoop",100,100,,no,https://www.hooptalent.com/blogs/news/eversewn-hero-embroidery-machine-mastery-from-setup-to-professional-techniques,high,
+Zeng Hsing,EverSewn Hero,,2017,zhs,"pes,dst,exp",110,170,"Small Hoop",40,40,,no,https://www.hooptalent.com/blogs/news/eversewn-hero-embroidery-machine-mastery-from-setup-to-professional-techniques,high,
+Zeng Hsing,Bernette Chicago 7,,2013,exp,"zhs,pes,jef",110,170,"Embroidery Hoop M",110,170,,no,https://www.bernette.com/en/models/bernette-chicago-7,high,"Marketed as 120x180; actual stitch limit is 110x170mm per OEM spec sheet."
+Zeng Hsing,Bernette Chicago 7,,2013,exp,"zhs,pes,jef",110,170,"Embroidery Hoop S",50,70,,no,https://www.bernette.com/en/models/bernette-chicago-7,high,"Marketed as 50x70; some localized manuals note a 40x40 variant."
+Zeng Hsing,CH05AX,"Zeng Hsing CH05AX",2021,zhs,"",120,180,"Large Hoop",120,180,,yes,https://www.zenghsing.com.tw/portfolio-items/ch05ax/,high,"Core OEM chassis serving as the base for multiple white-label machines."
+Zeng Hsing,CH05AX,"Zeng Hsing CH05AX",2021,zhs,"",120,180,"Small Hoop",50,70,,yes,https://www.zenghsing.com.tw/portfolio-items/ch05ax/,high,
+Singer,EM200 Quantum Stylist,"Singer Legacy SE300",2016,xxx,"dst",260,150,"Large Hoop",260,150,,yes,https://site.singeronline.com/ssl/instructions/Sgr_Quantum_Stylist_Superb_EM200.pdf,high,"Produced in collaboration with Zeng Hsing architectures."
+Singer,EM200 Quantum Stylist,"Singer Legacy SE300",2016,xxx,"dst",260,150,"Small Hoop",100,100,,yes,https://site.singeronline.com/ssl/instructions/Sgr_Quantum_Stylist_Superb_EM200.pdf,high,
+Juki,Tajima Sai,,2018,dst,"tcf",200,300,"Large Frame",200,300,,yes,https://jukiquilting.com/embroidery-machines/tajima-sai.html,high,"8-needle compact prosumer machine built with Tajima. Replaces older Jureve lines."
+Juki,Tajima Sai,,2018,dst,"tcf",200,300,"Small Frame",100,100,,yes,https://jukiquilting.com/embroidery-machines/tajima-sai.html,high,
+Juki,Jureve HZL-010N,,2001,emd,"dst",150,200,"Large Hoop",150,200,,yes,https://hr.manuals.plus/asin/B0DWJB66M6,medium,"Legacy Japanese domestic model featuring EM-3 embroidery unit."

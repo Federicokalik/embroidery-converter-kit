@@ -87,13 +87,52 @@ export const STRINGS: Record<string, Entry> = {
     it: 'Trascina qui i file di ricamo oppure premi Invio per sceglierli',
     en: 'Drop embroidery files here or press Enter to choose them',
   },
-  'conv.acceptHint': {
+  'conv.acceptHintInstant': {
     it:
       'Leggo i file di Husqvarna, Brother, Janome, Tajima e altri: {list}. ' +
-      'Più file insieme? Scarichi uno ZIP.',
+      'Un file alla volta: lo vedi cucire e lo scarichi.',
     en:
       'I read files from Husqvarna, Brother, Janome, Tajima and more: {list}. ' +
-      'Several at once? You get a ZIP.',
+      'One file at a time: watch it stitch, then download.',
+  },
+  'conv.acceptHintStudio': {
+    it:
+      'Leggo i file di Husqvarna, Brother, Janome, Tajima e altri: {list}. ' +
+      "Trascinane anche più d'uno: li metto in coda.",
+    en:
+      'I read files from Husqvarna, Brother, Janome, Tajima and more: {list}. ' +
+      'Drop several at once: they line up in the queue.',
+  },
+  'conv.batchNudge': {
+    it: 'Qui cucio un file alla volta.',
+    en: 'Here I stitch one file at a time.',
+  },
+  'conv.batchNudgeLink': {
+    it: "Per i lotti c'è il Convertitore →",
+    en: "For batches there's the Converter →",
+  },
+
+  // Studio toolbar
+  'tool.presetLabel': { it: 'La tua macchina', en: 'Your machine' },
+  'tool.presetNone': { it: 'Nessun preset', en: 'No preset' },
+  'tool.extraLabel': { it: 'Esporta anche in', en: 'Also export as' },
+  'tool.convertAll': { it: 'Converti tutto ({n})', en: 'Convert all ({n})' },
+  'tool.converting': { it: 'Converto…', en: 'Converting…' },
+
+  // Studio queue
+  'queue.count': { it: '{n} file in coda', en: '{n} files in the queue' },
+  'queue.countOne': { it: '1 file in coda', en: '1 file in the queue' },
+  'queue.statusReady': { it: 'pronto', en: 'ready' },
+  'queue.statusDone': { it: 'convertito', en: 'converted' },
+  'queue.statusFailed': { it: 'errore', en: 'error' },
+  'queue.remove': { it: 'Rimuovi {name} dalla coda', en: 'Remove {name} from the queue' },
+  'queue.meta': {
+    it: '{fmt} — {stitches} punti — {w}×{h} mm',
+    en: '{fmt} — {stitches} stitches — {w}×{h} mm',
+  },
+  'queue.skipped': {
+    it: 'Già in {fmt}: quel formato lo salto.',
+    en: 'Already {fmt}: skipping that format.',
   },
 
   // /convert page
@@ -130,10 +169,6 @@ export const STRINGS: Record<string, Entry> = {
     it: 'Il formato {fmt} non salva il telaio nel file.',
     en: "The {fmt} format doesn't store a hoop in the file.",
   },
-  'panel.moreLink': {
-    it: 'Telaio, tagli del filo e altre opzioni: aprili nel Convertitore →',
-    en: 'Hoop, thread trims and more options: open them in the Converter →',
-  },
   'panel.hoopFits': { it: 'Ci sta nel telaio scelto.', en: 'Fits the chosen hoop.' },
   'panel.hoopRecenter': {
     it: 'Ci sta se lo centri: spunta “Centra nel telaio”.',
@@ -157,10 +192,29 @@ export const STRINGS: Record<string, Entry> = {
   },
   'panel.trimsStops': { it: '{n} fermate macchina', en: '{n} machine stops' },
   'panel.convert': { it: 'Converti in {fmt}', en: 'Convert to {fmt}' },
-  'panel.discard': { it: 'Scarta', en: 'Discard' },
+  'panel.convertMulti': { it: 'Converti in {n} formati', en: 'Convert to {n} formats' },
+  'panel.remove': { it: 'Rimuovi dalla coda', en: 'Remove from queue' },
   'panel.sameFormat': {
     it: 'Il file è già in {fmt}: scegli un altro formato.',
     en: 'This file is already {fmt}: pick another format.',
+  },
+  'panel.sameFormatExtras': {
+    it: 'Già in {fmt}: converto solo nei formati extra.',
+    en: 'Already {fmt}: converting to the extra formats only.',
+  },
+  'panel.threadsLabel': { it: 'Fili', en: 'Threads' },
+  'panel.threadsMore': { it: '+{n} altri', en: '+{n} more' },
+  'panel.statJumps': { it: 'Salti', en: 'Jumps' },
+  'panel.statTrims': { it: 'Tagli', en: 'Trims' },
+  'panel.statStops': { it: 'Pause', en: 'Stops' },
+  'panel.sewTime': { it: 'Tempo di ricamo', en: 'Sew time' },
+  'panel.sewTimeMin': {
+    it: '~{min} min (stima a 600 punti/min)',
+    en: '~{min} min (assuming 600 stitches/min)',
+  },
+  'panel.sewTimeHours': {
+    it: '~{h} h {min} min (stima a 600 punti/min)',
+    en: '~{h} h {min} min (assuming 600 stitches/min)',
   },
 
   // Download section (/convert)
@@ -175,20 +229,8 @@ export const STRINGS: Record<string, Entry> = {
 
   // Stitch-out panel (conversion animation)
   'stitch.working': { it: 'Sto ricucendo {name}', en: 'Re-stitching {name}' },
-  'stitch.batch': {
-    it: 'In anteprima {name}. Gli altri {n} file arrivano nello ZIP.',
-    en: 'Previewing {name}. The other {n} files land in the ZIP.',
-  },
-  'stitch.batchOne': {
-    it: "In anteprima {name}. L'altro file arriva nello ZIP.",
-    en: 'Previewing {name}. The other file lands in the ZIP.',
-  },
   'stitch.skip': { it: 'Salta e scarica', en: 'Skip and download' },
   'stitch.doneSingle': { it: 'Cucito. Il download è partito.', en: 'Stitched. Download started.' },
-  'stitch.doneMulti': {
-    it: 'Cuciti tutti. Lo ZIP è partito.',
-    en: 'All stitched. ZIP download started.',
-  },
   'stitch.close': { it: 'Chiudi', en: 'Close' },
 
   // Results list: design size + declared-hoop fit (params pre-localized in mm)

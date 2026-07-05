@@ -18,7 +18,7 @@ function initAnchors(): void {
 
 applyI18n();
 initLangSwitch(refreshScroll); // text lengths changed, triggers must recompute
-initConverter({ playStitchOut, onLayoutChange: refreshScroll, panelVariant: 'lite' });
+initConverter({ mode: 'instant', playStitchOut, onLayoutChange: refreshScroll });
 renderFormatWall(
   document.getElementById('format-wall')!,
   document.getElementById('atoz-sub')!,

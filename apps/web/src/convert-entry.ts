@@ -6,4 +6,4 @@ import { initConverter } from './converter/converter';
 
 applyI18n();
 initLangSwitch();
-initConverter();
+initConverter({ mode: 'studio' });

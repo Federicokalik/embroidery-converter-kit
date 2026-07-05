@@ -92,12 +92,7 @@ export function playStitchOut(job: StitchOutJob): Promise<void> {
     });
     stage.requestRender();
 
-    status.textContent =
-      job.extraCount > 1
-        ? t('stitch.batch', { name: job.fileName, n: job.extraCount })
-        : job.extraCount === 1
-          ? t('stitch.batchOne', { name: job.fileName })
-          : t('stitch.working', { name: job.fileName });
+    status.textContent = t('stitch.working', { name: job.fileName });
     skip.hidden = false;
 
     gsap.to(overlay, { autoAlpha: 1, duration: 0.25 });
@@ -159,7 +154,7 @@ export function playStitchOut(job: StitchOutJob): Promise<void> {
       settled = true;
       needleLoop.kill();
       skip.hidden = true;
-      status.textContent = job.extraCount > 0 ? t('stitch.doneMulti') : t('stitch.doneSingle');
+      status.textContent = t('stitch.doneSingle');
       document.removeEventListener('keydown', onKey);
       resolve(); // download fires now, while the finished design lingers
       gsap.delayedCall(1.5, cleanup);
