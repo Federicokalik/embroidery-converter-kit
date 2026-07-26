@@ -7,9 +7,11 @@
  * /convert/, the marketing landing is never reachable.
  *
  * Conversion stays 100% local, exactly like in the browser: no design data
- * ever leaves the machine (fonts are bundled, OFL). The ONLY network call
- * is an optional once-per-launch update check against the GitHub releases
- * metadata — no payload, disable with RICUCI_NO_UPDATE_CHECK=1.
+ * ever leaves the machine (fonts are bundled, OFL). The only network traffic
+ * is the once-per-launch update check against the GitHub releases metadata,
+ * plus — on Windows only — the download of a new installer once one exists.
+ * Nothing about the user's designs is ever sent. Disable the whole thing with
+ * RICUCI_NO_UPDATE_CHECK=1.
  */
 const { app, BrowserWindow, dialog, net, protocol, shell } = require('electron');
 const path = require('node:path');
@@ -69,6 +71,49 @@ async function notifyUpdate(win) {
     cancelId: 1,
   });
   if (response === 0) void shell.openExternal(update.url);
+}
+
+/**
+ * Windows gets real in-place updates: electron-updater pulls the new NSIS
+ * installer in the background and runs it silently, keeping the directory
+ * chosen at install time. The other two platforms stay on notifyUpdate():
+ * - macOS — Squirrel.Mac refuses to update an app without a Developer ID
+ *   signature, so an auto-update would fail on every launch.
+ * - Linux — the AppImage is the one artifact with a real verification chain
+ *   (GPG-signed SHA256SUMS); replacing it in place would bypass that.
+ */
+async function runUpdater(win) {
+  if (process.platform !== 'win32' || !app.isPackaged) return notifyUpdate(win);
+
+  // Required lazily so unpackaged runs (dev, --smoke-test) never load it.
+  const { autoUpdater } = require('electron-updater');
+  autoUpdater.autoDownload = true;
+  // Declining the restart only defers it: the installer runs on the next quit.
+  autoUpdater.autoInstallOnAppQuit = true;
+  // Offline, rate-limited, or a release without latest.yml: stay silent. The
+  // converter works fine without ever reaching the network.
+  autoUpdater.on('error', () => {});
+
+  autoUpdater.on('update-downloaded', async (info) => {
+    if (win.isDestroyed()) return;
+    const { response } = await dialog.showMessageBox(win, {
+      type: 'info',
+      title: 'Ricuci',
+      message: `Ricuci ${info.version} è pronto`,
+      detail: 'La nuova versione è stata scaricata. Riavvia per installarla.',
+      buttons: ['Riavvia ora', 'Al prossimo avvio'],
+      defaultId: 0,
+      cancelId: 1,
+    });
+    // (isSilent, isForceRunAfter): no wizard on update, reopen when done.
+    if (response === 0) setImmediate(() => autoUpdater.quitAndInstall(true, true));
+  });
+
+  try {
+    await autoUpdater.checkForUpdates();
+  } catch {
+    // Updater failures are never the user's problem.
+  }
 }
 
 protocol.registerSchemesAsPrivileged([
@@ -165,7 +210,7 @@ app.whenReady().then(() => {
 
   // Once per launch, after the converter is up; silent when up to date.
   if (!SMOKE_TEST && process.env['RICUCI_NO_UPDATE_CHECK'] !== '1') {
-    win.webContents.once('did-finish-load', () => void notifyUpdate(win));
+    win.webContents.once('did-finish-load', () => void runUpdater(win));
   }
 
   app.on('activate', () => {

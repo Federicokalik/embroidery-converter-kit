@@ -15,7 +15,7 @@ and fully documented in [`docs/ZHS_FORMAT.md`](docs/ZHS_FORMAT.md).
 |---|---|
 | **Web** | <https://ricuci.app> — landing with an instant demo, full studio at [/convert/](https://ricuci.app/convert/), docs in [IT](https://ricuci.app/docs/) and [EN](https://ricuci.app/en/docs/) |
 | **CLI (npx)** | `npx ricuci in.vip out.zhs` — no install, needs Node ≥18 ([npmjs.com/package/ricuci](https://www.npmjs.com/package/ricuci)) |
-| **Desktop** | [Latest release](https://github.com/Federicokalik/embroidery-converter-kit/releases/latest): `Ricuci-Windows.exe`, `Ricuci-macOS.dmg`, `Ricuci-Linux.AppImage` |
+| **Desktop** | [Latest release](https://github.com/Federicokalik/embroidery-converter-kit/releases/latest): `Ricuci-Windows.exe` (installer), `Ricuci-macOS.dmg`, `Ricuci-Linux.AppImage` |
 | **CLI (standalone binary)** | Same releases page, no Node needed: `embconv-windows-x64.exe`, `embconv-macos-arm64`, `embconv-macos-x64`, `embconv-linux-x64` |
 
 ### Install & verify
@@ -38,8 +38,20 @@ standalone binaries sign as follows:
   pending), so Gatekeeper warns on first launch. Open it once with
   right-click → **Open**, or clear the quarantine flag:
   `xattr -dr com.apple.quarantine /Applications/Ricuci.app`.
-- **Windows** — the `.exe` is **unsigned for now**, so SmartScreen shows a
-  warning: click **More info → Run anyway**. Code signing is planned.
+- **Windows** — `Ricuci-Windows.exe` is an **installer** (per-user, so no
+  admin rights and no UAC prompt; you can pick the directory). It is
+  **unsigned for now**, so SmartScreen shows a warning: click **More info →
+  Run anyway**. Code signing is planned.
+
+### Updates
+
+Once per launch the app compares its version against the latest release.
+Windows then updates itself: electron-updater downloads the new installer in
+the background and runs it when you restart. macOS and Linux only show a
+notice and open the releases page — macOS because Squirrel.Mac will not update
+an unsigned app, Linux so the GPG-signed `SHA256SUMS` stays the way you verify
+what you run. Set `RICUCI_NO_UPDATE_CHECK=1` to disable the check entirely; no
+design data is ever part of it.
 
 ## Formats
 

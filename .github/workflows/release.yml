@@ -26,8 +26,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # Windows ships the NSIS installer plus the two files electron-updater
+          # needs on the release: latest.yml (version + sha512) and the blockmap
+          # (differential download — users fetch only the changed blocks).
+          # Dropping either one silently disables auto-update.
           - os: windows-latest
-            asset: apps/desktop/release/Ricuci-Windows.exe
+            asset: |
+              apps/desktop/release/Ricuci-Windows.exe
+              apps/desktop/release/Ricuci-Windows.exe.blockmap
+              apps/desktop/release/latest.yml
           - os: macos-latest
             asset: apps/desktop/release/Ricuci-macOS.dmg
           - os: ubuntu-latest
@@ -52,8 +59,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # The tag is the source of truth for the app version: the in-app
-      # update notifier compares app.getVersion() with the latest release.
+      # The tag is the source of truth for the app version: on Windows
+      # electron-updater compares it with the release's latest.yml, on
+      # macOS/Linux the in-app notifier compares it with the release tag.
       - run: npm pkg set version="${GITHUB_REF_NAME#v}"
         working-directory: apps/desktop
         shell: bash

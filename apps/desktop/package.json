@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "private": true,
   "version": "0.2.0",
   "description": "Ricuci — embroidery file converter (desktop)",
@@ -33,14 +33,28 @@
       "output": "release"
     },
     "npmRebuild": false,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Federicokalik",
+        "repo": "embroidery-converter-kit"
+      }
+    ],
     "win": {
       "target": [
-        "portable"
+        "nsis"
       ],
       "icon": "build/icon.png"
     },
-    "portable": {
-      "artifactName": "Ricuci-Windows.exe"
+    "nsis": {
+      "artifactName": "Ricuci-Windows.exe",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ricuci",
+      "uninstallDisplayName": "Ricuci"
     },
     "mac": {
       "target": [
@@ -71,5 +85,8 @@
     "appImage": {
       "artifactName": "Ricuci-Linux.AppImage"
     }
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
   }
 }

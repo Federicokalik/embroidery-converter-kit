@@ -895,11 +895,13 @@ export const STRINGS: Record<string, Entry> = {
   },
   'app.about.update': {
     it:
-      'Una volta per avvio Ricuci controlla se c’è una versione più recente (solo i metadati della ' +
-      'release su GitHub, nessun file). Si disattiva con RICUCI_NO_UPDATE_CHECK=1.',
+      'Una volta per avvio Ricuci controlla se c’è una versione più recente. Su Windows la scarica ' +
+      'in background e la installa al riavvio; su macOS e Linux apre la pagina delle release, così ' +
+      'resti tu a decidere. Si disattiva con RICUCI_NO_UPDATE_CHECK=1.',
     en:
-      'Once per launch Ricuci checks for a newer version (only the GitHub release metadata, no ' +
-      'files). Turn it off with RICUCI_NO_UPDATE_CHECK=1.',
+      'Once per launch Ricuci checks for a newer version. On Windows it downloads it in the ' +
+      'background and installs it on restart; on macOS and Linux it opens the releases page so the ' +
+      'choice stays yours. Turn it off with RICUCI_NO_UPDATE_CHECK=1.',
   },
   'app.about.versionLabel': { it: 'Versione', en: 'Version' },
   'app.about.authorLabel': { it: 'Autore', en: 'Author' },
