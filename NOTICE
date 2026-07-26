@@ -1,77 +1,94 @@
-Third-party code
-----------------
-
-This project ports embroidery format logic from the following
-open-source projects:
-
-- pyembroidery (https://github.com/inkstitch/pyembroidery) — MIT License.
-  The EmbCompress (Greg-Hus) decompressor, the ZHS reader logic, and the
-  HUS/VIP command conventions in packages/core are TypeScript ports of
-  pyembroidery source code.
-
-- libembroidery (https://github.com/Embroidermodder/libembroidery) —
-  zlib license. Used as format documentation reference; the files under
-  reference/vendor/ are unmodified excerpts kept for reverse-engineering
-  reference only and are not part of the shipped product.
-
-The ZHS writer is original work, reverse-engineered from Artist Toolkit
-output for interoperability purposes (see docs/ZHS_FORMAT.md).
-
-Bundled assets
---------------
-
-- Fonts: "Bricolage Grotesque", "Instrument Sans" and "JetBrains Mono",
-  all licensed under the SIL Open Font License 1.1 and self-hosted (no
-  third-party font requests at runtime, no CDN). The woff2 files live in
-  apps/web/src/assets/fonts with their OFL.txt license texts alongside;
-  the OFL permits bundling them in the site build and in the desktop
-  and CLI executables. The Bricolage Grotesque woff2 files have had their
-  overlapping contours merged (apps/web/scripts/clean-fonts.py) for clean
-  outline rendering; the OFL has no Reserved Font Name, so the
-  modification keeps the family name.
-- The three stage designs in apps/web/src/assets/designs
-  (unicorn-6x10.jef, lobster.pes, octopus.dst) are designs the owner is
-  entitled to publish; they ship with the site and desktop builds by the
-  owner's decision. They are the ONLY embroidery designs in the repo.
-- fixtures/ and the design-derived golden files under
-  packages/core/test/golden are NOT in the repository: real embroidery
-  designs (personal designs, community designs shared within the owner's
-  group, and a factory sample shipped with a Zeng Hsing machine) used as
-  private test data for interoperability work — not redistributable
-  content. The test suite self-skips when they are absent; the full
-  suite runs on the owner's machine.
-
 Project license
 ---------------
 
-The project's own CODE is licensed under the PolyForm Internal Use
-License 1.0.0 (see LICENSE): anyone may use the software — personally
-or within their own organization — and make private changes and forks,
-but may not distribute copies or software built from it. Publication
-is reserved to the Licensor; the Licensor's official distributions
-(web app, CLI, executables) are free of charge.
+This project's own source code is licensed under the MIT License
+(see LICENSE), (c) 2026 Federico Kalik.
 
-Clarifications and additional permissions from the Licensor:
-- Invoking the UNMODIFIED CLI or executable from your own software,
-  scripts or services (including commercial ones) is permitted
-  internal use — as long as the Software is not embedded in or
-  redistributed with your product.
-- "Ricuci" and "embconv" identify the Licensor's builds only; do not
-  use these names for modified versions.
-- Designs you convert remain yours (or their respective owners');
-  conversion happens locally and the Licensor claims no rights on your
-  input or output files.
+The MIT grant also covers the three sample embroidery designs in
+apps/web/src/assets/designs (unicorn-6x10.jef, lobster.pes,
+octopus.dst) — designs the copyright holder is entitled to release.
+They are the ONLY embroidery designs in the repository.
 
-The DOCUMENTATION under docs/ — including the reverse-engineered
-format specifications — is licensed separately under CC BY-NC-ND 4.0
-(see docs/LICENSE).
+Two things are NOT covered by the MIT grant and keep their own terms:
+the bundled OFL fonts and the GSAP library (both detailed below), and
+the documentation under docs/, which is licensed separately under
+CC BY 4.0 (see docs/LICENSE).
 
-The MIT notice for the pyembroidery-derived portions above is
-preserved regardless of the project license.
+"Ricuci" and "embconv" are the names of the maintainer's official
+builds. The MIT License grants no trademark rights; if you distribute
+a modified version, please give it a different name so users can tell
+the builds apart.
 
-Note on public hosting: on public GitHub, the platform ToS lets users
-view and fork public repositories within GitHub regardless of license;
-the LICENSE still forbids any use of those copies beyond viewing.
-(The pre-publication checklist that used to live here was completed:
-Fontshare fonts replaced with self-hosted OFL fonts, OFL texts added,
-fixtures/ and design goldens removed from the repo and its history.)
+Third-party code ported into this project
+-----------------------------------------
+
+- pyembroidery (https://github.com/inkstitch/pyembroidery) — MIT
+  License. The EmbCompress (Greg-Hus) decompressor, the ZHS reader
+  logic, the pattern normalizer (EmbEncoder.Transcoder) and the
+  HUS/VIP command conventions in packages/core are TypeScript ports of
+  pyembroidery source code. The thread charts under
+  packages/core/src/charts are generated from pyembroidery's tables by
+  packages/core/scripts/gen_charts.py.
+
+  Copyright (c) pyembroidery contributors. The MIT notice for these
+  portions is preserved regardless of this project's license.
+
+- libembroidery (https://github.com/Embroidermodder/libembroidery) —
+  zlib license, Copyright 2018-2025 The Embroidermodder Team.
+  packages/core/src/charts/vip-table.ts (VIP_COLOR_TABLE — the XOR
+  keystream for the VIP header color block) is an ALTERED version of
+  libembroidery's `vipDecodingTable`, mechanically transcoded to
+  TypeScript by packages/core/scripts/gen_vip_table.py. This table is
+  part of the shipped product. The files under reference/vendor/ are
+  unmodified excerpts of libembroidery kept as reverse-engineering
+  reference and are not shipped; they retain their original notice.
+
+  This project is not libembroidery and is not endorsed by the
+  Embroidermodder Team.
+
+The ZHS writer is original work, reverse-engineered from Artist
+Toolkit output for interoperability purposes (see docs/ZHS_FORMAT.md).
+
+Bundled third-party components with their own license
+-----------------------------------------------------
+
+- GSAP (GreenSock Animation Platform), used by the marketing site and
+  the desktop app shell, is NOT open source and is NOT covered by this
+  project's MIT License. It is distributed under GreenSock's standard
+  "no charge" license (https://gsap.com/standard-license),
+  Copyright (c) 2008-2026 GreenSock. Free to use, including
+  commercially, but it is not sublicensable: if you fork this project
+  you receive GSAP from npm under GreenSock's terms, not under MIT.
+  GSAP's `@license` banner must be preserved in any build output.
+
+- Fonts: "Bricolage Grotesque", "Instrument Sans" and "JetBrains Mono",
+  all licensed under the SIL Open Font License 1.1 and self-hosted (no
+  third-party font requests at runtime, no CDN). They remain under the
+  OFL and are NOT relicensed by this project's MIT grant; in
+  particular the OFL forbids selling the font files on their own. The
+  woff2 files live in apps/web/src/assets/fonts with their OFL.txt
+  license texts alongside; the OFL permits bundling them in the site
+  build and in the desktop and CLI executables. The Bricolage
+  Grotesque woff2 files have had their overlapping contours merged
+  (apps/web/scripts/clean-fonts.py) for clean outline rendering; the
+  OFL has no Reserved Font Name, so the modification keeps the family
+  name.
+
+- Other runtime dependencies (Electron, Astro, three.js, fflate, Pico
+  CSS and their transitive dependencies) are all under permissive
+  licenses — MIT, ISC, BSD-2/3-Clause, Apache-2.0, BlueOak-1.0.0 —
+  compatible with the MIT License. Electron additionally ships
+  Chromium, Node.js and V8, which carry their own notices inside the
+  distributed application bundles.
+
+Test data not in this repository
+--------------------------------
+
+fixtures/ and the design-derived golden files under
+packages/core/test/golden are NOT in the repository: real embroidery
+designs (personal designs, community designs shared within the
+maintainer's group, and a factory sample shipped with a Zeng Hsing
+machine) used as private test data for interoperability work — not
+redistributable content, and not covered by any license granted here.
+The test suite self-skips when they are absent; the full suite runs on
+the maintainer's machine.

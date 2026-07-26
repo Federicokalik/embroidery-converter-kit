@@ -17,6 +17,9 @@ export default defineConfig({
   integrations: [targetPrune('desktop')],
   vite: {
     assetsInclude: ['**/*.vip', '**/*.jef', '**/*.pes', '**/*.dst'],
+    // Same rationale as astro.config.mjs: the shipped executables must carry
+    // GSAP's copyright banner and the MIT notices of the bundled libraries.
+    esbuild: { legalComments: 'eof' },
     build: {
       target: 'es2022',
       chunkSizeWarningLimit: 600,

@@ -1,6 +1,6 @@
 {
   "name": "@embroidery/core",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "version": "0.1.0",
   "type": "module",
   "main": "./src/index.ts",

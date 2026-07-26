@@ -41,6 +41,7 @@ representation.
 
 ## License
 
-Source-available under the PolyForm Internal Use License 1.0.0. Running the
-**unmodified** CLI from your own scripts or services — including commercial
-ones — is permitted internal use. See the bundled `LICENSE` and `NOTICE`.
+MIT. Use it, fork it, embed it in your own tools — commercial use included —
+just keep the copyright notice. Format logic is ported from pyembroidery (MIT)
+and libembroidery (zlib); see the bundled `LICENSE` and `NOTICE` for the full
+attribution.

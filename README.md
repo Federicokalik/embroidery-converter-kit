@@ -120,17 +120,20 @@ the tag and the assets get stable file names.
 
 ## License
 
-- **Code**: [PolyForm Internal Use License 1.0.0](LICENSE) — source-available.
-  You can read everything, use the software personally or inside your own
-  organization, and keep private forks; redistribution of the software or of
-  builds is reserved to the licensor. The official web app, desktop apps and
-  CLI are free of charge. Calling the unmodified CLI/executable from your own
-  scripts or services is fine (see [`NOTICE`](NOTICE) for the licensor's
-  clarifications).
+- **Code**: [MIT](LICENSE). Use it, fork it, ship it, sell it — just keep the
+  copyright notice. The official web app, desktop apps and CLI stay free of
+  charge. The MIT grant also covers the three sample designs in
+  `apps/web/src/assets/designs`.
 - **Documentation** (`docs/`, including the format specs):
-  [CC BY-NC-ND 4.0](docs/LICENSE).
+  [CC BY 4.0](docs/LICENSE) — share and adapt with attribution.
 - **Third-party**: EmbCompress/HUS/VIP logic ported from
-  [pyembroidery](https://github.com/inkstitch/pyembroidery) (MIT);
-  [libembroidery](https://github.com/Embroidermodder/libembroidery) used as
-  documentation reference (zlib). Fonts are OFL 1.1, self-hosted. Details in
+  [pyembroidery](https://github.com/inkstitch/pyembroidery) (MIT); the VIP
+  color keystream is transcoded from
+  [libembroidery](https://github.com/Embroidermodder/libembroidery) (zlib).
+  Two bundled components keep their own terms and are **not** MIT: the fonts
+  (OFL 1.1, self-hosted) and [GSAP](https://gsap.com/standard-license)
+  (GreenSock standard "no charge" license — free, but not sublicensable, so a
+  fork gets it from npm under GreenSock's terms). Details in
   [`NOTICE`](NOTICE).
+- **Trademark**: "Ricuci" and "embconv" name the official builds. MIT grants
+  no trademark rights — please rename modified distributions.

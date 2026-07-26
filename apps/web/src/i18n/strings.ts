@@ -841,45 +841,49 @@ export const STRINGS: Record<string, Entry> = {
   'app.license.metaTitle': { it: 'Ricuci — Licenza', en: 'Ricuci — License' },
   'app.license.title': { it: 'Licenza', en: 'License' },
   'app.license.lede': {
-    it: 'Ricuci è software gratuito. Il codice è sotto licenza PolyForm Internal Use 1.0.0.',
-    en: 'Ricuci is free software. The code is under the PolyForm Internal Use License 1.0.0.',
+    it: 'Ricuci è software libero e gratuito. Il codice è sotto licenza MIT.',
+    en: 'Ricuci is free and open-source software. The code is under the MIT License.',
   },
   'app.license.summary': {
     it:
-      'Puoi usarlo — personalmente o nella tua organizzazione — e modificarlo in privato. ' +
-      'Non puoi ridistribuirne copie o software costruito a partire da esso: la pubblicazione ' +
-      'resta al Licenziante, che distribuisce app, CLI ed eseguibili gratuitamente.',
+      'Puoi usarlo, studiarlo, modificarlo, ridistribuirlo e anche venderlo, per qualunque scopo ' +
+      'incluso quello commerciale. L’unica condizione è mantenere l’avviso di copyright e il testo ' +
+      'della licenza nelle copie. Il software è fornito “così com’è”, senza garanzie.',
     en:
-      'You may use it — personally or within your organization — and change it privately. ' +
-      'You may not distribute copies or software built from it: publication is reserved to the ' +
-      'Licensor, who distributes the app, CLI and executables free of charge.',
+      'You may use, study, modify, redistribute and even sell it, for any purpose including ' +
+      'commercial ones. The only condition is keeping the copyright notice and the license text ' +
+      'in your copies. The software is provided “as is”, without warranty.',
   },
-  'app.license.clarHead': { it: 'Chiarimenti dal Licenziante', en: 'Clarifications from the Licensor' },
+  'app.license.clarHead': { it: 'Cosa sapere', en: 'Good to know' },
   'app.license.clar1': {
     it:
-      'Invocare la CLI o gli eseguibili non modificati dai tuoi script o servizi (anche ' +
-      'commerciali) è uso interno permesso, purché il Software non sia incorporato o ridistribuito ' +
-      'col tuo prodotto.',
+      'Due componenti inclusi non sono MIT e mantengono i propri termini: i caratteri (SIL Open ' +
+      'Font License 1.1) e la libreria di animazione GSAP (licenza standard GreenSock — gratuita, ' +
+      'ma non sublicenziabile).',
     en:
-      'Invoking the unmodified CLI or executables from your own scripts or services (including ' +
-      'commercial ones) is permitted internal use, as long as the Software is not embedded in or ' +
-      'redistributed with your product.',
+      'Two bundled components are not MIT and keep their own terms: the fonts (SIL Open Font ' +
+      'License 1.1) and the GSAP animation library (GreenSock standard license — free, but not ' +
+      'sublicensable).',
   },
   'app.license.clar2': {
-    it: '“Ricuci” ed “embconv” identificano solo le build del Licenziante: non usare questi nomi per versioni modificate.',
-    en: '“Ricuci” and “embconv” identify the Licensor’s builds only: do not use these names for modified versions.',
+    it:
+      '“Ricuci” ed “embconv” sono i nomi delle build ufficiali. La licenza MIT non concede diritti ' +
+      'sul marchio: se distribuisci una versione modificata, dalle un nome diverso.',
+    en:
+      '“Ricuci” and “embconv” are the names of the official builds. The MIT License grants no ' +
+      'trademark rights: if you distribute a modified version, give it a different name.',
   },
   'app.license.clar3': {
     it:
       'I design che converti restano tuoi (o dei rispettivi proprietari): la conversione avviene ' +
-      'in locale e il Licenziante non rivendica alcun diritto sui tuoi file.',
+      'in locale e nessuno rivendica diritti sui tuoi file.',
     en:
-      'Designs you convert remain yours (or their owners’): conversion happens locally and the ' +
-      'Licensor claims no rights over your files.',
+      'Designs you convert remain yours (or their owners’): conversion happens locally and nobody ' +
+      'claims any rights over your files.',
   },
   'app.license.docsNote': {
-    it: 'La documentazione — incluse le specifiche di formato decodificate — è sotto CC BY-NC-ND 4.0.',
-    en: 'The documentation — including the reverse-engineered format specs — is under CC BY-NC-ND 4.0.',
+    it: 'La documentazione — incluse le specifiche di formato decodificate — è sotto CC BY 4.0.',
+    en: 'The documentation — including the reverse-engineered format specs — is under CC BY 4.0.',
   },
   'app.license.full': { it: 'Leggi il testo integrale della licenza', en: 'Read the full license text' },
 

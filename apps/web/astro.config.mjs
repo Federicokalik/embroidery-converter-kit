@@ -22,6 +22,12 @@ export default defineConfig({
     // The stage designs in src/assets/designs are imported with `?url`
     // and copied into dist at build.
     assetsInclude: ['**/*.vip', '**/*.jef', '**/*.pes', '**/*.dst'],
+    // Keep third-party `/*! … @license … */` banners in the output. The
+    // minifier drops them by default, which would strip GSAP's copyright
+    // notice (its license forbids removing proprietary notices) and the MIT
+    // notices of three/fflate/Pico (MIT requires the notice to travel with
+    // the code). 'eof' collects them at the end of each chunk.
+    esbuild: { legalComments: 'eof' },
     build: {
       target: 'es2022',
       // three is a single lazy chunk by design (desktop-only, preloaded

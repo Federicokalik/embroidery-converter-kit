@@ -1,12 +1,14 @@
 The documentation in this directory — including the reverse-engineered
-ZHS and VIP format specifications — is (c) 2026 Federico and licensed
-under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
-International license (CC BY-NC-ND 4.0).
+ZHS and VIP format specifications — is (c) 2026 Federico Kalik and
+licensed under the Creative Commons Attribution 4.0 International
+license (CC BY 4.0).
 
-You may copy and share these documents unmodified, with attribution,
-for noncommercial purposes. You may not distribute modified versions,
-and you may not use them commercially without written permission.
+You may share and adapt these documents, for any purpose including
+commercial, as long as you give appropriate credit, link to the
+license, and indicate whether changes were made.
 
-Full license text: https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
 
-(The project's source code is licensed separately: see /LICENSE.)
+(The project's source code is licensed separately under the MIT
+License: see /LICENSE. Code samples embedded in these documents may
+also be used under the MIT License.)

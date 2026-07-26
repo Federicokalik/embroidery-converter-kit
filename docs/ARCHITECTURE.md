@@ -94,5 +94,14 @@ These files drive physical machines. Every reader/writer needs:
 
 ## Licensing
 
-pyembroidery and libembroidery are **MIT / permissive** — porting their format
-logic into a commercial product is allowed. Keep a NOTICE file crediting them.
+The project's own code is **MIT** (`/LICENSE`); this documentation is
+**CC BY 4.0** (`docs/LICENSE`).
+
+pyembroidery is **MIT** and libembroidery is **zlib** — both permissive, so
+porting their format logic (including into a commercial product) is allowed.
+Keep the NOTICE file crediting them; the zlib terms also require marking the
+altered `vipDecodingTable` transcription as such, which NOTICE does.
+
+Two bundled components are **not** MIT and must stay carved out of the grant:
+the OFL 1.1 fonts and GSAP (GreenSock standard "no charge" license — free but
+not sublicensable). GSAP's `@license` banner must survive minification.
