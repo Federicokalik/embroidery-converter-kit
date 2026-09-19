@@ -74,7 +74,14 @@ export type HoopChoice = 'auto' | 'declared' | number; // number = primary catal
 
 export interface ItemOptions {
   hoopChoice: HoopChoice;
-  trims: 'drop' | 'pause';
+  /**
+   * Thread-trim edit mode. 'keep' (default) leaves the pattern untouched;
+   * 'remove' strips every TRIM record; 'add' inserts machine trims before
+   * color changes and long jump runs. 'pause' is the ZHS-only writer mode
+   * (trim → machine stop). Any non-'keep' value is an active edit: it also
+   * enables exporting to the file's own format (read .pes → edit → .pes).
+   */
+  trims: 'keep' | 'remove' | 'add' | 'pause';
   centerInHoop: boolean;
 }
 
@@ -173,7 +180,7 @@ export function computeItemDefaults(parsed: ParsedFile): Omit<QueueItem, 'id' | 
     stats: patternStats(parsed.pattern.stitches),
     options: {
       hoopChoice: parsed.pattern.hoop !== undefined ? 'declared' : 'auto',
-      trims: 'drop',
+      trims: 'keep',
       centerInHoop: false,
     },
     status: 'ready',

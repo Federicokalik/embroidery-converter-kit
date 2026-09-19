@@ -88,6 +88,24 @@ const out = await convert({
     <li>It sends nothing over the network. See <a href={withBase('en/docs/privacy')}>Privacy</a>.</li>
   </ul>
 
+  <h2>Editing thread trims without converting</h2>
+  <p>
+    Besides converting, you can <strong>rewrite a file in its own format</strong>
+    after a trim edit: drop a <code>.pes</code>, pick <strong>"Add trims"</strong>
+    (a cut at every color change and on jumps over 3 mm) or
+    <strong>"Remove trims"</strong> in the studio, and download a rewritten
+    <code>.pes</code> — same geometry, edited trims.
+  </p>
+  <p>
+    The round trip is not byte-identical (the file is rewritten by the
+    format's writer), but functionally equivalent. Not every format can
+    express trims: JEF drops them (the machine only cuts at color changes),
+    PEC/PES carries the trim flag on every travel jump, VP3 always closes the
+    design with an explicit trim. The full table is in
+    <a href={withBase('en/docs/formats')}>Formats</a> and in the repository's
+    <code>docs/TRIM_EDIT.md</code>.
+  </p>
+
   <p class="docs-prevnext">
     <a href={withBase('en/docs')}>← Overview</a>
     <a href={withBase('en/docs/architecture')}>Architecture →</a>

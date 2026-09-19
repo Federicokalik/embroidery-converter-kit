@@ -77,6 +77,13 @@ import { withBase } from '../../core/base';
       scrivere.
     </li>
     <li>
+      <code>--trims &lt;modo&gt;</code> — <code>keep</code> (default),
+      <code>remove</code> o <code>add</code>: togglie o inserisce i tagli del
+      filo prima di scrivere. Con un'edit attiva l'output può restare nel
+      formato di partenza (<code>ricuci design.pes edit.pes --trims add</code>).
+      ZHS lo ignora (usa <code>--pause-trims</code>).
+    </li>
+    <li>
       <code>--pause-trims</code> — <code>zhs</code>: ferma la macchina a ogni
       taglio di metà colore (per spuntare il filo lì) invece di scartare i
       tagli in silenzio.

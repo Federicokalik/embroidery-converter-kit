@@ -26,6 +26,8 @@ export {
 } from './hoops';
 export type { HoopBrand, HoopFit } from './hoops';
 export { center, translate } from './geometry';
+export { addTrims, removeTrims } from './trim-edits';
+export type { AddTrimOptions } from './trim-edits';
 export { compress, expand, signed8, signed16 } from './embcompress';
 export { decodeDelta, encodeDelta, isEncodableDelta } from './zhs-codec';
 export { isVip, readVip, VIP_MAGIC } from './readers/vip';

@@ -75,6 +75,13 @@ import { withBase } from '../../../core/base';
       <code>--center</code> — center the design on the origin before writing.
     </li>
     <li>
+      <code>--trims &lt;mode&gt;</code> — <code>keep</code> (default),
+      <code>remove</code> or <code>add</code>: strips or inserts thread-trim
+      records before writing. With an active edit the output may keep the
+      input format (<code>ricuci design.pes edited.pes --trims add</code>).
+      ZHS ignores it (use <code>--pause-trims</code>).
+    </li>
+    <li>
       <code>--pause-trims</code> — <code>zhs</code>: stop the machine at each
       mid-color trim (to cut the thread there) instead of dropping trims
       silently.

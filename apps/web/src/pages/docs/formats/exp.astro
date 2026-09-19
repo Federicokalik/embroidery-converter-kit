@@ -15,7 +15,7 @@ import { withBase } from '../../../core/base';
   <ul>
     <li><strong>Colori</strong>: <em>assenti</em>. Li scegli tu in macchina.</li>
     <li><strong>Telaio</strong>: <em>assente</em>. Idem.</li>
-    <li><strong>Trims</strong>: no comando diretto; il writer droppa i TRIM con <code>TRIM_DROPPED</code> warning.</li>
+    <li><strong>Trims</strong>: sì, con la sequenza di controllo <code>0x80 0x80 0x07</code> (il reader la rimappa su <code>TRIM</code>). Con «Rimuovi i tagli» il file riscritto resta trim-free.</li>
     <li><strong>Color change</strong>: marker speciale.</li>
   </ul>
 

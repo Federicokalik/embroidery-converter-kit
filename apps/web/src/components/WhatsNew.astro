@@ -1,0 +1,28 @@
+---
+// One-time "what's new" modal (landing + /convert only). Pure markup:
+// whats-new.ts decides when (and whether — desktop shells are skipped)
+// to showModal() it; dismissal persists in localStorage. Static copy is
+// rendered in the page language; data-i18n keeps the runtime engine happy.
+import { localeUrl, translate } from '../i18n/i18n';
+import type { Lang } from '../i18n/i18n';
+
+interface Props {
+  lang?: Lang;
+  /** Where the CTA points. Defaults to the converter studio. */
+  ctaHref?: string;
+}
+const { lang = 'it', ctaHref = localeUrl(lang, 'convert/') } = Astro.props;
+const tt = (key: string): string => translate(lang, key);
+---
+
+<dialog id="whats-new" class="whats-new" aria-labelledby="whats-new-title">
+  <div class="whatsnew-card">
+    <p class="mono whatsnew-kicker" data-i18n="whatsnew.kicker">{tt('whatsnew.kicker')}</p>
+    <h2 id="whats-new-title" data-i18n="whatsnew.title">{tt('whatsnew.title')}</h2>
+    <p class="whatsnew-body" data-i18n="whatsnew.body">{tt('whatsnew.body')}</p>
+    <div class="whatsnew-actions">
+      <a class="btn btn-primary" href={ctaHref} data-whatsnew-close data-i18n="whatsnew.cta">{tt('whatsnew.cta')}</a>
+      <button type="button" class="btn btn-ghost" data-whatsnew-close data-i18n="whatsnew.later">{tt('whatsnew.later')}</button>
+    </div>
+  </div>
+</dialog>

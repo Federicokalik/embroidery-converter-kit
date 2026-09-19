@@ -88,6 +88,24 @@ const out = await convert({
     <li>Non manda niente in rete. Vedi <a href={withBase('docs/privacy')}>Privacy</a>.</li>
   </ul>
 
+  <h2>Modificare i tagli del filo senza convertire</h2>
+  <p>
+    Oltre alla conversione, puoi <strong>riscrivere un file nel suo stesso
+    formato</strong> dopo una modifica ai tagli: carichi un <code>.pes</code>,
+    nello studio scegli <strong>«Aggiungi i tagli»</strong> (un taglio a ogni
+    cambio colore e sui salti oltre 3 mm) o <strong>«Rimuovi i tagli»</strong>,
+    e scarichi un <code>.pes</code> riscritto — stessa geometria, tagli editati.
+  </p>
+  <p>
+    Il round-trip non è byte-identico (il file viene riscritto con il writer
+    del formato), ma funzionalmente equivalente. Non tutti i formati sanno
+    esprimere i tagli: JEF li scarta (la macchina taglia solo al cambio
+    colore), PEC/PES porta il flag di taglio su ogni salto di transito, VP3
+    chiude sempre il disegno con un taglio esplicito. La tabella completa è
+    in <a href={withBase('docs/formats')}>Formati</a> e nella pagina
+    <code>docs/TRIM_EDIT.md</code> del repository.
+  </p>
+
   <p class="docs-prevnext">
     <a href={withBase('docs')}>← Panoramica</a>
     <a href={withBase('docs/architecture')}>Architettura →</a>

@@ -94,10 +94,16 @@
 }
 
 .sponsor-logo {
+  /* Paper chip behind the wordmark: the badge panel is dark ink, the brand
+     wordmark is dark ink too — it needs its original light background. */
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 0 8px rgb(255 46 136 / 0.15));
+  box-sizing: border-box;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 1px solid rgb(20 20 20 / 0.08);
 }
 
 .sponsor-cta {

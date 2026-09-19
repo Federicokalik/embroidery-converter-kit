@@ -55,7 +55,8 @@ export function initPanel(deps: PanelDeps): PanelHandle {
   const trimsRadios = Array.from(
     root.querySelectorAll<HTMLInputElement>('input[name="trims"]'),
   );
-  const dropStops = root.querySelector('#trims-drop-stops') as HTMLElement;
+  const keepHint = root.querySelector('#trims-keep-hint') as HTMLElement;
+  const keepStops = root.querySelector('#trims-keep-stops') as HTMLElement;
   const pauseStops = root.querySelector('#trims-pause-stops') as HTMLElement;
   const centerField = root.querySelector('#center-field') as HTMLElement;
   const centerCheck = root.querySelector('#center-check') as HTMLInputElement;
@@ -243,11 +244,23 @@ export function initPanel(deps: PanelDeps): PanelHandle {
   }
 
   function renderTrims(it: QueueItem): void {
-    const show = deps.getTarget() === 'zhs' && it.parsed!.hasTrims;
+    const isZhs = deps.getTarget() === 'zhs';
+    // ZHS shows the field only when the design carries trims (its only
+    // choices are drop/pause); every other format always shows it so a
+    // design without trims can gain some.
+    const show = isZhs ? it.parsed!.hasTrims : true;
     trimsField.hidden = !show;
     if (!show) return;
-    for (const radio of trimsRadios) radio.checked = radio.value === it.options.trims;
-    dropStops.textContent = t('panel.trimsStops', { n: it.stops.drop });
+    for (const radio of trimsRadios) {
+      const label = radio.closest('label') as HTMLElement;
+      // remove/add are hidden on ZHS (the format has no trim record);
+      // pause is the ZHS-only writer mode.
+      label.hidden = isZhs ? radio.value !== 'keep' && radio.value !== 'pause' : radio.value === 'pause';
+      radio.checked = radio.value === it.options.trims;
+    }
+    // On ZHS the "keep as is" radio is really the writer's drop mode.
+    keepHint.textContent = isZhs ? t('panel.trimsDropHint') : t('panel.trimsKeepHint');
+    keepStops.textContent = isZhs ? t('panel.trimsStops', { n: it.stops.drop }) : '';
     pauseStops.textContent = t('panel.trimsStops', { n: it.stops.pause });
   }
 
@@ -262,8 +275,9 @@ export function initPanel(deps: PanelDeps): PanelHandle {
     convertBtn.disabled = formats.length === 0 || converting;
     noteEl.hidden = !sameAsPrimary;
     if (sameAsPrimary) {
-      noteEl.textContent =
-        formats.length > 0
+      noteEl.textContent = it.options.trims !== 'keep'
+        ? t('panel.sameFormatEdit', { fmt: target.toUpperCase() })
+        : formats.length > 0
           ? t('panel.sameFormatExtras', { fmt: target.toUpperCase() })
           : t('panel.sameFormat', { fmt: target.toUpperCase() });
     }
@@ -288,7 +302,9 @@ export function initPanel(deps: PanelDeps): PanelHandle {
   for (const radio of trimsRadios) {
     radio.addEventListener('change', () => {
       if (item === null || !radio.checked) return;
-      item.options.trims = radio.value === 'pause' ? 'pause' : 'drop';
+      const value = radio.value;
+      item.options.trims =
+        value === 'pause' || value === 'remove' || value === 'add' ? value : 'keep';
       deps.onOptionsChange(item);
     });
   }

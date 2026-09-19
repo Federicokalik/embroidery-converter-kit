@@ -92,6 +92,14 @@ export function writeJef(
   options?: WriterOptions,
 ): { bytes: Uint8Array; warnings: ConversionWarning[] } {
   const { stitches, threads, warnings } = normalize(pattern, JEF_SETTINGS);
+  if (stitches.some((s) => s.command === 'TRIM')) {
+    // JEF has no trim record (the machine trims only at color changes);
+    // TRIMs are dropped here and re-derived heuristically on read.
+    warnings.push({
+      code: 'TRIM_DROPPED',
+      message: 'The JEF format cannot encode trims; TRIMs were dropped.',
+    });
+  }
   const dateString = options?.date ?? formatNow();
 
   // Palette construction (the pyembroidery "PATCH" block).

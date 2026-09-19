@@ -8,6 +8,7 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, extname, join } from 'node:path';
 import {
+  addTrims,
   center,
   checkFit,
   convert,
@@ -16,24 +17,34 @@ import {
   getReader,
   getWriter,
   HOOP_CATALOG,
+  removeTrims,
   selectSmallestHoop,
   supportedFormats,
   UnsupportedDesignError,
 } from '@embroidery/core';
 import type { Command, Hoop, HoopBrand, Pattern, WriterOptions } from '@embroidery/core';
 
+/** Trim edit mode: 'keep' writes the pattern untouched; 'remove'/'add'
+ * are IR-level edits applied before writing (works with same-format
+ * export: read .pes → edit → write .pes). */
+type TrimMode = 'keep' | 'remove' | 'add';
+
 function usage(): never {
   const { read, write } = supportedFormats();
   console.error(
     [
       'Usage:',
-      '  embconv <input> <output> [--hoop <WxH>] [--center] [--pause-trims]',
-      '  embconv --batch <dir> --to <format> [--out <dir>] [--hoop <WxH>] [--center] [--pause-trims]',
+      '  embconv <input> <output> [--hoop <WxH>] [--center] [--trims <mode>] [--pause-trims]',
+      '  embconv --batch <dir> --to <format> [--out <dir>] [--hoop <WxH>] [--center] [--trims <mode>] [--pause-trims]',
       '  embconv info <file> [--hoop <WxH>] [--brand <brand>]',
       '',
       '  --hoop <WxH>   target hoop in mm (e.g. 130x180) for formats that',
       '                 declare one (pes, jef, zhs); in `info`, fit-check against it',
       '  --center       center the design on the origin before writing',
+      '  --trims <mode> keep | remove | add (default keep): strip or insert',
+      '                 TRIM records before writing; lets the output keep the',
+      '                 input format (pes -> pes edited). zhs ignores it (use',
+      '                 --pause-trims)',
       '  --pause-trims  zhs: stop the machine at each mid-color trim (cut the',
       '                 thread there) instead of dropping trims silently',
       `  --brand        one of: ${Object.keys(HOOP_CATALOG).join(', ')}`,
@@ -79,17 +90,34 @@ function takeFlag(args: string[], flag: string): boolean {
 
 const mm = (units: number): string => (units / 10).toFixed(1);
 
+function parseTrimMode(value: string | undefined): TrimMode {
+  if (value === undefined) return 'keep';
+  if (value === 'keep' || value === 'remove' || value === 'add') return value;
+  console.error(`Bad --trims "${value}": expected keep, remove or add.`);
+  process.exit(2);
+}
+
+/** Apply the CLI trim edit to a parsed pattern (pure; 'keep' returns it). */
+function editTrims(pattern: Pattern, mode: TrimMode): Pattern {
+  if (mode === 'remove') return { ...pattern, stitches: removeTrims(pattern.stitches) };
+  if (mode === 'add') return { ...pattern, stitches: addTrims(pattern.stitches) };
+  return pattern;
+}
+
 function convertFile(
   inputPath: string,
   outputPath: string,
   options: WriterOptions,
   doCenter: boolean,
+  trimMode: TrimMode = 'keep',
 ): boolean {
   try {
     const data = new Uint8Array(readFileSync(inputPath));
     let result: { bytes: Uint8Array; warnings: import('@embroidery/core').ConversionWarning[] };
-    if (doCenter) {
-      const pattern = center(getReader(inputPath)(data));
+    if (trimMode !== 'keep' || doCenter) {
+      let pattern = getReader(inputPath)(data);
+      pattern = editTrims(pattern, trimMode);
+      if (doCenter) pattern = center(pattern);
       result = getWriter(outputPath)(pattern, options);
     } else {
       result = convert(data, inputPath, outputPath, options);
@@ -207,6 +235,7 @@ if (args[0] === 'info') {
   const hoopSpec = takeOption(args, '--hoop');
   const doCenter = takeFlag(args, '--center');
   const pauseTrims = takeFlag(args, '--pause-trims');
+  const trimMode = parseTrimMode(takeOption(args, '--trims'));
   const target = takeOption(args, '--to');
   const outDirOpt = takeOption(args, '--out');
   const dir = args[0];
@@ -225,10 +254,12 @@ if (args[0] === 'info') {
   let failed = 0;
   for (const entry of readdirSync(dir)) {
     const ext = extname(entry).slice(1).toLowerCase();
-    if (!readable.has(ext) || ext === target.toLowerCase()) continue;
+    if (!readable.has(ext)) continue;
+    // Same-format entries are skipped unless a trim edit rewrites them.
+    if (trimMode === 'keep' && ext === target.toLowerCase()) continue;
     const stem = basename(entry, extname(entry));
     const out = join(outDir, `${stem}.${target.toLowerCase()}`);
-    if (convertFile(join(dir, entry), out, options, doCenter)) {
+    if (convertFile(join(dir, entry), out, options, doCenter, trimMode)) {
       ok += 1;
     } else {
       failed += 1;
@@ -240,11 +271,12 @@ if (args[0] === 'info') {
   const hoopSpec = takeOption(args, '--hoop');
   const doCenter = takeFlag(args, '--center');
   const pauseTrims = takeFlag(args, '--pause-trims');
+  const trimMode = parseTrimMode(takeOption(args, '--trims'));
   const options: WriterOptions = {};
   if (hoopSpec !== undefined) options.hoop = parseHoop(hoopSpec);
   if (pauseTrims) options.trims = 'pause';
   if (args.length === 2 && args[0] !== undefined && args[1] !== undefined) {
-    process.exit(convertFile(args[0], args[1], options, doCenter) ? 0 : 1);
+    process.exit(convertFile(args[0], args[1], options, doCenter, trimMode) ? 0 : 1);
   } else {
     usage();
   }

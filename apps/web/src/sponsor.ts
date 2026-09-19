@@ -1,7 +1,7 @@
 // Floating sponsor tab behavior, shared by every page. Reveals the tab
 // unless dismissed, plays a one-time tease (pop open, then tuck back), and
 // wires the close button (persisted in localStorage). Hover/focus expansion
-// is pure CSS. Under prefers-reduced-motion the SVG foil is paused.
+// is pure CSS.
 
 const DISMISS_KEY = 'ricuci-sponsor-dismissed';
 
@@ -42,8 +42,4 @@ export function initSponsor(): void {
       root.classList.remove('is-out');
     }, 280);
   });
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    root.querySelector<SVGSVGElement>('.sponsor-reveal svg.cd-logo')?.pauseAnimations?.();
-  }
 }
