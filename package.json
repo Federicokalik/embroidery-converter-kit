@@ -2,7 +2,7 @@
   "name": "embroidery-converter",
   "license": "MIT",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "packageManager": "pnpm@10.33.2",
   "scripts": {
     "test": "pnpm --filter @embroidery/core test",
