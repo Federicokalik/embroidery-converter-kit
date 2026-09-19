@@ -342,6 +342,41 @@ export const STRINGS: Record<string, Entry> = {
     pt: 'A máquina para a cada corte para você cortar o fio na hora.',
   },
   'panel.trimsStops': { it: '{n} fermate macchina', en: '{n} machine stops', fr: '{n} arrêts machine', de: '{n} Maschinenstopps', es: '{n} paradas de máquina', pt: '{n} paradas de máquina' },
+  'panel.trimsKeep': { it: "Lascia com'è", en: 'Keep as is', fr: 'Laisser tel quel', de: 'Unverändert lassen', es: 'Dejar como está', pt: 'Manter como está' },
+  'panel.trimsKeepHint': {
+    it: 'Nessuna modifica ai tagli del file.',
+    en: 'No change to the trims in the file.',
+    fr: 'Aucune modification des coupes du fichier.',
+    de: 'Keine Änderung der Schnitte in der Datei.',
+    es: 'Sin cambios en los cortes del archivo.',
+    pt: 'Nenhuma mudança nos cortes do arquivo.',
+  },
+  'panel.trimsRemove': { it: 'Rimuovi i tagli', en: 'Remove trims', fr: 'Retirer les coupes', de: 'Schnitte entfernen', es: 'Quitar los cortes', pt: 'Remover os cortes' },
+  'panel.trimsRemoveHint': {
+    it: 'Elimina tutti i tagli: il filo si spunta a mano tra i blocchi.',
+    en: 'Strip every trim: snip the thread by hand between blocks.',
+    fr: 'Supprime toutes les coupes : coupez le fil à la main entre les blocs.',
+    de: 'Entfernt alle Schnitte: den Faden zwischen den Blöcken von Hand abschneiden.',
+    es: 'Elimina todos los cortes: corta el hilo a mano entre los bloques.',
+    pt: 'Remove todos os cortes: corte o fio à mão entre os blocos.',
+  },
+  'panel.trimsAdd': { it: 'Aggiungi i tagli', en: 'Add trims', fr: 'Ajouter des coupes', de: 'Schnitte hinzufügen', es: 'Añadir cortes', pt: 'Adicionar cortes' },
+  'panel.trimsAddHint': {
+    it: 'Un taglio a ogni cambio colore e sui salti oltre 3 mm.',
+    en: 'A cut at every color change and on jumps over 3 mm.',
+    fr: 'Une coupe à chaque changement de couleur et sur les sauts de plus de 3 mm.',
+    de: 'Ein Schnitt bei jedem Farbwechsel und bei Sprüngen über 3 mm.',
+    es: 'Un corte en cada cambio de color y en saltos de más de 3 mm.',
+    pt: 'Um corte a cada troca de cor e em saltos acima de 3 mm.',
+  },
+  'panel.sameFormatEdit': {
+    it: 'Stesso formato: esporto il {fmt} modificato (file riscritto, non byte-identico).',
+    en: 'Same format: exporting the modified {fmt} (file rewritten, not byte-identical).',
+    fr: 'Même format : j\'exporte le {fmt} modifié (fichier réécrit, non identique octet par octet).',
+    de: 'Gleiches Format: exportiere das bearbeitete {fmt} (Datei neu geschrieben, nicht byte-identisch).',
+    es: 'Mismo formato: exporto el {fmt} modificado (archivo reescrito, no idéntico byte a byte).',
+    pt: 'Mesmo formato: exporto o {fmt} modificado (arquivo reescrito, não idêntico byte a byte).',
+  },
   'panel.convert': { it: 'Converti in {fmt}', en: 'Convert to {fmt}', fr: 'Convertir en {fmt}', de: 'Konvertieren zu {fmt}', es: 'Convertir a {fmt}', pt: 'Converter para {fmt}' },
   'panel.convertMulti': { it: 'Converti in {n} formati', en: 'Convert to {n} formats', fr: 'Convertir en {n} formats', de: 'In {n} Formate konvertieren', es: 'Convertir a {n} formatos', pt: 'Converter para {n} formatos' },
   'panel.remove': { it: 'Rimuovi dalla coda', en: 'Remove from queue', fr: 'Retirer de la file', de: 'Aus der Warteschlange entfernen', es: 'Quitar de la cola', pt: 'Remover da fila' },
@@ -714,6 +749,45 @@ export const STRINGS: Record<string, Entry> = {
       'Este formato não sabe cortar o fio: removi os comandos de corte. ' +
       'Você cortará os fios entre cores à mão.',
   },
+
+  // What's-new modal (landing + /convert, one-time via localStorage)
+  'whatsnew.kicker': { it: 'Novità', en: "What's new", fr: 'Nouveautés', de: 'Neuigkeiten', es: 'Novedades', pt: 'Novidades' },
+  'whatsnew.title': {
+    it: 'Togli o aggiungi il taglio del filo — anche senza convertire',
+    en: 'Add or remove thread trims — even without converting',
+    fr: 'Retirez ou ajoutez les coupes de fil — même sans convertir',
+    de: 'Fadenschnitte entfernen oder hinzufügen — auch ohne Konvertieren',
+    es: 'Quita o añade los cortes de hilo — incluso sin convertir',
+    pt: 'Remova ou adicione os cortes de fio — mesmo sem converter',
+  },
+  'whatsnew.body': {
+    it:
+      'Carichi un file, scegli «Aggiungi i tagli» o «Rimuovi i tagli» e scarichi ' +
+      'lo stesso formato modificato: un .pes riscritto in .pes, un .dst in .dst. ' +
+      'Disponibile nello studio, per ogni formato scrivibile.',
+    en:
+      'Drop a file, pick "Add trims" or "Remove trims" and download the same ' +
+      'format, modified: a .pes rewritten as .pes, a .dst as .dst. Available in ' +
+      'the studio, for every writable format.',
+    fr:
+      'Déposez un fichier, choisissez « Ajouter les coupes » ou « Retirer les coupes » ' +
+      'et téléchargez le même format, modifié : un .pes réécrit en .pes, un .dst en ' +
+      '.dst. Disponible dans le studio, pour chaque format inscriptible.',
+    de:
+      'Datei ablegen, „Schnitte hinzufügen" oder „Schnitte entfernen" wählen und das ' +
+      'gleiche Format bearbeitet herunterladen: ein .pes neu geschrieben als .pes, ' +
+      'ein .dst als .dst. Im Studio verfügbar, für jedes schreibbare Format.',
+    es:
+      'Suelta un archivo, elige «Añadir cortes» o «Quitar los cortes» y descarga el ' +
+      'mismo formato, modificado: un .pes reescrito en .pes, un .dst en .dst. ' +
+      'Disponible en el estudio, para cada formato escribible.',
+    pt:
+      'Solte um arquivo, escolha «Adicionar cortes» ou «Remover os cortes» e baixe o ' +
+      'mesmo formato, modificado: um .pes reescrito em .pes, um .dst em .dst. ' +
+      'Disponível no estúdio, para cada formato gravável.',
+  },
+  'whatsnew.cta': { it: 'Prova nello studio', en: 'Try it in the studio', fr: 'Essayer dans le studio', de: 'Im Studio ausprobieren', es: 'Pruébalo en el estudio', pt: 'Experimente no estúdio' },
+  'whatsnew.later': { it: 'Più tardi', en: 'Later', fr: 'Plus tard', de: 'Später', es: 'Más tarde', pt: 'Mais tarde' },
 
   // Per-format caveats
   'note.zhs': {

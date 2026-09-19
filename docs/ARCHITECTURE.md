@@ -59,6 +59,10 @@ interface Pattern {
 
 Every reader returns a `Pattern`; every writer consumes one. `convert()` = read → Pattern → write.
 
+Same-format trim editing (add/remove `TRIM` records without converting) lives
+in `packages/core/src/trim-edits.ts` — see `docs/TRIM_EDIT.md` for the
+per-format truth table and the UI/CLI behavior.
+
 ## Tech choices (aligned to Federico's stack)
 
 - **pnpm** workspaces, **TypeScript** strict everywhere.

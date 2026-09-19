@@ -7,6 +7,7 @@ import { playStitchOut } from './converter/stitchout';
 import { scrollToSection, refreshScroll } from './core/gsap';
 import { initExperience } from './experience';
 import { initSponsor } from './sponsor';
+import { initWhatsNew } from './whats-new';
 
 function initAnchors(): void {
   for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')) {
@@ -26,4 +27,5 @@ renderFormatWall(
 );
 initAnchors();
 initSponsor();
+initWhatsNew(3400); // let the preloader/hero settle first
 void initExperience();

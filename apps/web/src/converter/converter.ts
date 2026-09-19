@@ -8,16 +8,18 @@
  *   convert-all. Results live on the queue rows.
  */
 import {
+  addTrims,
   center,
   detectFormat,
   getReader,
   getWriter,
+  removeTrims,
   supportedFormats,
   UnsupportedDesignError,
   FormatError,
   HOOP_CATALOG,
 } from '@embroidery/core';
-import type { Hoop, WriterOptions } from '@embroidery/core';
+import type { Hoop, Pattern, WriterOptions } from '@embroidery/core';
 import { zipSync } from 'fflate';
 import { t, onLangChange } from '../i18n/i18n';
 import { toStitchData } from '../stitch/runs';
@@ -115,6 +117,7 @@ function writePattern(
   format: string,
   options: WriterOptions | undefined,
   centerFirst: boolean,
+  trimMode: 'keep' | 'remove' | 'add' = 'keep',
 ): { bytes: Uint8Array | null; outcome: FormatOutcome } {
   const outcome: FormatOutcome = {
     format,
@@ -125,7 +128,13 @@ function writePattern(
     trimsChosen: options?.trims !== undefined,
   };
   try {
-    const pattern = centerFirst ? center(parsed.pattern) : parsed.pattern;
+    const base: Pattern =
+      trimMode === 'remove'
+        ? { ...parsed.pattern, stitches: removeTrims(parsed.pattern.stitches) }
+        : trimMode === 'add'
+          ? { ...parsed.pattern, stitches: addTrims(parsed.pattern.stitches) }
+          : parsed.pattern;
+    const pattern = centerFirst ? center(base) : base;
     const { bytes, warnings } = getWriter(format)(pattern, options);
     outcome.size = bytes.byteLength;
     outcome.warnings = warnings;
@@ -335,9 +344,24 @@ export function initConverter(hooks: ConverterHooks): void {
     return HOOP_CATALOG[brand];
   }
 
+  /** An active trim edit (anything but 'keep') also enables same-format
+   * export: read .pes → edit → write .pes modified. */
+  function hasActiveEdit(item: QueueItem): boolean {
+    return item.options.trims !== 'keep';
+  }
+
+  /** IR-level trim edit for one output format. ZHS handles trims itself
+   * via its writer option ('drop'/'pause') — no IR edit for it. */
+  function trimEditMode(item: QueueItem, format: string): 'keep' | 'remove' | 'add' {
+    if (format === 'zhs') return 'keep';
+    const mode = item.options.trims;
+    return mode === 'remove' || mode === 'add' ? mode : 'keep';
+  }
+
   function formatsFor(item: QueueItem): string[] {
     if (item.parsed === null) return [];
-    return [target, ...extras].filter((f) => f !== item.parsed!.sourceFormat);
+    const source = item.parsed!.sourceFormat;
+    return [target, ...extras].filter((f) => hasActiveEdit(item) || f !== source);
   }
 
   function writerOptionsFor(item: QueueItem, format: string): WriterOptions {
@@ -345,7 +369,13 @@ export function initConverter(hooks: ConverterHooks): void {
     const hoop =
       resolveHoop(item, format, target, hoopCatalogFor(format)) ?? item.parsed?.pattern.hoop;
     if (hoop !== undefined) options.hoop = hoop;
-    if (format === 'zhs' && item.parsed!.hasTrims) options.trims = item.options.trims;
+    if (format === 'zhs' && item.parsed!.hasTrims) {
+      // ZHS writer owns trims: 'pause' is its stop mode, 'remove' is an
+      // explicit drop; 'keep' stays undefined so the writer default applies.
+      const mode = item.options.trims;
+      if (mode === 'pause') options.trims = 'pause';
+      else if (mode === 'remove') options.trims = 'drop';
+    }
     return options;
   }
 
@@ -363,7 +393,9 @@ export function initConverter(hooks: ConverterHooks): void {
   function runItem(item: QueueItem): Array<{ name: string; bytes: Uint8Array }> {
     const parsed = item.parsed!;
     const all = [target, ...extras];
-    item.skipped = all.filter((f) => f === parsed.sourceFormat);
+    item.skipped = hasActiveEdit(item)
+      ? []
+      : all.filter((f) => f === parsed.sourceFormat);
     const centerFirst = item.options.centerInHoop && hoopCatalogFor(target) !== undefined;
     const files: Array<{ name: string; bytes: Uint8Array }> = [];
     item.outcomes = formatsFor(item).map((format) => {
@@ -372,6 +404,7 @@ export function initConverter(hooks: ConverterHooks): void {
         format,
         writerOptionsFor(item, format),
         centerFirst,
+        trimEditMode(item, format),
       );
       if (bytes !== null) files.push({ name: outcome.outputName, bytes });
       return outcome;
@@ -569,7 +602,7 @@ export function initConverter(hooks: ConverterHooks): void {
           extents: null,
           stops: { drop: 0, pause: 0 },
           stats: { jumps: 0, trims: 0, stops: 0 },
-          options: { hoopChoice: 'auto', trims: 'drop', centerInHoop: false },
+          options: { hoopChoice: 'auto', trims: 'keep', centerInHoop: false },
           status: 'failed',
           skipped: [],
           outcomes: [],

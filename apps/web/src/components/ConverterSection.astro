@@ -91,15 +91,29 @@ const convertHref = localeUrl(lang, 'convert/');
 
       <fieldset id="trims-field" class="panel-field trims-field" hidden>
         <legend class="mono panel-label" data-i18n="panel.trimsLabel">{tt('panel.trimsLabel')}</legend>
-        <label class="trims-option">
-          <input type="radio" name="trims" value="drop" checked />
+        <label class="trims-option" data-trims-mode="keep">
+          <input type="radio" name="trims" value="keep" checked />
           <span class="trims-copy">
-            <strong data-i18n="panel.trimsDrop">{tt('panel.trimsDrop')}</strong>
-            <small data-i18n="panel.trimsDropHint">{tt('panel.trimsDropHint')}</small>
-            <small id="trims-drop-stops" class="mono trims-stops"></small>
+            <strong data-i18n="panel.trimsKeep">{tt('panel.trimsKeep')}</strong>
+            <small id="trims-keep-hint" data-i18n="panel.trimsKeepHint">{tt('panel.trimsKeepHint')}</small>
+            <small id="trims-keep-stops" class="mono trims-stops"></small>
           </span>
         </label>
-        <label class="trims-option">
+        <label class="trims-option" data-trims-mode="remove">
+          <input type="radio" name="trims" value="remove" />
+          <span class="trims-copy">
+            <strong data-i18n="panel.trimsRemove">{tt('panel.trimsRemove')}</strong>
+            <small data-i18n="panel.trimsRemoveHint">{tt('panel.trimsRemoveHint')}</small>
+          </span>
+        </label>
+        <label class="trims-option" data-trims-mode="add">
+          <input type="radio" name="trims" value="add" />
+          <span class="trims-copy">
+            <strong data-i18n="panel.trimsAdd">{tt('panel.trimsAdd')}</strong>
+            <small data-i18n="panel.trimsAddHint">{tt('panel.trimsAddHint')}</small>
+          </span>
+        </label>
+        <label class="trims-option" data-trims-mode="pause">
           <input type="radio" name="trims" value="pause" />
           <span class="trims-copy">
             <strong data-i18n="panel.trimsPause">{tt('panel.trimsPause')}</strong>

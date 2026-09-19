@@ -1,0 +1,70 @@
+/* One-time "what's new" modal (landing + /convert). <dialog> + backdrop,
+   paper card on the site's ink grain. Text lengths vary per language —
+   the card sizes to content with a comfortable max width. */
+
+.whats-new {
+  padding: 0;
+  border: none;
+  background: none;
+  max-width: none;
+  max-height: none;
+}
+
+.whats-new::backdrop {
+  background: rgb(20 20 20 / 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.whatsnew-card {
+  max-width: min(30rem, calc(100vw - 2.5rem));
+  padding: 1.6rem 1.7rem 1.5rem;
+  border-radius: 18px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 70px -24px rgb(20 20 20 / 0.6);
+}
+
+.whatsnew-kicker {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pink-deep, #d81b60);
+}
+
+.whatsnew-card h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+
+.whatsnew-body {
+  margin: 0 0 1.2rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-soft, #4a4a46);
+}
+
+.whatsnew-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .whatsnew-card {
+    animation: whatsnew-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes whatsnew-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
